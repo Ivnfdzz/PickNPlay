@@ -1,0 +1,52 @@
+/* Tipografía general */
+body {
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* Fondo crema */
+.bg-crema {
+    background-color: #fff7e6 !important;
+}
+
+/* Navy blue oscuro */
+.bg-brown {
+    background-color: #1e2a5a !important;
+}
+
+/* Botón personalizado */
+.btn-brown {
+    background-color: #1e2a5a;
+    color: #fff7e6;
+    border: none;
+}
+
+.btn-brown:hover {
+    background-color: #2563eb;
+    color: #fff7e6;
+}
+
+/* Botón modo oscuro personalizado */
+.btn-dark-mode {
+    border-color: #fff7e6;
+    color: #fff7e6;
+}
+
+.btn-dark-mode:hover {
+    background-color: #fff7e6;
+    border-color: #fff7e6;
+    color: #1e2a5a !important;
+}
+
+/* Botón flecha personalizado */
+.btn-arrow {
+    background-color: #1e2a5a;
+    color: #fff7e6;
+    border: 1px solid #1e2a5a;
+    border-left: none;
+}
+
+.btn-arrow:hover {
+    background-color: #2563eb;
+    color: #fff7e6;
+    border-color: #2563eb;
+}
