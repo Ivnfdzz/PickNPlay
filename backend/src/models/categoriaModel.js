@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db.config.js');
 
-const Rol = sequelize.define('Rol', {
-    id_rol: {
+const Categoria = sequelize.define('Categoria', {
+    id_categoria: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -15,9 +15,9 @@ const Rol = sequelize.define('Rol', {
     }
 },
     {
-        tableName: 'rol', // Nombre específico de la tabla
+        tableName: 'categoria', // Nombre específico de la tabla
         timestamps: false // Si no quieres createdAt y updatedAt automáticos
     }
 );
 
-module.exports = Rol;
+module.exports = Categoria;

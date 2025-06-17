@@ -28,6 +28,14 @@ const User = sequelize.define('User', {
     fecha_registro: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
+    },
+    id_rol: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'rol', // Nombre de la tabla referenciada
+            key: 'id_rol' // Clave primaria de la tabla referenciada
+        }
     }
 },
     {
