@@ -1,0 +1,50 @@
+body {
+    font-family: "Segoe UI", sans-serif;
+}
+
+.bg-crema {
+    background-color: #fff7e6 !important;
+}
+
+.bg-brown {
+    background-color: #3f1d10 !important;
+}
+
+.btn-brown {
+    background-color: #3f1d10;
+    color: #fff7e6;
+    border: none;
+}
+
+.btn-brown:hover {
+    background-color: #733a12;
+    color: #fff7e6;
+}
+
+.btn-dark-mode {
+    border-color: #fff7e6;
+    color: #fff7e6;
+}
+
+.btn-dark-mode:hover {
+    background-color: #fff7e6;
+    border-color: #fff7e6;
+    color: #3f1d10 !important;
+}
+
+/* Estilo para las cartas de categorías */
+.categoria-card {
+    transition: transform 0.2s ease;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.categoria-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
