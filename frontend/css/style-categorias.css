@@ -45,6 +45,9 @@ body {
 }
 
 .card-img-top {
-    height: 200px;
-    object-fit: cover;
+    height: 180px;
+    object-fit: contain; /* Cambiado de 'cover' a 'contain' */
+    object-position: center;
+    background-color: #f8f9fa; /* Fondo gris claro */
+    padding: 10px; /* Añade un poco de espacio alrededor */
 }
