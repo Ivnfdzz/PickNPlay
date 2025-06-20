@@ -1,10 +1,10 @@
-const Rol = require('./models/rolModel');
-const Usuario = require('./models/usuarioModel');
-const Pedido = require('./models/pedidoModel');
-const DetallePedido = require('./models/detallePedidoModel');
-const Producto = require('./models/productoModel');
-const Categoria = require('./models/categoriaModel');
-const Venta = require('./models/ventaModel');
+const Rol = require('./rolModel');
+const Usuario = require('./usuarioModel');
+const Pedido = require('./pedidoModel');
+const DetallePedido = require('./detallePedidoModel');
+const Producto = require('./productoModel');
+const Categoria = require('./categoriaModel');
+const Venta = require('./ventaModel');
 
 const establecerRelaciones = () => {
     // Asociaciones Rol-Usuario

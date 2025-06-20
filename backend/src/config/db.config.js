@@ -26,7 +26,17 @@ const testConnection = async () => {
     }
 };
 
+const inicializarDB = async () => {
+    await testConnection();
+    
+    const establecerRelaciones = require('../models/associations');
+    establecerRelaciones();
+
+    await DB.sync({alter: true});
+    console.log('Base de datos sincronizada correctamente.');
+};
+
 module.exports = {
     DB,
-    testConnection
+    inicializarDB
 };
