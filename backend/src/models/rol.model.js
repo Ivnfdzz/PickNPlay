@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { DB } = require('../config/db.config.js');
+const { DB } = require('../config/db.config');
 
 const Rol = DB.define('Rol', {
     id_rol: {

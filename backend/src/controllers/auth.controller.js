@@ -7,8 +7,9 @@ exports.signup = async (req, res) => {
         const { username, email, password } = req.body;
         // Verifica si el usuario ya existe
         const existingUser = await Usuario.findOne({
-            where: { email: email } });
-        
+            where: { email: email }
+        });
+
         if (existingUser) {
             return res.status(400).json({ message: 'Email ya registrado' });
         }
@@ -28,7 +29,7 @@ exports.signup = async (req, res) => {
                 rol: newUser.id_rol
             }
         });
-        
+
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -64,14 +65,14 @@ exports.login = async (req, res) => {
             }
         });
     } catch (error) {
-        
+
     }
 }
 
 exports.getProfile = async (req, res) => {
     try {
         const user = await Usuario.findByPk(req.user.id, {
-            attributes: {exclude: ['password']}
+            attributes: { exclude: ['password'] }
         });
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });

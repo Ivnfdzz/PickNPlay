@@ -18,6 +18,14 @@ const Pedido = DB.define('Pedido', {
     total: {
         type: DataTypes.FLOAT,
         allowNull: false
+    },
+    id_metodopago: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'metodo_pago',
+            key: 'id_metodopago'
+        }
     }
 },
     {
