@@ -1,4 +1,4 @@
-const rolModel = require('../models/rolModel.js');
+const rolModel = require('../models/rol.model.js');
 
 const traerRoles = async (req, res) => {
     try {

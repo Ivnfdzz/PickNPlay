@@ -1,4 +1,4 @@
-const categoriaModel = require('../models/categoriaModel.js');
+const categoriaModel = require('../models/categoria.model.js');
 
 const traerCategorias = async (req, res) => {
     try {

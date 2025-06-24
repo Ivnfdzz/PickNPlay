@@ -1,10 +1,9 @@
-const Rol = require('./rolModel');
-const Usuario = require('./usuarioModel');
-const Pedido = require('./pedidoModel');
-const DetallePedido = require('./detallePedidoModel');
-const Producto = require('./productoModel');
-const Categoria = require('./categoriaModel');
-const Venta = require('./ventaModel');
+const Rol = require('./rol.model');
+const Usuario = require('./usuario.model');
+const Pedido = require('./pedido.model');
+const DetallePedido = require('./detallePedido.model');
+const Producto = require('./producto.model');
+const Categoria = require('./categoria.model');
 
 const establecerRelaciones = () => {
     // Asociaciones Rol-Usuario
@@ -14,10 +13,6 @@ const establecerRelaciones = () => {
     // Asociaciones Pedido-DetallePedido
     Pedido.hasMany(DetallePedido, { foreignKey: 'id_pedido' });
     DetallePedido.belongsTo(Pedido, { foreignKey: 'id_pedido' });
-
-    // Asociaciones Pedido-Venta
-    Pedido.hasOne(Venta, { foreignKey: 'id_pedido' });
-    Venta.belongsTo(Pedido, { foreignKey: 'id_pedido' });
 
     // Asociaciones Producto-DetallePedido
     Producto.hasMany(DetallePedido, { foreignKey: 'id_producto' });
