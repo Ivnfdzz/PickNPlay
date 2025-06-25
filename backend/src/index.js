@@ -1,25 +1,27 @@
-const express = require("express"); // Framework web
-const app = express();              // Inicializa la aplicación
-const cors = require("cors");       // Middleware para permitir CORS
-const { inicializarDB } = require('./config/db.config.js'); // Conexión a la base de 
-const rolRouter = require('./routes/rol.router.js'); // Rutas para los posteos
-const categoriaRouter = require('./routes/categoria.router.js'); // Rutas para los posteos
-const usuarioRouter = require('./routes/usuario.router.js'); // Rutas para los posteos
-const productoRouter = require('./routes/producto.router.js'); // Rutas para los posteos
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const { inicializarDB } = require('./config/db.config.js');
+const rolRouter = require('./routes/rol.router.js');
+const categoriaRouter = require('./routes/categoria.router.js');
+const usuarioRouter = require('./routes/usuario.router.js');
+const productoRouter = require('./routes/producto.router.js');
+const pedidoRouter = require('./routes/pedido.router.js');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000; // Si process.env.PORT es undefined, null, o cualquier valor "falsy", se usará el valor 3000
 
-app.use(cors());           // Permite peticiones desde otros orígenes (CORS)
-app.use(express.json());   // Permite leer datos en formato JSON en las peticiones
+app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("¡Hola, mundo!"); // ResprolControlleruesta simple para la ruta raíz
+    res.send("¡Hola, mundo!");
 });
 
 app.use("/roles", rolRouter);
 app.use("/categorias", categoriaRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/productos", productoRouter);
+app.use("/pedidos", pedidoRouter);
 
 app.listen(PORT, async () => {
     await inicializarDB();
