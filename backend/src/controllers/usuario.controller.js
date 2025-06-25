@@ -1,59 +1,80 @@
-const usuarioModel = require('../models/usuario.model.js');
+const Usuario = require("../models/usuario.model.js");
+const Rol = require("../models/rol.model.js");
 
 const traerUsuarios = async (req, res) => {
     try {
-        const usuarios = await usuarioModel.findAll(); // Obtiene todos los usuarios de la base de datos
-        res.json(usuarios); // Envía los usuarios como respuesta en formato JSON
+        const usuarios = await Usuario.findAll({
+            include: [
+                {
+                    model: Rol,
+                    attributes: ["nombre"],
+                },
+            ],
+            attributes: { exclude: ["password"] },
+        });
+        res.json(usuarios);
     } catch (error) {
-        res.json({message: error.message});
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
 const traerUsuario = async (req, res) => {
     try {
-        const usuario = await usuarioModel.findByPk(req.params.id)
+        const usuario = await Usuario.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Rol,
+                    attributes: ["nombre"],
+                },
+            ],
+            attributes: { exclude: ["password"] },
+        });
+
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
         res.json(usuario);
     } catch (error) {
-        res.json({message: error.message});
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
 const crearUsuario = async (req, res) => {
     try {
-        await usuarioModel.create(req.body)
+        await Usuario.create(req.body);
         res.json("Usuario creado correctamente");
     } catch (error) {
-        res.json({message: error.message});
+        res.json({ message: error.message });
     }
-}
+};
 
 const actualizarUsuario = async (req, res) => {
     try {
-        await usuarioModel.update(req.body, {
-            where: {id_usuario: req.params.id}
-        })
+        await Usuario.update(req.body, {
+            where: { id_usuario: req.params.id },
+        });
         res.json("Usuario actualizado correctamente");
     } catch (error) {
-        res.json({message: error.message});
+        res.json({ message: error.message });
     }
-}
+};
 
 const borrarUsuario = async (req, res) => {
     try {
-        await usuarioModel.destroy({
-            where: {id_usuario: req.params.id}
-        })
+        await Usuario.destroy({
+            where: { id_usuario: req.params.id },
+        });
         res.json("Usuario eliminado correctamente");
     } catch (error) {
-        res.json({message: error.message});
-        
+        res.json({ message: error.message });
     }
-}
+};
 
 module.exports = {
     traerUsuarios,
     traerUsuario,
     crearUsuario,
     actualizarUsuario,
-    borrarUsuario
+    borrarUsuario,
 };

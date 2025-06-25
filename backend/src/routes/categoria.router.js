@@ -1,6 +1,6 @@
 const express = require("express"); // Framework web
 const router = express.Router(); // Router para manejar las rutas de Categorias
-const { traerCategorias, traerCategoria, crearCategoria, actualizarCategoria, borrarCategoria } = require("../controllers/categoriaController.js"); // CRUD de Categoria
+const { traerCategorias, traerCategoria, crearCategoria, actualizarCategoria, borrarCategoria } = require("../controllers/categoria.controller.js"); // CRUD de Categoria
 
 
 router.get("/", traerCategorias);
