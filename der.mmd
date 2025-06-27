@@ -5,16 +5,15 @@ id: d7fccb09-ca00-4c54-95aa-b75fb2248efb
 ---
 erDiagram
     ROL ||--o{ USUARIO : "tiene"
+    PRODUCTO ||--o{ LOG_ACCION_USUARIO : "afecta"
+    CATEGORIA ||--o{ SUBCATEGORIA : "clasifica"
     METODOPAGO ||--o{ PEDIDO: "utiliza"
-    USUARIO ||--o{ PEDIDO : "realiza"
+    SUBCATEGORIA ||--o{ PRODUCTO_SUBCATEGORIA : "incluye"
+    PRODUCTO ||--o{ PRODUCTO_SUBCATEGORIA : "tiene"
     PEDIDO ||--|{ DETALLEPEDIDO : "contiene"
     PRODUCTO ||--o{ DETALLEPEDIDO : "incluido en"
-    CATEGORIA ||--o{ SUBCATEGORIA : "clasifica"
-    PRODUCTO ||--o{ PRODUCTO_SUBCATEGORIA : "tiene"
     USUARIO ||--o{ LOG_ACCION_USUARIO : "realiza"
-    SUBCATEGORIA ||--o{ PRODUCTO_SUBCATEGORIA : "incluye"
     ACCION ||--o{ LOG_ACCION_USUARIO : "registra"
-    PRODUCTO ||--o{ LOG_ACCION_USUARIO : "afecta"
     
 
     USUARIO {
