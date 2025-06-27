@@ -23,10 +23,6 @@ const establecerRelaciones = () => {
     Producto.hasMany(DetallePedido, { foreignKey: 'id_producto' });
     DetallePedido.belongsTo(Producto, { foreignKey: 'id_producto' });
 
-    // Categoria-Producto
-    Categoria.hasMany(Producto, { foreignKey: 'id_categoria' });
-    Producto.belongsTo(Categoria, { foreignKey: 'id_categoria', as: 'categoria' });
-
     // MetodoPago-Pedido
     MetodoPago.hasMany(Pedido, { foreignKey: 'id_metodopago' });
     Pedido.belongsTo(MetodoPago, { foreignKey: 'id_metodopago' });

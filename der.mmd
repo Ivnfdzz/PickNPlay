@@ -1,0 +1,93 @@
+---
+config:
+    theme: redux-dark-color
+id: d7fccb09-ca00-4c54-95aa-b75fb2248efb
+---
+erDiagram
+    ROL ||--o{ USUARIO : "tiene"
+    METODOPAGO ||--o{ PEDIDO: "utiliza"
+    USUARIO ||--o{ PEDIDO : "realiza"
+    PEDIDO ||--|{ DETALLEPEDIDO : "contiene"
+    PRODUCTO ||--o{ DETALLEPEDIDO : "incluido en"
+    CATEGORIA ||--o{ SUBCATEGORIA : "clasifica"
+    PRODUCTO ||--o{ PRODUCTO_SUBCATEGORIA : "tiene"
+    USUARIO ||--o{ LOG_ACCION_USUARIO : "realiza"
+    SUBCATEGORIA ||--o{ PRODUCTO_SUBCATEGORIA : "incluye"
+    ACCION ||--o{ LOG_ACCION_USUARIO : "registra"
+    PRODUCTO ||--o{ LOG_ACCION_USUARIO : "afecta"
+    
+
+    USUARIO {
+        int id_usuario PK
+        string username
+        string email
+        string password
+        date fecha_registro
+        int id_rol FK
+    }
+
+    ROL {
+        int id_rol PK
+        string nombre
+    }
+
+    PEDIDO {
+        int id_pedido PK
+        date fecha
+        string nombre_cliente
+        decimal total
+        int id_metodopago FK
+    }
+
+    METODOPAGO {
+        int id_metodopago PK
+        string nombre
+        boolean activo
+    }
+
+    DETALLEPEDIDO {
+        int id_detalle PK
+        int id_pedido FK
+        int id_producto FK
+        int cantidad
+        decimal precio_unitario
+    }
+
+    PRODUCTO {
+        int id_producto PK
+        string nombre
+        decimal precio
+        string imagen
+        string descripcion
+        boolean activo
+    }
+
+    CATEGORIA {
+        int id_categoria PK
+        string nombre
+    }
+
+    SUBCATEGORIA {
+        int id_subcategoria PK
+        string nombre
+        int id_categoria FK
+    }
+
+    PRODUCTO_SUBCATEGORIA {
+        int id_producto_subcategoria PK
+        int id_producto FK
+        int id_subcategoria FK
+    }
+
+    LOG_ACCION_USUARIO {
+        int id_log PK
+        int id_usuario FK
+        int id_accion FK
+        int id_producto FK
+        date fecha_hora
+    }
+
+    ACCION {
+        int id_accion PK
+        string nombre
+    }

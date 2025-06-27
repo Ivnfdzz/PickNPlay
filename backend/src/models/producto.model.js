@@ -25,14 +25,6 @@ const Producto = DB.define('Producto', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    id_categoria: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'categoria', // Nombre de la tabla referenciada
-            key: 'id_categoria' // Clave primaria de la tabla referenciada
-        }
-    },
     activo: {
         type: DataTypes.BOOLEAN,
         defaultValue: true

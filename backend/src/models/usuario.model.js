@@ -64,13 +64,13 @@ const Usuario = DB.define('Usuario', {
         hooks: {
             beforeCreate: async (usuario) => {
                 if (usuario.password){
-                    const salt = await bcrypt.genSalt(10);
+                    const salt = await bcrypt.genSalt(12);
                     usuario.password = await bcrypt.hash(usuario.password, salt);
                 }
             },
             beforeUpdate: async (usuario) => {
                 if (usuario.changed('password')) {
-                    const salt = await bcrypt.genSalt(10);
+                    const salt = await bcrypt.genSalt(12);
                     usuario.password = await bcrypt.hash(usuario.password, salt);
                 }
             }
