@@ -32,12 +32,6 @@ const crearUsuarios = async () => {
                 email: 'repositor1@pickandplay.com',
                 password: 'repositorAdmin123',
                 id_rol: 3
-            },
-            {
-                username: 'cliente1',
-                email: 'cliente@email.com',
-                password: 'cliente123',
-                id_rol: 4
             }
         ]);
 

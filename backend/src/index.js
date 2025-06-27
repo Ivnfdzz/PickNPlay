@@ -7,6 +7,7 @@ const categoriaRouter = require('./routes/categoria.router.js');
 const usuarioRouter = require('./routes/usuario.router.js');
 const productoRouter = require('./routes/producto.router.js');
 const pedidoRouter = require('./routes/pedido.router.js');
+const authRouter = require('./routes/auth.route.js');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000; // Si process.env.PORT es undefined, null, o cualquier valor "falsy", se usará el valor 3000
 
@@ -22,6 +23,7 @@ app.use("/categorias", categoriaRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/productos", productoRouter);
 app.use("/pedidos", pedidoRouter);
+app.use("/auth", authRouter);
 
 app.listen(PORT, async () => {
     await inicializarDB();

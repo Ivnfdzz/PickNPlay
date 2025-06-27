@@ -11,8 +11,7 @@ const crearRoles = async () => {
         await Rol.bulkCreate([
             { nombre: 'root' },
             { nombre: 'analista' },
-            { nombre: 'repositor' },
-            { nombre: 'cliente' }
+            { nombre: 'repositor' }
         ]);
 
         console.log('Roles creados');

@@ -12,8 +12,8 @@ const verificarToken = async (req, res, next) => {
         }
 
         // Verifica y decodifica el token usando la clave secreta
-        const decoded = jwt.verify(token, secret);
-        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
         // Busca al usuario en la base de datos usando el ID del token
         const usuario = await Usuario.findByPk(decoded.id_usuario);
 
@@ -30,5 +30,44 @@ const verificarToken = async (req, res, next) => {
     }
 }
 
+const verificarRol = (roles) => {
+    return async (req, res, next) => {
+        try {
+            if (!req.usuario) {
+                return res.status(401).json({ 
+                    message: 'Token requerido antes de verificar rol' 
+                });
+            }
 
-// 3:10
+            const usuario = await Usuario.findByPk(req.usuario.id_usuario, {
+                include: [
+                    {
+                        model: Rol,
+                        attributes: ['nombre']
+                    }
+                ]
+            });
+
+            if(!usuario) {
+                return res.status(404).json({ 
+                    message: 'Usuario no encontrado' 
+                });
+            }
+
+            if (!roles.includes(usuario.Rol.nombre)) {
+                return res.status(403).json({ 
+                    message: 'Acceso denegado: Rol no autorizado' 
+                });
+            }
+
+            next();
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    };
+};
+
+module.exports = {
+    verificarToken,
+    verificarRol
+}
