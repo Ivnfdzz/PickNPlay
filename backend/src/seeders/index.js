@@ -4,6 +4,8 @@ const crearCategorias = require('./categoria.seed.js');
 const crearMetodosPago = require('./metodoPago.seed.js');
 const crearProductos = require('./producto.seed.js');
 const crearUsuarios = require('./usuario.seed.js');
+const crearSubcategorias = require('./subcategoria.seed.js');
+const crearAcciones = require('./accion.seed.js');
 
 const ejecutarSeeds = async () => {
     try {
@@ -15,6 +17,8 @@ const ejecutarSeeds = async () => {
         // Ejecutar seeds en orden (respetando dependencias)
         await crearRoles();
         await crearCategorias();
+        await crearSubcategorias();
+        await crearAcciones();
         await crearMetodosPago();
         await crearProductos();
         await crearUsuarios();

@@ -14,7 +14,9 @@ const crearMetodosPago = async () => {
             { nombre: 'Tarjeta de Crédito', activo: true },
             { nombre: 'Transferencia Bancaria', activo: true },
             { nombre: 'MercadoPago', activo: true },
-            { nombre: 'Modo', activo: false }
+            { nombre: 'Modo', activo: false },
+            { nombre: 'PayPal', activo: true },
+            { nombre: 'QR', activo: false }
         ]);
 
         console.log('Métodos de pago creados');

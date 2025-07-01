@@ -15,6 +15,7 @@ const traerProductos = async (req, res) => {
                     include: [
                         {
                             model: Categoria,
+                            as: "categoria",
                             attributes: ["nombre"],
                         },
                     ],

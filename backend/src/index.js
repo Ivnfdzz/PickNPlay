@@ -8,24 +8,32 @@ const usuarioRouter = require('./routes/usuario.route.js');
 const productoRouter = require('./routes/producto.route.js');
 const pedidoRouter = require('./routes/pedido.route.js');
 const authRouter = require('./routes/auth.route.js');
+const subcategoriaRouter = require('./routes/subcategoria.route.js');
+const metodoPagoRouter = require('./routes/metodoPago.route.js');
+const accionRouter = require('./routes/accion.route.js');
 require('dotenv').config();
-const PORT = process.env.PORT || 3000; // Si process.env.PORT es undefined, null, o cualquier valor "falsy", se usará el valor 3000
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("¡Hola, mundo!");
+    res.send("¡Esta es la API de Pick&Play!");
 });
 
-app.use("/roles", rolRouter);
-app.use("/categorias", categoriaRouter);
-app.use("/usuarios", usuarioRouter);
-app.use("/productos", productoRouter);
-app.use("/pedidos", pedidoRouter);
-app.use("/auth", authRouter);
+app.use("/api/roles", rolRouter);
+app.use("/api/categorias", categoriaRouter);
+app.use("/api/subcategorias", subcategoriaRouter);
+app.use("/api/usuarios", usuarioRouter);
+app.use("/api/productos", productoRouter);
+app.use("/api/pedidos", pedidoRouter);
+app.use("/api/metodos-pago", metodoPagoRouter);
+app.use("/api/acciones", accionRouter);
+app.use("/api/auth", authRouter);
+
 
 app.listen(PORT, async () => {
     await inicializarDB();
     console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+    }
+);

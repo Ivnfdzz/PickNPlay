@@ -7,6 +7,7 @@ const DB = new Sequelize(
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
         dialect: 'mysql',
         logging: false, // Desactiva los logs de SQL
         pool: {
@@ -29,7 +30,7 @@ const testConnection = async () => {
 const inicializarDB = async () => {
     await testConnection();
     
-    const establecerRelaciones = require('../models/associations');
+    const establecerRelaciones = require('../models/associations.js');
     establecerRelaciones();
 
     await DB.sync({alter: true});
