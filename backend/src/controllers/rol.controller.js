@@ -1,8 +1,8 @@
-const rolModel = require('../models/rol.model.js');
+const Rol = require('../models/rol.model.js');
 
 const traerRoles = async (req, res) => {
     try {
-        const roles = await rolModel.findAll(); // Obtiene todos los roles de la base de datos
+        const roles = await Rol.findAll(); // Obtiene todos los roles de la base de datos
         res.json(roles); // Envía los roles como respuesta en formato JSON
     } catch (error) {
         res.json({message: error.message});
@@ -11,7 +11,7 @@ const traerRoles = async (req, res) => {
 
 const traerRol = async (req, res) => {
     try {
-        const rol = await rolModel.findByPk(req.params.id)
+        const rol = await Rol.findByPk(req.params.id)
         res.json(rol);
     } catch (error) {
         res.json({message: error.message});
@@ -20,7 +20,7 @@ const traerRol = async (req, res) => {
 
 const crearRol = async (req, res) => {
     try {
-        await rolModel.create(req.body)
+        await Rol.create(req.body)
         res.json("Rol creado correctamente");
     } catch (error) {
         res.json({message: error.message});
@@ -29,7 +29,7 @@ const crearRol = async (req, res) => {
 
 const actualizarRol = async (req, res) => {
     try {
-        await rolModel.update(req.body, {
+        await Rol.update(req.body, {
             where: {id_rol: req.params.id}
         })
         res.json("Rol actualizado correctamente");
@@ -40,7 +40,7 @@ const actualizarRol = async (req, res) => {
 
 const borrarRol = async (req, res) => {
     try {
-        await rolModel.destroy({
+        await Rol.destroy({
             where: {id_rol: req.params.id}
         })
         res.json("Rol eliminado correctamente");
@@ -57,3 +57,5 @@ module.exports = {
     actualizarRol,
     borrarRol
 };
+
+//Estandarizacion de nombre de import

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { Usuario } = require('../models/usuario.model.js');
-const { Rol } = require('../models/rol.model.js');
+const Usuario = require('../models/usuario.model.js');
+const Rol = require('../models/rol.model.js');
 require('dotenv').config();
 
 const signup = async (req, res) => {
@@ -36,7 +36,7 @@ const signup = async (req, res) => {
             username: username,
             email: email,
             password: password,
-            id_rol: id_rol
+            id_rol: 3 // "Repositor" por defecto
         });
 
         return res.status(201).json({
@@ -86,20 +86,25 @@ const login = async (req, res) => {
         }
 
         // Genera un token JWT
-        const token = jwt.sign({ id_usuario: usuario.id_usuario, email: usuario.email, rol: usuario.id_rol}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN});
+        const token = jwt.sign(
+            { id_usuario: usuario.id_usuario,
+            email: usuario.email,
+            rol: usuario.id_rol},
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN});
 
         return res.status(200).json({
             message: 'Inicio de sesión exitoso',
-            token: token,
             usuario: {
                 id_usuario: usuario.id_usuario,
                 username: usuario.username,
                 email: usuario.email,
                 rol: usuario.Rol.nombre
-            }
+            },
+            token: token
         });
     } catch (error) {
-
+        return res.status(500).json({ message: error.message });
     }
 }
 

@@ -1,8 +1,8 @@
-const categoriaModel = require('../models/categoria.model.js');
+const Categoria = require('../models/categoria.model.js');
 
 const traerCategorias = async (req, res) => {
     try {
-        const categorias = await categoriaModel.findAll(); // Obtiene todos los roles de la base de datos
+        const categorias = await Categoria.findAll(); // Obtiene todos los roles de la base de datos
         res.json(categorias); // Envía los roles como respuesta en formato JSON
     } catch (error) {
         res.json({message: error.message});
@@ -11,7 +11,7 @@ const traerCategorias = async (req, res) => {
 
 const traerCategoria = async (req, res) => {
     try {
-        const categoria = await categoriaModel.findByPk(req.params.id)
+        const categoria = await Categoria.findByPk(req.params.id)
         res.json(categoria);
     } catch (error) {
         res.json({message: error.message});
@@ -20,7 +20,7 @@ const traerCategoria = async (req, res) => {
 
 const crearCategoria = async (req, res) => {
     try {
-        await categoriaModel.create(req.body)
+        await Categoria.create(req.body)
         res.json("Categoria creada correctamente");
     } catch (error) {
         res.json({message: error.message});
@@ -29,7 +29,7 @@ const crearCategoria = async (req, res) => {
 
 const actualizarCategoria = async (req, res) => {
     try {
-        await categoriaModel.update(req.body, {
+        await Categoria.update(req.body, {
             where: {id_categoria: req.params.id}
         })
         res.json("Categoria actualizada correctamente");
@@ -40,7 +40,7 @@ const actualizarCategoria = async (req, res) => {
 
 const borrarCategoria = async (req, res) => {
     try {
-        await categoriaModel.destroy({
+        await Categoria.destroy({
             where: {id_categoria: req.params.id}
         })
         res.json("Categoria eliminada correctamente");
@@ -57,3 +57,6 @@ module.exports = {
     actualizarCategoria,
     borrarCategoria
 };
+
+
+//Estandarizacion de nombre de import
