@@ -11,8 +11,8 @@ router.get("/categoria/:categoriaId", traerProductosPorCategoria);
 router.get("/:id", traerProducto);
 
 // Rutas administrativas
-router.post("/", verificarTokenMiddleware, verificarRol(['repositor', 'root']), crearProducto);
-router.put("/:id", verificarTokenMiddleware, verificarRol(['repositor', 'root']), actualizarProducto);
+router.post("/", verificarTokenMiddleware, verificarRol(['repositor', 'root']), auditoriaMiddleware, crearProducto);
+router.put("/:id", verificarTokenMiddleware, verificarRol(['repositor', 'root']), auditoriaMiddleware, actualizarProducto);
 router.delete("/:id", verificarTokenMiddleware, verificarRol(['root']), borrarProducto);
 
 module.exports = router;
