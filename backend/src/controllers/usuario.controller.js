@@ -1,17 +1,8 @@
-const Usuario = require("../models/usuario.model.js");
-const Rol = require("../models/rol.model.js");
+const UsuarioService = require('../services/usuario.service.js');
 
 const traerUsuarios = async (req, res) => {
     try {
-        const usuarios = await Usuario.findAll({
-            include: [
-                {
-                    model: Rol,
-                    attributes: ["nombre"],
-                },
-            ],
-            attributes: { exclude: ["password"] },
-        });
+        const usuarios = await UsuarioService.obtenerTodos();
         res.json(usuarios);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -20,54 +11,70 @@ const traerUsuarios = async (req, res) => {
 
 const traerUsuario = async (req, res) => {
     try {
-        const usuario = await Usuario.findByPk(req.params.id, {
-            include: [
-                {
-                    model: Rol,
-                    attributes: ["nombre"],
-                },
-            ],
-            attributes: { exclude: ["password"] },
-        });
-
-        if (!usuario) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
-        }
-
+        const usuario = await UsuarioService.obtenerPorId(req.params.id);
         res.json(usuario);
     } catch (error) {
+        if (error.message === 'Usuario no encontrado') {
+            return res.status(404).json({ message: error.message });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
 const crearUsuario = async (req, res) => {
     try {
-        await Usuario.create(req.body);
-        res.json("Usuario creado correctamente");
+        const nuevoUsuario = await UsuarioService.crear(req.body);
+        res.status(201).json({
+            message: 'Usuario creado correctamente',
+            usuario: nuevoUsuario
+        });
     } catch (error) {
-        res.json({ message: error.message });
+        if (error.message.includes('requeridos') || 
+            error.message.includes('inválido') ||
+            error.message.includes('ya registrado') ||
+            error.message.includes('caracteres') ||
+            error.message.includes('texto válido') ||
+            error.message.includes('no encontrado')) {
+            return res.status(400).json({ message: error.message });
+        }
+        res.status(500).json({ message: error.message });
     }
 };
 
 const actualizarUsuario = async (req, res) => {
     try {
-        await Usuario.update(req.body, {
-            where: { id_usuario: req.params.id },
-        });
-        res.json("Usuario actualizado correctamente");
+        const mensaje = await UsuarioService.actualizar(req.params.id, req.body);
+        res.json(mensaje);
     } catch (error) {
-        res.json({ message: error.message });
+        if (error.message === 'Usuario no encontrado') {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message.includes('ya registrado') || 
+            error.message.includes('no encontrado')) {
+            return res.status(400).json({ message: error.message });
+        }
+        res.status(500).json({ message: error.message });
     }
 };
 
 const borrarUsuario = async (req, res) => {
     try {
-        await Usuario.destroy({
-            where: { id_usuario: req.params.id },
-        });
-        res.json("Usuario eliminado correctamente");
+        const mensaje = await UsuarioService.eliminar(req.params.id);
+        res.json(mensaje);
     } catch (error) {
-        res.json({ message: error.message });
+        if (error.message === 'Usuario no encontrado') {
+            return res.status(404).json({ message: error.message });
+        }
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const obtenerEstadisticas = async (req, res) => {
+    try {
+        const estadisticas = await UsuarioService.contarUsuarios();
+        res.json(estadisticas);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -77,4 +84,5 @@ module.exports = {
     crearUsuario,
     actualizarUsuario,
     borrarUsuario,
+    obtenerEstadisticas
 };

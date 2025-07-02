@@ -2,143 +2,158 @@ const Pedido = require("../models/pedido.model.js");
 const DetallePedido = require("../models/detallePedido.model.js");
 const Producto = require("../models/producto.model.js");
 const MetodoPago = require("../models/metodoPago.model.js");
-const Categoria = require("../models/categoria.model.js");
 
-/**
- * Valida los datos del pedido
- */
-const validarDatosPedido = (data) => {
-    // 1. Destructuring de los datos de entrada
-    const { nombre_cliente, detallesPedido, id_metodopago } = data;
+class PedidoService {
 
-    // 2. Validar campos obligatorios
-    if (!nombre_cliente || !detallesPedido || !id_metodopago) {
-        throw new Error("Faltan datos requeridos...");
+    static async crear(data) {
+        const { nombre_cliente, detallesPedido, id_metodopago } = data;
+
+        // PASO 1: Validaciones
+        this._validarDatos(data);
+        await this._validarMetodoPago(id_metodopago);
+        const productosValidados = await this._validarProductos(detallesPedido);
+        
+        // PASO 2: Cálculos
+        const total = this._calcularTotal(productosValidados);
+
+        // PASO 3: Crear pedido
+        const nuevoPedido = await this._crearPedido({
+            nombre_cliente,
+            total,
+            id_metodopago
+        });
+
+        // PASO 4: Crear detalles
+        await this._crearDetallesPedido(nuevoPedido.id_pedido, productosValidados);
+
+        // PASO 5: Retornar resumen
+        return {
+            id_pedido: nuevoPedido.id_pedido,
+            nombre_cliente: nuevoPedido.nombre_cliente,
+            total: nuevoPedido.total,
+            fecha: nuevoPedido.fecha,
+            cantidad_productos: productosValidados.length,
+        };
     }
 
-    // 3. Validar estructura de detalles
-    if (!Array.isArray(detallesPedido) || detallesPedido.length === 0) {
-        throw new Error("El pedido debe tener al menos un producto");
-    }
-};
-
-/**
- * Valida y calcula el total del pedido
- */
-const validarYCalcularTotal = async (detallesPedido) => {
-    let total = 0;
-    const productosValidados = [];
-
-    for (const detalle of detallesPedido) {
-        // 1. CONSULTA A PRODUCTO (Entidad PRODUCTO del DER)
-        const producto = await Producto.findByPk(detalle.id_producto);
-
-        // 2. VALIDAR EXISTENCIA
-        if (!producto) {
-            throw new Error(`Producto con ID ${detalle.id_producto} no encontrado`);
-        }
-
-        // 3. VALIDAR ESTADO ACTIVO (Campo 'activo' de PRODUCTO)
-        if (!producto.activo) {
-            throw new Error(`El producto ${producto.nombre} no está activo`);
-        }
-
-        // 4. CALCULAR SUBTOTAL
-        const subtotal = producto.precio * detalle.cantidad;
-        total += subtotal;
-
-        // 5. ACUMULAR DATOS VALIDADOS
-        productosValidados.push({
-            ...detalle,      // id_producto, cantidad del DETALLEPEDIDO
-            producto,        // Objeto completo de PRODUCTO
-            subtotal,        // Calculado
+    static async obtenerTodos() {
+        return await Pedido.findAll({
+            include: this._getIncludeCompleto(),
+            order: [["fecha", "DESC"]],
         });
     }
 
-    return { total, productosValidados };
-};
+    static async obtenerPorId(id) {
+        return await Pedido.findByPk(id, {
+            include: this._getIncludeCompleto(),
+        });
+    }
 
-/**
- * Crea un pedido completo con sus detalles
- */
-const crearPedidoCompleto = async (data) => {
-    const { nombre_cliente, detallesPedido, id_metodopago } = data;
+    static async eliminar(id) {
+        const pedidosEliminados = await Pedido.destroy({
+            where: { id_pedido: id },
+        });
 
-    // PASO 1: VALIDAR DATOS (Función anterior)
-    validarDatosPedido(data);
+        if (pedidosEliminados === 0) {
+            throw new Error("Pedido no encontrado");
+        }
 
-    // PASO 2: VALIDAR PRODUCTOS Y CALCULAR TOTAL (Función anterior)
-    const { total, productosValidados } = await validarYCalcularTotal(detallesPedido);
+        return "Pedido eliminado correctamente";
+    }
 
-    // PASO 3: CREAR REGISTRO EN TABLA PEDIDO
-    const nuevoPedido = await Pedido.create({
-        nombre_cliente,    // Campo de PEDIDO
-        total,            // Campo de PEDIDO (calculado)
-        id_metodopago,    // FK hacia METODOPAGO
-    });
+    static _validarDatos(data) {
+        const { nombre_cliente, detallesPedido, id_metodopago } = data;
 
-    // PASO 4: CREAR REGISTROS EN TABLA DETALLEPEDIDO
-    const detalles = productosValidados.map((item) => ({
-        id_pedido: nuevoPedido.id_pedido,        // FK hacia PEDIDO (recién creado)
-        id_producto: item.id_producto,           // FK hacia PRODUCTO
-        cantidad: item.cantidad,                 // Campo de DETALLEPEDIDO
-        precio_unitario: item.producto.precio,  // Campo de DETALLEPEDIDO
-    }));
+        if (!nombre_cliente || !detallesPedido || !id_metodopago) {
+            throw new Error("Faltan datos requeridos: nombre_cliente, detallesPedido, id_metodopago");
+        }
 
-    await DetallePedido.bulkCreate(detalles);
+        if (!Array.isArray(detallesPedido) || detallesPedido.length === 0) {
+            throw new Error("El pedido debe tener al menos un producto");
+        }
+    }
 
-    // PASO 5: RETORNAR RESUMEN
-    return {
-        id_pedido: nuevoPedido.id_pedido,
-        nombre_cliente: nuevoPedido.nombre_cliente,
-        total: nuevoPedido.total,
-        fecha: nuevoPedido.fecha,
-    };
-};
+    static async _validarMetodoPago(id_metodopago) {
+        const metodoPago = await MetodoPago.findByPk(id_metodopago);
+        if (!metodoPago) {
+            throw new Error(`Método de pago con ID ${id_metodopago} no encontrado`);
+        }
 
-/**
- * Include estándar para consultas de pedidos
- */
-const getIncludeEstandar = () => [
-    {
-        model: MetodoPago,
-        attributes: ["nombre"],
-    },
-    {
-        model: DetallePedido,
-        include: [
+        if (!metodoPago.activo) {
+            throw new Error(`El método de pago ${metodoPago.nombre} no está activo`);
+        }
+
+        return metodoPago;
+    }
+
+    static async _validarProductos(detallesPedido) {
+        const productosValidados = [];
+
+        for (const detalle of detallesPedido) {
+            // Validar que el producto existe
+            const producto = await Producto.findByPk(detalle.id_producto);
+            if (!producto) {
+                throw new Error(`Producto con ID ${detalle.id_producto} no encontrado`);
+            }
+
+            // Validar que el producto está activo
+            if (!producto.activo) {
+                throw new Error(`El producto ${producto.nombre} no está activo`);
+            }
+
+            // Acumular datos validados SIN calcular precios aquí
+            productosValidados.push({
+                ...detalle,
+                producto
+            });
+        }
+
+        return productosValidados;
+    }
+
+    static _calcularTotal(productosValidados) {
+        let total = 0;
+
+        for (const item of productosValidados) {
+            const subtotal = item.producto.precio * item.cantidad;
+            total += subtotal;
+        }
+
+        return total;
+    }
+
+    static async _crearPedido(datoPedido) {
+        return await Pedido.create(datoPedido);
+    }
+
+    static async _crearDetallesPedido(id_pedido, productosValidados) {
+        const detalles = productosValidados.map((item) => ({
+            id_pedido,
+            id_producto: item.id_producto,
+            cantidad: item.cantidad,
+            precio_unitario: item.producto.precio,
+        }));
+
+        return await DetallePedido.bulkCreate(detalles);
+    }
+
+    static _getIncludeCompleto() {
+        return [
             {
-                model: Producto,
-                attributes: ["nombre", "precio"]
+                model: MetodoPago,
+                attributes: ["nombre"],
             },
-        ],
-    },
-];
+            {
+                model: DetallePedido,
+                include: [
+                    {
+                        model: Producto,
+                        attributes: ["nombre", "precio", "descripcion"],
+                    },
+                ],
+            },
+        ];
+    }
+}
 
-/**
- * Obtiene pedidos con includes estándar
- */
-const obtenerPedidos = async () => {
-    return await Pedido.findAll({
-        include: getIncludeEstandar(),
-        order: [["fecha", "DESC"]],
-    });
-};
-
-/**
- * Obtiene un pedido por ID con includes completos
- */
-const obtenerPedidoPorId = async (id) => {
-    return await Pedido.findByPk(id, {
-        include: getIncludeEstandar(),
-    });
-};
-
-module.exports = {
-    validarDatosPedido,
-    validarYCalcularTotal,
-    crearPedidoCompleto,
-    obtenerPedidos,
-    obtenerPedidoPorId,
-    getIncludeEstandar,
-};
+module.exports = PedidoService;

@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { traerPedidos, traerPedido, crearPedido, actualizarPedido, borrarPedido } = require("../controllers/pedido.controller.js");
+const { traerPedidos, traerPedido, crearPedido, borrarPedido } = require("../controllers/pedido.controller.js");
+const { verificarTokenMiddleware, verificarRol } = require("../middlewares/auth.middleware.js");
 
-router.get("/", traerPedidos);
-router.get("/:id", traerPedido);
+// Rutas publicas
 router.post("/", crearPedido);
-router.put("/:id", actualizarPedido);
-router.delete("/:id", borrarPedido);
+
+// Rutas privadas
+router.get("/", verificarTokenMiddleware, verificarRol(['analista', 'root']), traerPedidos);
+router.get("/:id", verificarTokenMiddleware, verificarRol(['analista', 'root']), traerPedido);
+router.delete("/:id", verificarTokenMiddleware, verificarRol(['root']), borrarPedido);
 
 module.exports = router;

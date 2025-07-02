@@ -1,27 +1,8 @@
-const Producto = require("../models/producto.model.js");
-const Categoria = require("../models/categoria.model.js");
-const Subcategoria = require("../models/subcategoria.model.js");
-const { Op } = require("sequelize");
+const ProductoService = require('../services/producto.service.js');
 
 const traerProductos = async (req, res) => {
     try {
-        const productos = await Producto.findAll({
-            include: [
-                {
-                    model: Subcategoria,
-                    as: "subcategorias",
-                    attributes: ["nombre"],
-                    through: { attributes: [] },
-                    include: [
-                        {
-                            model: Categoria,
-                            as: "categoria",
-                            attributes: ["nombre"],
-                        },
-                    ],
-                },
-            ],
-        });
+        const productos = await ProductoService.obtenerTodos();
         res.json(productos);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -30,22 +11,7 @@ const traerProductos = async (req, res) => {
 
 const traerProducto = async (req, res) => {
     try {
-        const producto = await Producto.findByPk(req.params.id, {
-            include: [
-                {
-                    model: Subcategoria,
-                    as: "subcategorias",
-                    attributes: ["nombre"],
-                    through: { attributes: [] },
-                    include: [
-                        {
-                            model: Categoria,
-                            attributes: ["nombre"],
-                        },
-                    ],
-                },
-            ],
-        });
+        const producto = await ProductoService.obtenerPorId(req.params.id);
 
         if (!producto) {
             return res.status(404).json({ message: "Producto no encontrado" });
@@ -57,186 +23,88 @@ const traerProducto = async (req, res) => {
     }
 };
 
-const traerProductosPorSubcategoria = async (req, res) => {
+const traerProductosPorCategoria = async (req, res) => {
     try {
-        const { subcategoriaId } = req.params;
-
-        const subcategoria = await Subcategoria.findByPk(subcategoriaId, {
-            include: [
-                {
-                    model: Producto,
-                    as: "productos",
-                    through: { attributes: [] },
-                    where: { activo: true },
-                },
-                {
-                    model: Categoria,
-                    attributes: ["nombre"],
-                },
-            ],
-        });
-
-        if (!subcategoria) {
-            return res
-                .status(404)
-                .json({ message: "Subcategoría no encontrada" });
-        }
-
-        res.json(subcategoria);
+        const resultado = await ProductoService.obtenerPorCategoria(req.params.categoriaId);
+        res.json(resultado);
     } catch (error) {
+        if (error.message === "Categoría no encontrada") {
+            return res.status(404).json({ message: error.message });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
-// ✅ MODIFICADA: Productos por categoría (a través de subcategorías)
-const traerProductosPorCategoria = async (req, res) => {
+const traerProductosPorSubcategoria = async (req, res) => {
     try {
-        const { categoriaId } = req.params;
-
-        // Obtener la categoría con sus subcategorías y productos
-        const categoria = await Categoria.findByPk(categoriaId, {
-            include: [
-                {
-                    model: Subcategoria,
-                    include: [
-                        {
-                            model: Producto,
-                            as: "productos",
-                            through: { attributes: [] },
-                            where: { activo: true },
-                        },
-                    ],
-                },
-            ],
-        });
-
-        if (!categoria) {
-            return res.status(404).json({ message: "Categoría no encontrada" });
-        }
-
-        // Aplanar los productos de todas las subcategorías
-        const productos = [];
-        categoria.Subcategorias.forEach((subcategoria) => {
-            productos.push(...subcategoria.productos);
-        });
-
-        res.json({
-            categoria: {
-                id_categoria: categoria.id_categoria,
-                nombre: categoria.nombre,
-            },
-            productos: productos,
-        });
+        const resultado = await ProductoService.obtenerPorSubcategoria(req.params.subcategoriaId);
+        res.json(resultado);
     } catch (error) {
+        if (error.message === "Subcategoría no encontrada") {
+            return res.status(404).json({ message: error.message });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
 const traerProductosActivos = async (req, res) => {
     try {
-        const productos = await Producto.findAll({
-            where: { activo: true },
-            include: [
-                {
-                    model: Subcategoria,
-                    as: 'subcategorias',
-                    attributes: ['nombre'],
-                    through: { attributes: [] },
-                    include: [
-                        {
-                            model: Categoria,
-                            attributes: ['nombre']
-                        }
-                    ]
-                }
-            ]
-        });
+        const productos = await ProductoService.obtenerActivos();
         res.json(productos);
     } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const buscarProductos = async (req, res) => {
+    try {
+        const productos = await ProductoService.buscarPorTermino(req.query.q);
+        res.json(productos);
+    } catch (error) {
+        if (error.message === "Parámetro de búsqueda requerido") {
+            return res.status(400).json({ message: error.message });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
 const crearProducto = async (req, res) => {
     try {
-        const newProducto = await Producto.create(req.body);
+        const nuevoProducto = await ProductoService.crear(req.body);
         res.status(201).json({
             message: "Producto creado correctamente",
-            producto: newProducto,
+            producto: nuevoProducto,
         });
     } catch (error) {
+        if (error.message.includes('requeridos') || 
+            error.message.includes('mayor a 0') ||
+            error.message.includes('texto válido')) {
+            return res.status(400).json({ message: error.message });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
 const actualizarProducto = async (req, res) => {
     try {
-        const [filasAfectadas] = await Producto.update(req.body, {
-            where: { id_producto: req.params.id },
-        });
-
-        if (filasAfectadas === 0) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-        }
-
-        res.json("Producto actualizado correctamente");
+        const mensaje = await ProductoService.actualizar(req.params.id, req.body);
+        res.json(mensaje);
     } catch (error) {
+        if (error.message === "Producto no encontrado") {
+            return res.status(404).json({ message: error.message });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
 const borrarProducto = async (req, res) => {
     try {
-        const filasAfectadas = await Producto.destroy({
-            where: { id_producto: req.params.id },
-        });
-
-        if (filasAfectadas === 0) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-        }
-
-        res.json("Producto eliminado correctamente");
+        const mensaje = await ProductoService.eliminar(req.params.id);
+        res.json(mensaje);
     } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Función específica para buscar productos (útil para el autoservicio)
-const buscarProductos = async (req, res) => {
-    try {
-        const { q } = req.query; // ?q=monopoly
-
-        if (!q || q.trim() === "") {
-            return res
-                .status(400)
-                .json({ message: "Parámetro de búsqueda requerido" });
+        if (error.message === "Producto no encontrado") {
+            return res.status(404).json({ message: error.message });
         }
-
-        const productos = await Producto.findAll({
-            where: {
-                nombre: {
-                    [Op.like]: `%${q}%`,
-                },
-                activo: true,
-            },
-            include: [
-                {
-                    model: Subcategoria,
-                    as: 'subcategorias',
-                    attributes: ['nombre'],
-                    through: { attributes: [] },
-                    include: [
-                        {
-                            model: Categoria,
-                            attributes: ['nombre']
-                        }
-                    ]
-                }
-            ]
-        });
-
-        res.json(productos);
-    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };

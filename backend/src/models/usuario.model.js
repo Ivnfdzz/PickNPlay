@@ -52,6 +52,7 @@ const Usuario = DB.define('Usuario', {
     id_rol: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 3,
         references: {
             model: 'rol', // Nombre de la tabla referenciada
             key: 'id_rol' // Clave primaria de la tabla referenciada
