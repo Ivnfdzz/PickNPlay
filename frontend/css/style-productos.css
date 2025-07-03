@@ -1,0 +1,145 @@
+/* Importar estilos base de categorías */
+@import url('style-categorias.css');
+
+/* === ESTILOS ESPECÍFICOS DE PRODUCTOS === */
+
+/* Sidebar subcategorías */
+.sidebar-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff7e6 !important; /* Cambio aquí */
+}
+
+.subcategoria-item {
+    border: none !important;
+    padding: 1rem 1.5rem;
+    transition: all 0.2s ease;
+    background-color: #fff7e6 !important; /* Cambio aquí */
+}
+
+.subcategoria-item:hover {
+    background-color: #f8f9fa !important;
+    border-left: 4px solid #3f1d10 !important;
+}
+
+.subcategoria-item.active {
+    background-color: #3f1d10 !important;
+    color: white !important;
+    border-left: 4px solid #733a12 !important;
+}
+
+.subcategoria-item.active i {
+    color: white !important;
+}
+
+/* Content area */
+.content-header {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff7e6 !important; /* Cambio aquí */
+}
+
+.content-scroll {
+    background-color: #fff7e6 !important; /* Ya estaba correcto */
+}
+
+/* Sidebar background */
+.col-md-3.col-lg-2 {
+    background-color: #fff7e6 !important; /* Cambio aquí */
+}
+
+/* Cards de productos estilo autoservicio */
+.producto-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.producto-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.producto-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.producto-card .card-body {
+    padding: 1.25rem;
+}
+
+.producto-precio {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #3f1d10;
+}
+
+.btn-agregar-carrito {
+    background-color: #3f1d10;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-agregar-carrito:hover {
+    background-color: #733a12;
+}
+
+/* Cantidad selector */
+.cantidad-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.cantidad-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cantidad-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #3f1d10;
+}
+
+.cantidad-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar-header {
+        position: relative;
+    }
+
+    .content-scroll {
+        height: auto !important;
+    }
+
+    .producto-card .card-img-top {
+        height: 150px;
+    }
+}
