@@ -1,25 +1,26 @@
 const Producto = require("../models/producto.model.js");
 const Categoria = require("../models/categoria.model.js");
 const Subcategoria = require("../models/subcategoria.model.js");
+const ProductoSubcategoria = require("../models/productoSubcategoria.model.js");
 const { Op } = require("sequelize");
 
 class ProductoService {
     static async obtenerTodos() {
         return await Producto.findAll({
-            include: this._getIncludeCompleto()
+            include: this._getIncludeCompleto(),
         });
     }
 
     static async obtenerPorId(id) {
         return await Producto.findByPk(id, {
-            include: this._getIncludeCompleto()
+            include: this._getIncludeCompleto(),
         });
     }
 
     static async obtenerActivos() {
         return await Producto.findAll({
             where: { activo: true },
-            include: this._getIncludeCompleto()
+            include: this._getIncludeCompleto(),
         });
     }
 
@@ -35,7 +36,7 @@ class ProductoService {
                 },
                 activo: true,
             },
-            include: this._getIncludeCompleto()
+            include: this._getIncludeCompleto(),
         });
     }
 
@@ -44,7 +45,7 @@ class ProductoService {
             include: [
                 {
                     model: Subcategoria,
-                    as: 'subcategorias',
+                    as: "subcategorias",
                     include: [
                         {
                             model: Producto,
@@ -101,18 +102,48 @@ class ProductoService {
     }
 
     static async crear(data) {
-        this._validarDatosProducto(data);
-        
-        return await Producto.create(data);
+        const { subcategorias, ...datosProducto } = data;
+
+        this._validarDatosProducto(datosProducto);
+
+        if (
+            !subcategorias ||
+            !Array.isArray(subcategorias) ||
+            subcategorias.length === 0
+        ) {
+            throw new Error(
+                "Debe proporcionar al menos una subcategoría para el producto"
+            );
+        }
+
+        await this._validarSubcategorias(subcategorias);
+
+        const nuevoProducto = await Producto.create(datosProducto);
+
+        await this._asignarSubcategorias(
+            nuevoProducto.id_producto,
+            subcategorias
+        );
+
+        return await this.obtenerPorId(nuevoProducto.id_producto);
     }
 
     static async actualizar(id, data) {
-        const [filasAfectadas] = await Producto.update(data, {
+        const { subcategorias, ...datosProducto } = data;
+
+        const [filasAfectadas] = await Producto.update(datosProducto, {
             where: { id_producto: id },
         });
 
         if (filasAfectadas === 0) {
             throw new Error("Producto no encontrado");
+        }
+
+        if (subcategorias !== undefined) {
+            if (subcategorias.length > 0) {
+                await this._validarSubcategorias(subcategorias);
+            }
+            await this._actualizarSubcategorias(id, subcategorias);
         }
 
         return "Producto actualizado correctamente";
@@ -132,7 +163,7 @@ class ProductoService {
 
     static async validarProductoActivo(id) {
         const producto = await Producto.findByPk(id);
-        
+
         if (!producto) {
             throw new Error(`Producto con ID ${id} no encontrado`);
         }
@@ -144,19 +175,18 @@ class ProductoService {
         return producto;
     }
 
-
     static _getIncludeCompleto() {
         return [
             {
                 model: Subcategoria,
                 as: "subcategorias",
-                attributes: ["nombre"],
+                attributes: ["id_subcategoria", "nombre"],
                 through: { attributes: [] },
                 include: [
                     {
                         model: Categoria,
                         as: "categoria",
-                        attributes: ["nombre"],
+                        attributes: ["id_categoria", "nombre"],
                     },
                 ],
             },
@@ -174,8 +204,51 @@ class ProductoService {
             throw new Error("El precio debe ser mayor a 0");
         }
 
-        if (typeof nombre !== 'string' || nombre.trim() === '') {
+        if (typeof nombre !== "string" || nombre.trim() === "") {
             throw new Error("El nombre debe ser un texto válido");
+        }
+    }
+
+    static async _validarSubcategorias(subcategorias) {
+        if (!Array.isArray(subcategorias)) {
+            throw new Error("Las subcategorías deben ser un array de IDs");
+        }
+
+        const subcategoriasExistentes = await Subcategoria.findAll({
+            where: { id_subcategoria: { [Op.in]: subcategorias } },
+        });
+
+        if (subcategoriasExistentes.length !== subcategorias.length) {
+            const idsEncontrados = subcategoriasExistentes.map(
+                (s) => s.id_subcategoria
+            );
+            const idsNoEncontrados = subcategorias.filter(
+                (id) => !idsEncontrados.includes(id)
+            );
+            throw new Error(
+                `Subcategorías no encontradas: ${idsNoEncontrados.join(", ")}`
+            );
+        }
+        return subcategoriasExistentes;
+    }
+
+    static async _asignarSubcategorias(id_producto, subcategorias) {
+        const asignaciones = subcategorias.map((id_subcategoria) => ({
+            id_producto,
+            id_subcategoria,
+        }));
+        await ProductoSubcategoria.bulkCreate(asignaciones);
+    }
+
+    static async _actualizarSubcategorias(id_producto, nuevasSubcategorias) {
+        // Eliminar asignaciones existentes
+        await ProductoSubcategoria.destroy({
+            where: { id_producto },
+        });
+
+        // Crear nuevas asignaciones si hay subcategorías
+        if (nuevasSubcategorias.length > 0) {
+            await this._asignarSubcategorias(id_producto, nuevasSubcategorias);
         }
     }
 }

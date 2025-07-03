@@ -1,4 +1,4 @@
-const ProductoService = require('../services/producto.service.js');
+const ProductoService = require("../services/producto.service.js");
 
 const traerProductos = async (req, res) => {
     try {
@@ -25,7 +25,9 @@ const traerProducto = async (req, res) => {
 
 const traerProductosPorCategoria = async (req, res) => {
     try {
-        const resultado = await ProductoService.obtenerPorCategoria(req.params.categoriaId);
+        const resultado = await ProductoService.obtenerPorCategoria(
+            req.params.categoriaId
+        );
         res.json(resultado);
     } catch (error) {
         if (error.message === "Categoría no encontrada") {
@@ -37,7 +39,9 @@ const traerProductosPorCategoria = async (req, res) => {
 
 const traerProductosPorSubcategoria = async (req, res) => {
     try {
-        const resultado = await ProductoService.obtenerPorSubcategoria(req.params.subcategoriaId);
+        const resultado = await ProductoService.obtenerPorSubcategoria(
+            req.params.subcategoriaId
+        );
         res.json(resultado);
     } catch (error) {
         if (error.message === "Subcategoría no encontrada") {
@@ -76,9 +80,13 @@ const crearProducto = async (req, res) => {
             producto: nuevoProducto,
         });
     } catch (error) {
-        if (error.message.includes('requeridos') || 
-            error.message.includes('mayor a 0') ||
-            error.message.includes('texto válido')) {
+        if (
+            error.message.includes("requeridos") ||
+            error.message.includes("mayor a 0") ||
+            error.message.includes("texto válido") ||
+            error.message.includes("subcategoría") ||
+            error.message.includes("no encontradas")
+        ) {
             return res.status(400).json({ message: error.message });
         }
         res.status(500).json({ message: error.message });
@@ -87,11 +95,21 @@ const crearProducto = async (req, res) => {
 
 const actualizarProducto = async (req, res) => {
     try {
-        const mensaje = await ProductoService.actualizar(req.params.id, req.body);
+        const mensaje = await ProductoService.actualizar(
+            req.params.id,
+            req.body
+        );
         res.json(mensaje);
     } catch (error) {
         if (error.message === "Producto no encontrado") {
             return res.status(404).json({ message: error.message });
+        }
+
+        if (
+            error.message.includes("subcategoría") ||
+            error.message.includes("no encontradas")
+        ) {
+            return res.status(400).json({ message: error.message });
         }
         res.status(500).json({ message: error.message });
     }
