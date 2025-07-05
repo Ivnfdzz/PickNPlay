@@ -41,40 +41,77 @@ class ProductoService {
     }
 
     static async obtenerPorCategoria(categoriaId) {
-        const categoria = await Categoria.findByPk(categoriaId, {
-            include: [
-                {
-                    model: Subcategoria,
-                    as: "subcategorias",
-                    include: [
-                        {
-                            model: Producto,
-                            as: "productos",
-                            through: { attributes: [] },
-                            where: { activo: true },
-                        },
-                    ],
-                },
-            ],
-        });
+        try {
+            // PASO 1: Obtener todos los productos que tienen subcategorías de esta categoría
+            const subcategorias = await Subcategoria.findAll({
+                where: { id_categoria: categoriaId },
+                include: [
+                    {
+                        model: Producto,
+                        as: "productos",
+                        where: { activo: true },
+                        attributes: ["id_producto", "nombre", "precio", "imagen", "descripcion", "activo"],
+                        through: { attributes: [] }
+                    },
+                    {
+                        model: Categoria,
+                        as: "categoria",
+                        attributes: ["id_categoria", "nombre"]
+                    }
+                ]
+            });
 
-        if (!categoria) {
-            throw new Error("Categoría no encontrada");
+            // PASO 2: Procesar y agrupar productos únicos
+            const productosMap = new Map();
+
+            subcategorias.forEach(subcategoria => {
+                subcategoria.productos.forEach(producto => {
+                    const productoId = producto.id_producto;
+
+                    if (!productosMap.has(productoId)) {
+                        // ✅ CREAR producto con array vacío de subcategorías
+                        productosMap.set(productoId, {
+                            id_producto: producto.id_producto,
+                            nombre: producto.nombre,
+                            precio: producto.precio,
+                            imagen: producto.imagen,
+                            descripcion: producto.descripcion,
+                            activo: producto.activo,
+                            subcategorias: []
+                        });
+                    }
+
+                    // ✅ AGREGAR subcategoría al producto
+                    productosMap.get(productoId).subcategorias.push({
+                        id_subcategoria: subcategoria.id_subcategoria,
+                        nombre: subcategoria.nombre,
+                        categoria: {
+                            id_categoria: subcategoria.categoria.id_categoria,
+                            nombre: subcategoria.categoria.nombre
+                        }
+                    });
+                });
+            });
+
+            // PASO 3: Convertir Map a Array
+            const productosUnicos = Array.from(productosMap.values());
+
+            // PASO 4: Obtener información de la categoría
+            const categoria = subcategorias.length > 0 ?
+                subcategorias[0].categoria :
+                await Categoria.findByPk(categoriaId);
+
+            console.log(`✅ ProductoService.obtenerPorCategoria: ${productosUnicos.length} productos únicos encontrados`);
+
+            return {
+                productos: productosUnicos,
+                categoria: categoria
+            };
+
+        } catch (error) {
+            console.error('❌ Error en ProductoService.obtenerPorCategoria:', error);
+            throw error;
         }
-
-        // Aplanar productos de todas las subcategorías
-        const productos = [];
-        categoria.subcategorias.forEach((subcategoria) => {
-            productos.push(...subcategoria.productos);
-        });
-
-        return {
-            categoria: {
-                id_categoria: categoria.id_categoria,
-                nombre: categoria.nombre,
-            },
-            productos: productos,
-        };
     }
 
     static async obtenerPorSubcategoria(subcategoriaId) {

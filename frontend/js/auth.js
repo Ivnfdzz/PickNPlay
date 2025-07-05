@@ -1,14 +1,14 @@
 class AuthController {
     constructor() {
         this.elements = {
-            // Elementos de login (solo en login.html)
+            // Elementos de login
             loginForm: document.getElementById("login-form"),
-            loginEmail: document.getElementById("email"), // Según tu login.html
-            loginPassword: document.getElementById("password"), // Según tu login.html
+            loginEmail: document.getElementById("email"), 
+            loginPassword: document.getElementById("password"),
             loginError: document.getElementById("login-error"),
             loginButton: document.querySelector('button[type="submit"]'),
             
-            // Elementos comunes (navbar, etc.)
+            // Elementos comunes
             backButton: document.getElementById("backButton"),
             logoutButton: document.getElementById("logout-button"),
             userInfo: document.getElementById("user-info"),
@@ -20,15 +20,15 @@ class AuthController {
         this.init();
     }
 
-    // ========== INICIALIZACIÓN ==========
-    
+    // INICIALIZACIÓN
+
     init() {
         this.setupEventListeners();
         this.checkAuthStatus();
     }
 
     setupEventListeners() {
-        // Formulario de login (solo si existe)
+        // Formulario de login 
         if (this.elements.loginForm) {
             this.elements.loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -36,21 +36,21 @@ class AuthController {
             });
         }
 
-        // Botón de logout (si existe)
+        // Botón de logout
         if (this.elements.logoutButton) {
             this.elements.logoutButton.addEventListener('click', () => {
                 this.handleLogout();
             });
         }
 
-        // Botón de volver (si existe)
+        // Botón de volver
         if (this.elements.backButton) {
             this.elements.backButton.addEventListener('click', () => {
                 window.history.back();
             });
         }
 
-        // Limpiar errores en inputs (solo si existen)
+        // Limpiar errores en inputs
         if (this.elements.loginEmail) {
             this.elements.loginEmail.addEventListener('input', () => {
                 this.clearError();
@@ -64,7 +64,7 @@ class AuthController {
         }
     }
 
-    // ========== AUTENTICACIÓN PRINCIPAL ==========
+    // AUTENTICACIÓN PRINCIPAL
 
     async handleLogin() {
         try {
@@ -146,7 +146,7 @@ class AuthController {
                 
             } catch (error) {
                 console.error('Token inválido:', error);
-                this.clearSession(); // Limpiar sesión inválida
+                this.clearSession();
                 
                 // Si está en página admin, redirigir a login
                 if (window.location.pathname.includes('/admin/')) {
@@ -163,7 +163,7 @@ class AuthController {
         }
     }
 
-    // ========== GESTIÓN DE SESIÓN ==========
+    // GESTIÓN DE SESIÓN
 
     saveSession(token, user) {
         localStorage.setItem("token", token);
@@ -175,7 +175,7 @@ class AuthController {
         localStorage.removeItem("user");
     }
 
-    // ========== VERIFICACIONES DE PERMISOS ==========
+    // VERIFICACIONES DE PERMISOS
 
     verifyAdminAccess() {
         const userRole = this.currentUser?.rol;
@@ -198,7 +198,7 @@ class AuthController {
         }
     }
 
-    // ========== VALIDACIONES ==========
+    // VALIDACIONES
 
     validateLoginInputs(email, password) {
         if (!email || !password) {
@@ -219,7 +219,7 @@ class AuthController {
         return true;
     }
 
-    // ========== MANEJO DE UI BÁSICO ==========
+    // MANEJO DE UI BÁSICO 
 
     updateUIForAuthenticatedUser(user) {
         // Mostrar info del usuario (si los elementos existen)
@@ -239,7 +239,7 @@ class AuthController {
             this.elements.logoutButton.classList.remove('d-none');
         }
 
-        console.log(`✅ Usuario autenticado: ${user.username} (${user.rol})`);
+        console.log(`Usuario autenticado: ${user.username} (${user.rol})`);
     }
 
     updateUIForUnauthenticatedUser() {
@@ -256,7 +256,7 @@ class AuthController {
             this.elements.logoutButton.classList.add('d-none');
         }
 
-        console.log('❌ Usuario no autenticado');
+        console.log('Usuario no autenticado');
     }
 
     showAdminElements(userRole) {
@@ -292,7 +292,7 @@ class AuthController {
         }
     }
 
-    // ========== MANEJO DE MENSAJES ==========
+    // MANEJO DE MENSAJES
 
     showError(message) {
         if (this.elements.loginError) {
@@ -354,13 +354,12 @@ class AuthController {
 
     createToastContainer() {
         const container = document.createElement('div');
-        container.className = 'toast-container position-fixed top-0 end-0 p-3';
+        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
         document.body.appendChild(container);
         return container;
     }
 
-    // ========== MÉTODOS DE UTILIDAD PÚBLICOS ==========
-
+    // MÉTODOS DE UTILIDAD PÚBLICOS
     isAuthenticated() {
         return !!this.currentUser && !!localStorage.getItem("token");
     }
@@ -393,7 +392,7 @@ class AuthController {
     }
 }
 
-// ========== INICIALIZACIÓN GLOBAL ==========
+// INICIALIZACIÓN GLOBAL
 
 let authController;
 

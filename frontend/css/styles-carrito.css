@@ -1,0 +1,215 @@
+@import url('styles-categorias.css');
+
+/* Header del carrito */
+.carrito-header {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+/* Color brown para títulos y elementos importantes */
+.text-brown {
+    color: #3f1d10 !important;
+}
+
+/* Cards básicas - reutiliza Bootstrap con pequeños ajustes */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* === PRODUCTOS EN EL CARRITO === */
+
+/* Card de cada producto en el carrito */
+.producto-carrito-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    transition: transform 0.2s ease;
+}
+
+.producto-carrito-item:hover {
+    transform: translateY(-2px);
+}
+
+/* Imagen del producto en carrito */
+.producto-carrito-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+/* === CONTROLES DE CANTIDAD === */
+
+/* Contenedor de los controles + y - */
+.cantidad-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Botones + y - */
+.cantidad-btn-carrito {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cantidad-btn-carrito:hover {
+    background-color: #3f1d10;
+    border-color: #3f1d10;
+    color: white;
+}
+
+/* Número de cantidad */
+.cantidad-display {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* === RESUMEN Y TOTALES === */
+
+/* Total destacado */
+#total-carrito {
+    color: #3f1d10 !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+}
+
+/* Precio de cada producto */
+.producto-precio-carrito {
+    color: #3f1d10;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* === BOTONES ESPECÍFICOS === */
+
+/* Botón eliminar producto individual */
+.btn-eliminar-producto {
+    color: #dc3545;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.btn-eliminar-producto:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* === ESTADOS ESPECIALES === */
+
+/* Loading spinner del carrito */
+#loading-carrito .spinner-border {
+    color: #3f1d10 !important;
+}
+
+/* Iconos del carrito vacío */
+#carrito-vacio i {
+    color: #6c757d;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Confirmación de pedido exitoso */
+#pedido-confirmado {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+#pedido-confirmado .card {
+    border-color: #198754 !important;
+    border-width: 2px !important;
+}
+
+/* === RESPONSIVE BÁSICO === */
+
+@media (max-width: 768px) {
+    /* Header más compacto en móvil */
+    .carrito-header {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .carrito-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    /* Imagen más pequeña en móvil */
+    .producto-carrito-img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    /* Botones más pequeños en móvil */
+    .cantidad-btn-carrito {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+    
+    /* Total más visible en móvil */
+    #total-carrito {
+        font-size: 1.75rem !important;
+    }
+}
+
+/* === ANIMACIONES SIMPLES === */
+
+/* Entrada suave */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Salida suave para productos eliminados */
+.slide-out {
+    animation: slideOut 0.3s ease-out forwards;
+}
+
+@keyframes slideOut {
+    from { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+    to { 
+        opacity: 0; 
+        transform: translateX(-100%); 
+    }
+}

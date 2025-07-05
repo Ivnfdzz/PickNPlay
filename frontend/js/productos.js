@@ -1,11 +1,11 @@
-// ========== VARIABLES GLOBALES ==========
+// VARIABLES GLOBALES
 let categoriaActual = null;
 let subcategoriaActual = null;
 let productosData = [];
 let subcategoriasData = [];
 let carritoItems = [];
 
-// ========== ELEMENTOS DEL DOM ==========
+// ELEMENTOS DEL DOM
 const elementos = {
     // Sidebar
     categoriaTitulo: document.getElementById("categoria-titulo"),
@@ -25,9 +25,9 @@ const elementos = {
     backButton: document.getElementById("backButton"),
 };
 
-// ========== INICIALIZACIÓN ==========
+// INICIALIZACIÓN
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🎮 Inicializando página de productos...");
+    console.log("Inicializando página de productos...");
 
     // Verificar datos del localStorage
     if (!verificarDatosIniciales()) {
@@ -44,14 +44,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarDatosIniciales();
 });
 
-// ========== VERIFICACIÓN Y CONFIGURACIÓN INICIAL ==========
+// VERIFICACIÓN Y CONFIGURACIÓN INICIAL
 function verificarDatosIniciales() {
     const nombreCliente = localStorage.getItem("nombreCliente");
     const categoriaId = localStorage.getItem("categoriaSeleccionada");
     const categoriaNombre = localStorage.getItem("nombreCategoria");
 
     if (!nombreCliente) {
-        console.error("❌ No hay nombre de cliente");
+        console.error("No hay nombre de cliente");
         mostrarToast("Debes ingresar tu nombre primero", "error");
         setTimeout(() => {
             window.location.href = "/frontend/html/index.html";
@@ -60,7 +60,7 @@ function verificarDatosIniciales() {
     }
 
     if (!categoriaId || !categoriaNombre) {
-        console.error("❌ No hay categoría seleccionada");
+        console.error("No hay categoría seleccionada");
         mostrarToast("Debes seleccionar una categoría primero", "error");
         setTimeout(() => {
             window.location.href = "/frontend/html/categorias.html";
@@ -74,10 +74,35 @@ function verificarDatosIniciales() {
         nombre: categoriaNombre,
     };
 
+    cargarCarritoDesdeLocalStorage();
+
     console.log(
-        `✅ Datos válidos - Cliente: ${nombreCliente}, Categoría: ${categoriaNombre}`
+        `Datos válidos - Cliente: ${nombreCliente}, Categoría: ${categoriaNombre}`
     );
     return true;
+}
+
+function cargarCarritoDesdeLocalStorage() {
+    const carritoGuardado = localStorage.getItem('carrito');
+    
+    if (carritoGuardado) {
+        try {
+            carritoItems = JSON.parse(carritoGuardado);
+            console.log(`Carrito restaurado: ${carritoItems.length} items`);
+
+            // Mostrar detalle de lo que se cargó
+            carritoItems.forEach(item => {
+                console.log(`  - ${item.nombre} (${item.cantidad})`);
+            });
+        } catch (error) {
+            console.error('Error parseando carrito:', error);
+            carritoItems = [];
+            localStorage.removeItem('carrito');
+        }
+    } else {
+        carritoItems = [];
+        console.log('Carrito vacío - empezando nuevo');
+    }
 }
 
 function configurarUIInicial() {
@@ -120,29 +145,19 @@ function configurarEventos() {
     }
 }
 
-// ========== CARGA DE DATOS DESDE API ==========
+// CARGA DE DATOS DESDE API
 async function cargarDatosIniciales() {
     try {
         mostrarLoading(true);
 
-        // Cargar subcategorías de la categoría seleccionada
-        console.log(
-            `🔄 Cargando subcategorías para categoría ${categoriaActual.id}`
-        );
         await cargarSubcategorias();
-
-        // Cargar todos los productos de la categoría
-        console.log(
-            `🔄 Cargando productos para categoría ${categoriaActual.id}`
-        );
         await cargarProductos();
 
-        // Mostrar productos inicialmente (todos)
         mostrarProductos(productosData);
 
-        console.log("✅ Datos cargados correctamente");
+        console.log(" Datos cargados correctamente");
     } catch (error) {
-        console.error("❌ Error cargando datos:", error);
+        console.error("Error cargando datos:", error);
         mostrarToast("Error cargando productos. Intenta nuevamente.", "error");
         mostrarErrorCarga();
     } finally {
@@ -155,39 +170,44 @@ async function cargarSubcategorias() {
         subcategoriasData = await apiInstance.getSubcategoriasPorCategoria(
             categoriaActual.id
         );
-        console.log(`✅ ${subcategoriasData.length} subcategorías cargadas`);
+        console.log(`${subcategoriasData.length} subcategorías cargadas`);
 
         // Renderizar subcategorías en el sidebar
         renderizarSubcategorias();
     } catch (error) {
-        console.error("❌ Error cargando subcategorías:", error);
+        console.error("Error cargando subcategorías:", error);
         throw error;
     }
 }
 
 async function cargarProductos() {
     try {
-        const response = await apiInstance.getProductosPorCategoria(
-            categoriaActual.id
-        );
+        const response = await apiInstance.getProductosPorCategoria(categoriaActual.id);
+        
+        // ✅ DEPURAR: Ver qué devuelve la API
+        console.log(" Respuesta completa de la API:", response);
+        console.log(" Productos en respuesta:", response.productos);
+        
         productosData = response.productos || [];
 
-        console.log(`✅ ${productosData.length} productos cargados`);
-
-        if (productosData.length === 0) {
-            mostrarMensajeSinProductos();
+        // ✅ DEPURAR: Ver estructura de cada producto
+        if (productosData.length > 0) {
+            console.log(" Primer producto:", productosData[0]);
+            console.log(" Subcategorías del primer producto:", productosData[0].subcategorias);
         }
+
+        console.log(` ${productosData.length} productos cargados`);
     } catch (error) {
-        console.error("❌ Error cargando productos:", error);
+        console.error(" Error cargando productos:", error);
         throw error;
     }
 }
 
-// ========== RENDERIZADO DE SUBCATEGORÍAS ==========
+// RENDERIZADO DE SUBCATEGORÍAS
 function renderizarSubcategorias() {
     if (!elementos.subcategoriasList) return;
 
-    // Limpiar subcategorías existentes (mantener botón "Todos")
+    // Limpiar subcategorías existentes
     const todosButton = elementos.subcategoriasList.querySelector(
         '[data-subcategoria-id=""]'
     );
@@ -237,52 +257,66 @@ function configurarEventosSubcategorias() {
 }
 
 function seleccionarSubcategoria(subcategoriaId, botonClickeado) {
+    console.log(`Seleccionando subcategoría: ${subcategoriaId}`);
+    
     // Remover clase active de todos los botones
-    const todosBotones =
-        elementos.subcategoriasList.querySelectorAll(".subcategoria-item");
+    const todosBotones = elementos.subcategoriasList.querySelectorAll(".subcategoria-item");
     todosBotones.forEach((btn) => btn.classList.remove("active"));
 
     // Agregar clase active al botón clickeado
     botonClickeado.classList.add("active");
 
     // Filtrar productos
-    if (subcategoriaId === "") {
-        // Mostrar todos los productos
+    if (subcategoriaId === "" || subcategoriaId === null || subcategoriaId === undefined) {
+        // MOSTRAR TODOS - Verificar que productosData tenga datos
+        console.log(`Mostrando TODOS los productos (${productosData.length})`);
         subcategoriaActual = null;
         elementos.tituloSeccion.textContent = categoriaActual.nombre;
         elementos.subtituloSeccion.textContent = "Todos los productos";
         mostrarProductos(productosData);
-        console.log("🔄 Mostrando todos los productos");
     } else {
-        // Filtrar por subcategoría
         const subcategoria = subcategoriasData.find(
             (s) => s.id_subcategoria == subcategoriaId
         );
+        
         if (subcategoria) {
+            console.log(`Filtrando por: ${subcategoria.nombre}`);
             subcategoriaActual = subcategoria;
             elementos.tituloSeccion.textContent = subcategoria.nombre;
             elementos.subtituloSeccion.textContent = `${categoriaActual.nombre} > ${subcategoria.nombre}`;
 
-            const productosFiltrados =
-                filtrarProductosPorSubcategoria(subcategoriaId);
+            const productosFiltrados = filtrarProductosPorSubcategoria(subcategoriaId);
             mostrarProductos(productosFiltrados);
-            console.log(`🔄 Mostrando productos de: ${subcategoria.nombre}`);
+        } else {
+            console.error(`Subcategoría no encontrada: ${subcategoriaId}`);
         }
     }
 }
 
 function filtrarProductosPorSubcategoria(subcategoriaId) {
-    return productosData.filter((producto) => {
+    console.log(`Filtrando por subcategoría ID: ${subcategoriaId}`);
+    console.log(`Total productos disponibles: ${productosData.length}`);
+    
+    const productosFiltrados = productosData.filter((producto) => {
+        // DEPURAR: Ver estructura de subcategorías
+        console.log(`Producto ${producto.nombre}:`, producto.subcategorias);
+        
         return (
             producto.subcategorias &&
+            Array.isArray(producto.subcategorias) &&
             producto.subcategorias.some(
-                (sub) => sub.id_subcategoria == subcategoriaId
+                (sub) => {
+                    console.log(`  Comparando: ${sub.id_subcategoria} === ${subcategoriaId}`);
+                    return sub.id_subcategoria == subcategoriaId;
+                }
             )
         );
     });
+    console.log(`Productos filtrados: ${productosFiltrados.length}`);
+    return productosFiltrados;
 }
 
-// ========== RENDERIZADO DE PRODUCTOS ==========
+
 function mostrarProductos(productos) {
     if (!elementos.productosContainer) return;
 
@@ -294,12 +328,13 @@ function mostrarProductos(productos) {
         return;
     }
 
-    productos.forEach((producto) => {
+    productos.forEach((producto, index) => {
+        console.log(`Renderizando producto ${index + 1}: ${producto.nombre}`);
         const card = crearTarjetaProducto(producto);
         elementos.productosContainer.appendChild(card);
     });
 
-    console.log(`✅ ${productos.length} productos mostrados`);
+    console.log(`${productos.length} productos mostrados`);
 }
 
 function crearTarjetaProducto(producto) {
@@ -366,15 +401,31 @@ function crearTarjetaProducto(producto) {
     return col;
 }
 
-// ========== FUNCIONES GLOBALES PARA ONCLICK ==========
+// FUNCIONES GLOBALES PARA ONCLICK
 window.cambiarCantidad = function (productoId, cambio) {
     const input = document.getElementById(`cantidad-${productoId}`);
     if (!input) return;
 
-    let cantidad = parseInt(input.value) + cambio;
-    cantidad = Math.max(1, Math.min(10, cantidad)); // Entre 1 y 10
+    let nuevaCantidad = parseInt(input.value) + cambio;
+    
+    // Límites básicos del input
+    nuevaCantidad = Math.max(1, nuevaCantidad);
+    
+    // VERIFICAR LÍMITE DINÁMICO BASADO EN CARRITO
+    const cantidadEnCarrito = obtenerCantidadEnCarrito(productoId);
+    const maxPermitido = Math.min(10, 10 - cantidadEnCarrito + parseInt(input.value));
+    
+    nuevaCantidad = Math.min(nuevaCantidad, maxPermitido);
+    
+    // FEEDBACK SI LLEGÓ AL LÍMITE
+    if (cambio > 0 && nuevaCantidad === maxPermitido && maxPermitido < 10) {
+        const disponible = 10 - cantidadEnCarrito;
+        if (disponible > 0) {
+            mostrarToast(`Máximo ${disponible} unidades disponibles de este producto`, 'info');
+        }
+    }
 
-    input.value = cantidad;
+    input.value = nuevaCantidad;
 
     // Feedback táctil visual
     const card = document.querySelector(`[data-producto-id="${productoId}"]`);
@@ -390,33 +441,54 @@ window.agregarAlCarrito = function (productoId) {
     const producto = productosData.find((p) => p.id_producto == productoId);
     if (!producto) {
         console.error("❌ Producto no encontrado:", productoId);
+        mostrarToast('Producto no encontrado', 'error');
         return;
     }
 
     const cantidadInput = document.getElementById(`cantidad-${productoId}`);
-    const cantidad = parseInt(cantidadInput.value) || 1;
+    const cantidadAAgregar = parseInt(cantidadInput.value) || 1;
 
-    // Verificar si el producto ya está en el carrito
-    const itemExistente = carritoItems.find(
-        (item) => item.id_producto == productoId
-    );
+    // VERIFICAR LÍMITES ANTES DE AGREGAR
+    const verificacion = verificarLimiteProducto(productoId, cantidadAAgregar);
+    
+    if (!verificacion.puedeAgregar) {
+        // NO SE PUEDE AGREGAR - Mostrar toast explicativo
+        mostrarToast(verificacion.mensaje, 'warning');
+        
+        // Feedback visual en la card (opcional - color warning)
+        const card = document.querySelector(`[data-producto-id="${productoId}"]`);
+        if (card) {
+            card.classList.add("border-warning");
+            setTimeout(() => {
+                card.classList.remove("border-warning");
+            }, 2000);
+        }
+        
+        console.log(`Límite alcanzado: ${producto.nombre} - ${verificacion.mensaje}`);
+        return; // SALIR SIN AGREGAR
+    }
+
+    // TODO OK - Proceder a agregar
+    const itemExistente = carritoItems.find(item => item.id_producto == productoId);
 
     if (itemExistente) {
-        // Actualizar cantidad
-        itemExistente.cantidad += cantidad;
+        // Actualizar cantidad del item existente
+        itemExistente.cantidad += cantidadAAgregar;
     } else {
-        // Agregar nuevo item
+        // Agregar nuevo item al carrito
         carritoItems.push({
             id_producto: producto.id_producto,
             nombre: producto.nombre,
             precio: producto.precio,
             imagen: producto.imagen,
-            cantidad: cantidad,
+            descripcion: producto.descripcion,
+            cantidad: cantidadAAgregar,
         });
     }
 
-    // Feedback visual y sonoro
-    mostrarFeedbackAgregarCarrito(productoId, producto.nombre, cantidad);
+    // Feedback positivo
+    const cantidadFinal = obtenerCantidadEnCarrito(productoId);
+    mostrarFeedbackAgregarCarrito(productoId, producto.nombre, cantidadFinal);
 
     // Actualizar contador
     actualizarContadorCarrito();
@@ -424,10 +496,13 @@ window.agregarAlCarrito = function (productoId) {
     // Reset cantidad a 1
     cantidadInput.value = 1;
 
-    console.log(`✅ ${producto.nombre} (${cantidad}) agregado al carrito`);
+    // Guardar en localStorage
+    localStorage.setItem("carrito", JSON.stringify(carritoItems));
+
+    console.log(`${producto.nombre} agregado. Total en carrito: ${cantidadFinal}/10`);
 };
 
-function mostrarFeedbackAgregarCarrito(productoId, nombre, cantidad) {
+function mostrarFeedbackAgregarCarrito(productoId, nombre, cantidadTotal) {
     // Feedback visual en la card
     const card = document.querySelector(`[data-producto-id="${productoId}"]`);
     if (card) {
@@ -437,8 +512,17 @@ function mostrarFeedbackAgregarCarrito(productoId, nombre, cantidad) {
         }, 1000);
     }
 
-    // Toast de confirmación
-    mostrarToast(`${nombre} (${cantidad}) agregado al carrito`, "success");
+    // TOAST MEJORADO - Incluye información de límite
+    const restante = 10 - cantidadTotal;
+    let mensaje = `${nombre} agregado al carrito (${cantidadTotal}/10)`;
+    
+    if (restante === 0) {
+        mensaje += ' - ¡Límite alcanzado!';
+    } else if (restante <= 2) {
+        mensaje += ` - Quedan ${restante} disponibles`;
+    }
+    
+    mostrarToast(mensaje, "success");
 
     // Animación del botón carrito
     if (elementos.btnCarrito) {
@@ -467,7 +551,7 @@ function actualizarContadorCarrito() {
     }
 }
 
-// ========== ESTADOS DE UI ==========
+// ESTADOS DE UI
 function mostrarLoading(mostrar) {
     if (!elementos.loadingContainer) return;
 
@@ -506,14 +590,51 @@ function mostrarErrorCarga() {
     }
 }
 
-// ========== SISTEMA DE TOASTS ==========
+// FUNCIONES AUXILIARES PARA LÍMITES
+function obtenerCantidadEnCarrito(productoId) {
+    const itemExistente = carritoItems.find(item => item.id_producto == productoId);
+    return itemExistente ? itemExistente.cantidad : 0;
+}
+
+
+function verificarLimiteProducto(productoId, cantidadAAgregar) {
+    const cantidadActual = obtenerCantidadEnCarrito(productoId);
+    const cantidadDisponible = 10 - cantidadActual;
+    
+    // Si ya tiene 10, no puede agregar nada
+    if (cantidadActual >= 10) {
+        return {
+            puedeAgregar: false,
+            cantidadDisponible: 0,
+            mensaje: 'Ya llegaste al límite de compra de este producto (10 unidades)'
+        };
+    }
+    
+    // Si la cantidad a agregar excede el disponible
+    if (cantidadAAgregar > cantidadDisponible) {
+        return {
+            puedeAgregar: false,
+            cantidadDisponible: cantidadDisponible,
+            mensaje: `Solo puedes agregar ${cantidadDisponible} más de este producto (límite: 10 unidades)`
+        };
+    }
+    
+    // Todo OK
+    return {
+        puedeAgregar: true,
+        cantidadDisponible: cantidadDisponible,
+        mensaje: ''
+    };
+}
+
+// SISTEMA DE TOASTS
 function mostrarToast(mensaje, tipo = "info") {
     // Crear contenedor si no existe
     let toastContainer = document.querySelector(".toast-container");
     if (!toastContainer) {
         toastContainer = document.createElement("div");
         toastContainer.className =
-            "toast-container position-fixed top-0 end-0 p-3";
+            "toast-container position-fixed bottom-0 end-0 p-3";
         document.body.appendChild(toastContainer);
     }
 
@@ -565,7 +686,7 @@ function getIconoTipo(tipo) {
     return iconos[tipo] || iconos.info;
 }
 
-// ========== UTILIDADES ==========
+// UTILIDADES
 function limpiarCarrito() {
     carritoItems = [];
     actualizarContadorCarrito();
@@ -575,4 +696,4 @@ function limpiarCarrito() {
 // Exponer funciones globales necesarias
 window.limpiarCarrito = limpiarCarrito;
 
-console.log("🎮 productos.js cargado correctamente");
+console.log("productos.js cargado correctamente");

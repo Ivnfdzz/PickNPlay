@@ -1,6 +1,6 @@
 class ApiClient {
     constructor() {
-        // URL base de tu backend (desde index.js)
+        // URL base del backend
         this.baseURL = "http://localhost:3000/api";
 
         // Headers por defecto
@@ -9,11 +9,7 @@ class ApiClient {
         };
     }
 
-    // ========== MÉTODOS BASE ==========
-
-    /**
-     * Método base para hacer peticiones HTTP
-     */
+    // Método base para hacer peticiones HTTP
     async _request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
 
@@ -50,9 +46,7 @@ class ApiClient {
         }
     }
 
-    // ========== MÉTODOS DE AUTENTICACIÓN ==========
-    // Conecta con /api/auth/login (tu AuthController)
-
+    // MÉTODOS DE AUTENTICACIÓN
     async login(email, password) {
         return await this._request("/auth/login", {
             method: "POST",
@@ -64,10 +58,7 @@ class ApiClient {
         return await this._request("/auth/profile");
     }
 
-    // ========== MÉTODOS DE USUARIOS ==========
-    // Conecta con /api/usuarios (tu UsuarioController)
-    // Solo para administradores con rol root
-
+    // MÉTODOS DE USUARIOS
     async getUsuarios() {
         return await this._request("/usuarios");
     }
@@ -100,8 +91,7 @@ class ApiClient {
         return await this._request("/usuarios/estadisticas");
     }
 
-    // ========== MÉTODOS DE ROLES ==========
-    // Para los forms de creación/edición de usuarios
+    // MÉTODOS DE ROLES
 
     async getRoles() {
         return await this._request("/roles");
@@ -111,8 +101,7 @@ class ApiClient {
         return await this._request(`/roles/${id}`);
     }
 
-    // ========== MÉTODOS DE CATEGORÍAS ==========
-    // Conecta con /api/categorias (tu CategoriaController)
+    // MÉTODOS DE CATEGORÍAS
 
     async getCategorias() {
         return await this._request("/categorias");
@@ -122,8 +111,7 @@ class ApiClient {
         return await this._request(`/categorias/${id}`);
     }
 
-    // ========== MÉTODOS DE SUBCATEGORÍAS ==========
-    // Conecta con /api/subcategorias (tu SubcategoriaController)
+    // MÉTODOS DE SUBCATEGORÍAS
 
     async getSubcategorias() {
         return await this._request("/subcategorias");
@@ -133,13 +121,11 @@ class ApiClient {
         return await this._request(`/subcategorias/${id}`);
     }
 
-    // ✅ MÉTODO FALTANTE
     async getSubcategoriasPorCategoria(categoriaId) {
         return await this._request(`/subcategorias/categoria/${categoriaId}`);
     }
 
-    // ========== MÉTODOS DE PRODUCTOS ==========
-    // Conecta con /api/productos (tu ProductoController)
+    // MÉTODOS DE PRODUCTOS
 
     async getProductos() {
         return await this._request("/productos");
@@ -167,8 +153,7 @@ class ApiClient {
         return await this._request(`/productos/${id}`);
     }
 
-    // ========== MÉTODOS DE PEDIDOS ==========
-    // Conecta con /api/pedidos (tu PedidoController)
+    // MÉTODOS DE PEDIDOS
 
     async crearPedido(pedidoData) {
         return await this._request("/pedidos", {
@@ -185,19 +170,17 @@ class ApiClient {
         return await this._request(`/pedidos/${id}`);
     }
 
-    // ========== MÉTODOS DE PAGOS ==========
-    // Conecta con /api/metodos-pago (tu MetodoPagoController)
+    // MÉTODOS DE PAGOS
 
     async getMetodosPago() {
-        return await this._request("/metodos-pago");
+        return await this._request("/metodosPago");
     }
 
     async getMetodosPagoActivos() {
-        return await this._request("/metodos-pago/activos");
+        return await this._request("/metodosPago/activos");
     }
 
-    // ========== MÉTODOS ADMINISTRATIVOS ==========
-    // Para el futuro panel de admin
+    // MÉTODOS ADMINISTRATIVOS
 
     async crearProducto(productoData) {
         return await this._request("/productos", {
@@ -219,8 +202,7 @@ class ApiClient {
         });
     }
 
-    // ========== MÉTODOS DE AUDITORÍA ==========
-    // Conecta con /api/logs (tu AuditoriaController)
+    // MÉTODOS DE AUDITORÍA
 
     async getLogs(filtros = {}) {
         const params = new URLSearchParams();
@@ -242,14 +224,11 @@ class ApiClient {
     }
 }
 
-// ========== EXPORTACIÓN CORREGIDA ==========
-// Usar un nombre diferente para evitar conflictos
+// EXPORTACIÓN CORREGIDA 
 const apiInstance = new ApiClient();
 
 // Hacer disponible globalmente
 window.ApiClient = apiInstance;
 
 // Verificar que se exportó correctamente
-console.log('🌐 ApiClient cargado correctamente');
-console.log('🔧 Tipo de ApiClient:', typeof window.ApiClient);
-console.log('🔧 Métodos disponibles:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.ApiClient)));
+console.log('ApiClient cargado correctamente');

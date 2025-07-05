@@ -1,0 +1,206 @@
+/* ✅ IMPORTAR ESTILOS BASE */
+@import url('styles-categorias.css');
+
+/* === ESTILOS TICKET - SÚPER SIMPLE === */
+
+/* Agregar clase que falta para botones outline */
+.btn-outline-brown {
+    border: 1px solid #3f1d10;
+    color: #3f1d10;
+    background-color: transparent;
+}
+
+.btn-outline-brown:hover {
+    background-color: #3f1d10;
+    border-color: #3f1d10;
+    color: #fff7e6;
+}
+
+/* Header del ticket con ícono de éxito */
+.ticket-header .success-icon {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Card del ticket */
+.ticket-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Info sections del ticket */
+.ticket-info, 
+.cliente-info, 
+.productos-ticket, 
+.totales-ticket {
+    line-height: 1.6;
+}
+
+/* Lista de productos */
+#lista-productos {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    padding: 1rem;
+}
+
+.producto-ticket-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.producto-ticket-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.producto-ticket-info h6 {
+    margin-bottom: 0.25rem;
+    color: #3f1d10;
+}
+
+.producto-ticket-cantidad {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.producto-ticket-precio {
+    color: #3f1d10;
+    font-weight: bold;
+}
+
+/* Totales destacados */
+#total-productos {
+    color: #3f1d10;
+    font-weight: 600;
+}
+
+#total-pagado {
+    color: #3f1d10 !important;
+    font-size: 1.75rem !important;
+    font-weight: bold !important;
+}
+
+/* Botones de acción */
+.acciones-ticket .btn {
+    min-width: 160px;
+}
+
+/* Estados - Loading, Error */
+#loading-ticket .spinner-border {
+    color: #3f1d10;
+}
+
+#error-ticket i {
+    color: #dc3545;
+}
+
+/* === RESPONSIVE BÁSICO === */
+@media (max-width: 768px) {
+    .ticket-card {
+        margin: 0 0.5rem;
+    }
+    
+    .ticket-card .card-body {
+        padding: 2rem 1.5rem;
+    }
+    
+    #total-pagado {
+        font-size: 1.5rem !important;
+    }
+    
+    .acciones-ticket .btn {
+        min-width: auto;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* === ANIMACIÓN SIMPLE === */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Aplicar animación al contenido del ticket */
+#ticket-contenido {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* === PREPARACIÓN PARA PDF === */
+/* === PREPARACIÓN PARA PDF MEJORADA === */
+@media print {
+    /* Ocultar elementos no necesarios */
+    .acciones-ticket,
+    nav,
+    footer {
+        display: none !important;
+    }
+    
+    /* Optimizar página para PDF */
+    body {
+        background-color: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .container {
+        max-width: none !important;
+        padding: 20px !important;
+        margin: 0 !important;
+    }
+    
+    /* Ticket optimizado para PDF */
+    .ticket-card {
+        box-shadow: none !important;
+        border: 2px solid #3f1d10 !important;
+        border-radius: 8px !important;
+        page-break-inside: avoid !important;
+        margin: 0 !important;
+    }
+    
+    .ticket-card .card-body {
+        padding: 25px !important;
+    }
+    
+    /* Tipografía optimizada */
+    .text-brown {
+        color: #3f1d10 !important;
+    }
+    
+    #total-pagado {
+        color: #3f1d10 !important;
+        font-weight: bold !important;
+    }
+    
+    /* Bordes y separadores */
+    .border-top, .border-bottom {
+        border-color: #3f1d10 !important;
+    }
+    
+    /* Iconos visibles en PDF */
+    .bi {
+        color: #3f1d10 !important;
+    }
+}
+
+/* Clase especial cuando está preparando para imprimir */
+body.imprimiendo-ticket {
+    background-color: white !important;
+}
+
+body.imprimiendo-ticket .ticket-card {
+    margin: 20px auto !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1) !important;
+}

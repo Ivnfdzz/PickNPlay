@@ -41,7 +41,7 @@ const crearProductos = async () => {
                 precio: 1200.0,
                 imagen: "uno.jpg",
                 descripcion: "El famoso juego de cartas para toda la familia.",
-                subcategorias: [2, 9], // Familiar + Rápidos
+                subcategorias: [9], // Rápidos
             },
 
             {
@@ -50,7 +50,7 @@ const crearProductos = async () => {
                 imagen: "puzzle_paisaje.jpg",
                 descripcion:
                     "Hermoso puzzle de 1000 piezas con paisaje montañoso.",
-                subcategorias: [2], // Familiar
+                subcategorias: [2, 4], // Familiar
             },
 
             {

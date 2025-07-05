@@ -28,7 +28,7 @@ app.use("/api/subcategorias", subcategoriaRouter);
 app.use("/api/usuarios", usuarioRouter);
 app.use("/api/productos", productoRouter);
 app.use("/api/pedidos", pedidoRouter);
-app.use("/api/metodos-pago", metodoPagoRouter);
+app.use("/api/metodosPago", metodoPagoRouter);
 app.use("/api/acciones", accionRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/logs", logRouter);

@@ -69,7 +69,7 @@ function validarNombre(nombre) {
         return false;
     }
 
-    // Verificar que solo contenga letras y espacios (sin números ni caracteres especiales)
+    // Verificar que solo contenga letras y espacios
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     if (!regex.test(nombre)) {
         inputNombre.classList.add('is-invalid');
@@ -84,7 +84,7 @@ function validarNombre(nombre) {
         return false;
     }
 
-    // Si pasa todas las validaciones, remover clase invalid (SOLO UNA VEZ AQUÍ)
+    // Si pasa todas las validaciones, remover clase invalid
     inputNombre.classList.remove('is-invalid');
     return true;
 }
