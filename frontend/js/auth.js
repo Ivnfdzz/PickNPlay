@@ -28,9 +28,9 @@ class AuthController {
     }
 
     setupEventListeners() {
-        // Formulario de login 
+        // Formulario de login
         if (this.elements.loginForm) {
-            this.elements.loginForm.addEventListener('submit', (e) => {
+            this.elements.loginForm.addEventListener("submit", (e) => {
                 e.preventDefault();
                 this.handleLogin();
             });
@@ -38,27 +38,27 @@ class AuthController {
 
         // Botón de logout
         if (this.elements.logoutButton) {
-            this.elements.logoutButton.addEventListener('click', () => {
+            this.elements.logoutButton.addEventListener("click", () => {
                 this.handleLogout();
             });
         }
 
         // Botón de volver
         if (this.elements.backButton) {
-            this.elements.backButton.addEventListener('click', () => {
+            this.elements.backButton.addEventListener("click", () => {
                 window.history.back();
             });
         }
 
         // Limpiar errores en inputs
         if (this.elements.loginEmail) {
-            this.elements.loginEmail.addEventListener('input', () => {
+            this.elements.loginEmail.addEventListener("input", () => {
                 this.clearError();
             });
         }
 
         if (this.elements.loginPassword) {
-            this.elements.loginPassword.addEventListener('input', () => {
+            this.elements.loginPassword.addEventListener("input", () => {
                 this.clearError();
             });
         }
@@ -96,34 +96,20 @@ class AuthController {
             setTimeout(() => {
                 this.redirectToDashboard(response.usuario.rol);
             }, 1500);
-
         } catch (error) {
-            console.error('Error en login:', error);
+            console.error("Error en login:", error);
             this.showError(this.getErrorMessage(error.message));
         } finally {
             this.setLoginLoading(false);
         }
     }
 
-    async handleLogout() {
-        try {
-            // Limpiar sesión
-            this.clearSession();
-
-            // Actualizar UI
-            this.currentUser = null;
-            this.updateUIForUnauthenticatedUser();
-
-            // Mostrar mensaje y redirigir
-            this.showSuccess("Sesión cerrada correctamente");
-
-            setTimeout(() => {
-                location.assign('/frontend/html/index.html');
-            }, 1500);
-
-        } catch (error) {
-            console.error('Error en logout:', error);
-        }
+    handleLogout() {
+        this.clearSession();
+        mostrarToast("Sesión cerrada correctamente", "info");
+        setTimeout(() => {
+            location.assign("/frontend/html/login.html");
+        }, 1500);
     }
 
     async checkAuthStatus() {
@@ -140,25 +126,24 @@ class AuthController {
                 this.updateUIForAuthenticatedUser(this.currentUser);
 
                 // Verificar permisos para páginas admin
-                if (window.location.pathname.includes('/admin/')) {
+                if (window.location.pathname.includes("/admin/")) {
                     this.verifyAdminAccess();
                 }
-
             } catch (error) {
-                console.error('Token inválido:', error);
+                console.error("Token inválido:", error);
                 this.clearSession();
 
                 // Si está en página admin, redirigir a login
-                if (window.location.pathname.includes('/admin/')) {
-                    location.assign('/frontend/html/login.html');
+                if (window.location.pathname.includes("/admin/")) {
+                    location.assign("/frontend/html/login.html");
                 }
             }
         } else {
             this.updateUIForUnauthenticatedUser();
 
             // Si está en página admin sin auth, redirigir
-            if (window.location.pathname.includes('/admin/')) {
-                location.assign('/frontend/html/login.html');
+            if (window.location.pathname.includes("/admin/")) {
+                location.assign("/frontend/html/login.html");
             }
         }
     }
@@ -173,6 +158,7 @@ class AuthController {
     clearSession() {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        this.currentUser = null;
     }
 
     // VERIFICACIONES DE PERMISOS
@@ -180,9 +166,9 @@ class AuthController {
     verifyAdminAccess() {
         const userRole = this.currentUser?.rol;
 
-        if (!['root', 'analista', 'repositor'].includes(userRole)) {
-            alert('No tienes permisos para acceder al panel administrativo');
-            location.assign('/frontend/html/index.html');
+        if (!["root", "analista", "repositor"].includes(userRole)) {
+            alert("No tienes permisos para acceder al panel administrativo");
+            location.assign("/frontend/html/index.html");
             return false;
         }
 
@@ -190,10 +176,12 @@ class AuthController {
     }
 
     redirectToDashboard(userRole) {
-        if (['root', 'analista', 'repositor'].includes(userRole)) {
-            location.assign('/frontend/html/admin/dashboard.html');
+        if (["root", "analista", "repositor"].includes(userRole)) {
+            location.assign("/frontend/html/admin/dashboard.html");
         } else {
-            this.showError('No tienes permisos para acceder al panel administrativo');
+            this.showError(
+                "No tienes permisos para acceder al panel administrativo"
+            );
             this.handleLogout();
         }
     }
@@ -206,7 +194,7 @@ class AuthController {
             return false;
         }
 
-        if (!email.includes('@')) {
+        if (!email.includes("@")) {
             this.showError("Por favor, ingresa un email válido");
             return false;
         }
@@ -219,7 +207,7 @@ class AuthController {
         return true;
     }
 
-    // MANEJO DE UI BÁSICO 
+    // MANEJO DE UI BÁSICO
 
     updateUIForAuthenticatedUser(user) {
         // Mostrar info del usuario (si los elementos existen)
@@ -228,7 +216,7 @@ class AuthController {
         }
 
         if (this.elements.userInfo) {
-            this.elements.userInfo.classList.remove('d-none');
+            this.elements.userInfo.classList.remove("d-none");
         }
 
         // Mostrar elementos admin según rol
@@ -236,7 +224,7 @@ class AuthController {
 
         // Mostrar logout button
         if (this.elements.logoutButton) {
-            this.elements.logoutButton.classList.remove('d-none');
+            this.elements.logoutButton.classList.remove("d-none");
         }
 
         console.log(`Usuario autenticado: ${user.username} (${user.rol})`);
@@ -245,7 +233,7 @@ class AuthController {
     updateUIForUnauthenticatedUser() {
         // Ocultar info del usuario
         if (this.elements.userInfo) {
-            this.elements.userInfo.classList.add('d-none');
+            this.elements.userInfo.classList.add("d-none");
         }
 
         // Ocultar elementos admin
@@ -253,27 +241,32 @@ class AuthController {
 
         // Ocultar logout
         if (this.elements.logoutButton) {
-            this.elements.logoutButton.classList.add('d-none');
+            this.elements.logoutButton.classList.add("d-none");
         }
 
-        console.log('Usuario no autenticado');
+        console.log("Usuario no autenticado");
     }
 
     showAdminElements(userRole) {
-        this.elements.adminItems.forEach(element => {
-            const requiredRoles = element.dataset.requiredRoles?.split(',') || ['root'];
+        this.elements.adminItems.forEach((element) => {
+            const requiredRoles = element.dataset.requiredRoles?.split(",") || [
+                "root",
+            ];
 
-            if (requiredRoles.includes(userRole) || requiredRoles.includes('all')) {
-                element.classList.remove('d-none');
+            if (
+                requiredRoles.includes(userRole) ||
+                requiredRoles.includes("all")
+            ) {
+                element.classList.remove("d-none");
             } else {
-                element.classList.add('d-none');
+                element.classList.add("d-none");
             }
         });
     }
 
     hideAdminElements() {
-        this.elements.adminItems.forEach(element => {
-            element.classList.add('d-none');
+        this.elements.adminItems.forEach((element) => {
+            element.classList.add("d-none");
         });
     }
 
@@ -287,7 +280,7 @@ class AuthController {
                 `;
             } else {
                 this.elements.loginButton.disabled = false;
-                this.elements.loginButton.innerHTML = 'Iniciar Sesión';
+                this.elements.loginButton.innerHTML = "Iniciar Sesión";
             }
         }
     }
@@ -298,32 +291,37 @@ class AuthController {
         // Feedback visual en el login (opcional)
         if (this.elements.loginError) {
             this.elements.loginError.textContent = message;
-            this.elements.loginError.classList.remove('d-none');
+            this.elements.loginError.classList.remove("d-none");
         }
         // Siempre mostrar toast global
-        mostrarToast(message, 'error');
+        mostrarToast(message, "error");
     }
 
     showSuccess(message) {
-        mostrarToast(message, 'success');
+        mostrarToast(message, "success");
     }
 
     clearError() {
         if (this.elements.loginError) {
-            this.elements.loginError.classList.add('d-none');
+            this.elements.loginError.classList.add("d-none");
         }
     }
 
     getErrorMessage(errorMessage) {
         const errorMap = {
-            'Email y password son requeridos': 'Por favor, completa todos los campos',
-            'Usuario no encontrado': 'Email o contraseña incorrectos',
-            'Contraseña incorrecta': 'Email o contraseña incorrectos',
-            'Formato de email inválido': 'Por favor, ingresa un email válido',
-            'Token no válido o expirado': 'Tu sesión ha expirado, inicia sesión nuevamente'
+            "Email y password son requeridos":
+                "Por favor, completa todos los campos",
+            "Usuario no encontrado": "Email o contraseña incorrectos",
+            "Contraseña incorrecta": "Email o contraseña incorrectos",
+            "Formato de email inválido": "Por favor, ingresa un email válido",
+            "Token no válido o expirado":
+                "Tu sesión ha expirado, inicia sesión nuevamente",
         };
 
-        return errorMap[errorMessage] || 'Error al iniciar sesión. Intenta nuevamente.';
+        return (
+            errorMap[errorMessage] ||
+            "Error al iniciar sesión. Intenta nuevamente."
+        );
     }
 
     // MÉTODOS DE UTILIDAD PÚBLICOS
@@ -332,6 +330,12 @@ class AuthController {
     }
 
     getCurrentUser() {
+        if (!this.currentUser) {
+            const userData = localStorage.getItem("user");
+            if (userData) {
+                this.currentUser = JSON.parse(userData);
+            }
+        }
         return this.currentUser;
     }
 
@@ -341,7 +345,7 @@ class AuthController {
 
     requireAuth() {
         if (!this.isAuthenticated()) {
-            location.assign('/frontend/html/login.html');
+            location.assign("/frontend/html/login.html");
             return false;
         }
         return true;
@@ -351,7 +355,7 @@ class AuthController {
         if (!this.requireAuth()) return false;
 
         if (!this.hasRole(requiredRole)) {
-            alert('No tienes permisos para acceder a esta sección');
+            alert("No tienes permisos para acceder a esta sección");
             window.history.back();
             return false;
         }
@@ -359,17 +363,6 @@ class AuthController {
     }
 }
 
-// INICIALIZACIÓN GLOBAL
-
-let authController;
-
-document.addEventListener('DOMContentLoaded', () => {
-    authController = new AuthController();
-    window.authController = authController;
+document.addEventListener("DOMContentLoaded", () => {
+    window.Auth = new AuthController();
 });
-
-// Funciones de utilidad globales
-window.requireAuth = () => authController?.requireAuth();
-window.requireRole = (role) => authController?.requireRole(role);
-window.isAuthenticated = () => authController?.isAuthenticated();
-window.getCurrentUser = () => authController?.getCurrentUser();
