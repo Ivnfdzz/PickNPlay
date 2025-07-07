@@ -3,11 +3,11 @@ class AuthController {
         this.elements = {
             // Elementos de login
             loginForm: document.getElementById("login-form"),
-            loginEmail: document.getElementById("email"), 
+            loginEmail: document.getElementById("email"),
             loginPassword: document.getElementById("password"),
             loginError: document.getElementById("login-error"),
             loginButton: document.querySelector('button[type="submit"]'),
-            
+
             // Elementos comunes
             backButton: document.getElementById("backButton"),
             logoutButton: document.getElementById("logout-button"),
@@ -15,7 +15,7 @@ class AuthController {
             userNameDisplay: document.getElementById("user-name"),
             adminItems: document.querySelectorAll(".admin-only"),
         };
-        
+
         this.currentUser = null;
         this.init();
     }
@@ -81,7 +81,7 @@ class AuthController {
             this.clearError();
 
             // Llamada a la API
-            const response = await ApiClient.login(email, password);
+            const response = await apiInstance.login(email, password);
 
             // Guardar sesión
             this.saveSession(response.token, response.usuario);
@@ -92,7 +92,7 @@ class AuthController {
 
             // Mostrar éxito y redirigir
             this.showSuccess(`¡Bienvenido ${response.usuario.username}!`);
-            
+
             setTimeout(() => {
                 this.redirectToDashboard(response.usuario.rol);
             }, 1500);
@@ -109,18 +109,18 @@ class AuthController {
         try {
             // Limpiar sesión
             this.clearSession();
-            
+
             // Actualizar UI
             this.currentUser = null;
             this.updateUIForUnauthenticatedUser();
-            
+
             // Mostrar mensaje y redirigir
             this.showSuccess("Sesión cerrada correctamente");
-            
+
             setTimeout(() => {
                 location.assign('/frontend/html/index.html');
             }, 1500);
-            
+
         } catch (error) {
             console.error('Error en logout:', error);
         }
@@ -133,21 +133,21 @@ class AuthController {
         if (token && userData) {
             try {
                 // Verificar que el token sea válido
-                await ApiClient.getProfile();
-                
+                await apiInstance.getProfile();
+
                 // Si llegamos aquí, el token es válido
                 this.currentUser = JSON.parse(userData);
                 this.updateUIForAuthenticatedUser(this.currentUser);
-                
+
                 // Verificar permisos para páginas admin
                 if (window.location.pathname.includes('/admin/')) {
                     this.verifyAdminAccess();
                 }
-                
+
             } catch (error) {
                 console.error('Token inválido:', error);
                 this.clearSession();
-                
+
                 // Si está en página admin, redirigir a login
                 if (window.location.pathname.includes('/admin/')) {
                     location.assign('/frontend/html/login.html');
@@ -155,7 +155,7 @@ class AuthController {
             }
         } else {
             this.updateUIForUnauthenticatedUser();
-            
+
             // Si está en página admin sin auth, redirigir
             if (window.location.pathname.includes('/admin/')) {
                 location.assign('/frontend/html/login.html');
@@ -179,13 +179,13 @@ class AuthController {
 
     verifyAdminAccess() {
         const userRole = this.currentUser?.rol;
-        
+
         if (!['root', 'analista', 'repositor'].includes(userRole)) {
             alert('No tienes permisos para acceder al panel administrativo');
             location.assign('/frontend/html/index.html');
             return false;
         }
-        
+
         return true;
     }
 
@@ -262,7 +262,7 @@ class AuthController {
     showAdminElements(userRole) {
         this.elements.adminItems.forEach(element => {
             const requiredRoles = element.dataset.requiredRoles?.split(',') || ['root'];
-            
+
             if (requiredRoles.includes(userRole) || requiredRoles.includes('all')) {
                 element.classList.remove('d-none');
             } else {
@@ -295,20 +295,17 @@ class AuthController {
     // MANEJO DE MENSAJES
 
     showError(message) {
+        // Feedback visual en el login (opcional)
         if (this.elements.loginError) {
             this.elements.loginError.textContent = message;
             this.elements.loginError.classList.remove('d-none');
-        } else {
-            alert(`Error: ${message}`);
         }
+        // Siempre mostrar toast global
+        mostrarToast(message, 'error');
     }
 
     showSuccess(message) {
-        if (typeof bootstrap !== 'undefined') {
-            this.createToast(message, 'success');
-        } else {
-            alert(message);
-        }
+        mostrarToast(message, 'success');
     }
 
     clearError() {
@@ -327,36 +324,6 @@ class AuthController {
         };
 
         return errorMap[errorMessage] || 'Error al iniciar sesión. Intenta nuevamente.';
-    }
-
-    createToast(message, type = 'info') {
-        const toastContainer = document.querySelector('.toast-container') || this.createToastContainer();
-        
-        const toastId = `toast-${Date.now()}`;
-        const bgClass = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-info';
-        
-        const toastHTML = `
-            <div class="toast ${bgClass} text-white" id="${toastId}" role="alert">
-                <div class="toast-body">${message}</div>
-            </div>
-        `;
-        
-        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-        
-        const toastElement = document.getElementById(toastId);
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
-        
-        toastElement.addEventListener('hidden.bs.toast', () => {
-            toastElement.remove();
-        });
-    }
-
-    createToastContainer() {
-        const container = document.createElement('div');
-        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-        document.body.appendChild(container);
-        return container;
     }
 
     // MÉTODOS DE UTILIDAD PÚBLICOS
@@ -382,7 +349,7 @@ class AuthController {
 
     requireRole(requiredRole) {
         if (!this.requireAuth()) return false;
-        
+
         if (!this.hasRole(requiredRole)) {
             alert('No tienes permisos para acceder a esta sección');
             window.history.back();

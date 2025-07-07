@@ -143,7 +143,7 @@ class ApiClient {
         return await this._request(`/productos/subcategoria/${subcategoriaId}`);
     }
 
-    async buscarProductos(termino) {
+    async buscarProducto(termino) {
         return await this._request(
             `/productos/buscar?q=${encodeURIComponent(termino)}`
         );

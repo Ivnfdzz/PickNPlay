@@ -58,14 +58,14 @@ function validarNombre(nombre) {
     // Verificar que no esté vacío
     if (nombre === "" || nombre.length === 0) {
         inputNombre.classList.add('is-invalid');
-        alert("Por favor, ingresa un nombre.");
+        mostrarToast("Por favor, ingresa un nombre.", 'info');
         return false;
     }
 
     // Verificar que tenga más de 2 caracteres
     if (nombre.length < 3) {
         inputNombre.classList.add('is-invalid');
-        alert("El nombre debe tener al menos 3 caracteres.");
+        mostrarToast("El nombre debe tener al menos 3 caracteres.", 'info');
         return false;
     }
 
@@ -73,14 +73,14 @@ function validarNombre(nombre) {
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     if (!regex.test(nombre)) {
         inputNombre.classList.add('is-invalid');
-        alert("El nombre solo puede contener letras y espacios.");
+        mostrarToast("El nombre solo puede contener letras y espacios.", 'info');
         return false;
     }
 
     // Verificar que no sea solo espacios
     if (nombre.replace(/\s/g, '').length === 0) {
         inputNombre.classList.add('is-invalid');
-        alert("El nombre no puede estar compuesto solo por espacios.");
+        mostrarToast("El nombre no puede estar compuesto solo por espacios.", 'info');
         return false;
     }
 
