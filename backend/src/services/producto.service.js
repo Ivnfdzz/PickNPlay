@@ -166,16 +166,26 @@ class ProductoService {
     }
 
     static async actualizar(id, data) {
+        id = parseInt(id);
         const { subcategorias, ...datosProducto } = data;
 
-        const [filasAfectadas] = await Producto.update(datosProducto, {
-            where: { id_producto: id },
-        });
-
-        if (filasAfectadas === 0) {
-            throw new Error("Producto no encontrado");
+        let filasAfectadas = 0;
+        if (Object.keys(datosProducto).length > 0) {
+            [filasAfectadas] = await Producto.update(datosProducto, {
+                where: { id_producto: id },
+            });
         }
 
+        // Si no se afectó ninguna fila, chequeá si el producto existe
+        if (filasAfectadas === 0) {
+            const productoExistente = await Producto.findByPk(id);
+            if (!productoExistente) {
+                throw new Error("Producto no encontrado");
+            }
+            // Si existe, seguimos (puede ser solo update de subcategorías)
+        }
+
+        // Actualizar subcategorías si corresponde
         if (subcategorias !== undefined) {
             if (subcategorias.length > 0) {
                 await this._validarSubcategorias(subcategorias);
@@ -250,9 +260,10 @@ class ProductoService {
         if (!Array.isArray(subcategorias)) {
             throw new Error("Las subcategorías deben ser un array de IDs");
         }
-
+        // Convertir a enteros
+        const subcatIds = subcategorias.map(Number);
         const subcategoriasExistentes = await Subcategoria.findAll({
-            where: { id_subcategoria: { [Op.in]: subcategorias } },
+            where: { id_subcategoria: { [Op.in]: subcatIds } },
         });
 
         if (subcategoriasExistentes.length !== subcategorias.length) {
@@ -272,7 +283,7 @@ class ProductoService {
     static async _asignarSubcategorias(id_producto, subcategorias) {
         const asignaciones = subcategorias.map((id_subcategoria) => ({
             id_producto,
-            id_subcategoria,
+            id_subcategoria: Number(id_subcategoria),
         }));
         await ProductoSubcategoria.bulkCreate(asignaciones);
     }
