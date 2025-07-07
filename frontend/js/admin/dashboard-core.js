@@ -406,9 +406,11 @@ document.addEventListener("operacionCrudSeleccionada", (e) => {
     if (entidad === "productos" && operacion === "listar") {
         listarProductos();
     }
+    if (entidad === "productos" && operacion === "crear") {
+        mostrarFormularioCrearProducto();
+    }
 });
 
-// INICIALIZACIÓN CUANDO CARGA EL DOM
 document.addEventListener("DOMContentLoaded", () => {
     DashboardCore.init();
     DashboardCore.cargarTemaGuardado();
@@ -416,5 +418,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Hacer disponible globalmente para otros módulos
 window.DashboardCore = DashboardCore;
-
-console.log("📝 dashboard-core.js cargado correctamente");
