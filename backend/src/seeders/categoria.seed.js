@@ -9,8 +9,8 @@ const crearCategorias = async () => {
         }
 
         await Categoria.bulkCreate([
-            { nombre: 'Juegos de Cartas' },
-            { nombre: 'Juegos de Mesa' }
+            { nombre: 'Juegos de Mesa' },
+            { nombre: 'Juegos de Cartas' }
         ]);
 
         console.log('Categorías creadas');

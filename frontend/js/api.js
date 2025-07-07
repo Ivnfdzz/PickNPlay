@@ -125,6 +125,26 @@ class ApiClient {
         return await this._request(`/subcategorias/categoria/${categoriaId}`);
     }
 
+    async crearSubcategoria(subcategoria) {
+        return this._request("/subcategorias", {
+            method: "POST",
+            body: JSON.stringify(subcategoria)
+        });
+    }
+
+    async actualizarSubcategoria(id, subcatData) {
+        return this._request(`/subcategorias/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(subcatData)
+        });
+    }
+
+    async eliminarSubcategoria(id) {
+        return this._request(`/subcategorias/${id}`, {
+            method: "DELETE"
+        });
+    }
+
     // MÉTODOS DE PRODUCTOS
 
     async getProductos() {

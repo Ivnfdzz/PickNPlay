@@ -2,6 +2,7 @@ const LogAccionUsuario = require('../models/logAccionUsuario.model.js');
 const Accion = require('../models/accion.model.js');
 const Usuario = require('../models/usuario.model.js');
 const Producto = require('../models/producto.model.js');
+const { Op } = require('sequelize');
 
 class AuditoriaService {
     static async registrarAccion(id_usuario, nombreAccion, id_producto) {
@@ -50,7 +51,7 @@ class AuditoriaService {
         // Filtro por fecha desde
         if (filtros.fecha_desde) {
             whereClause.fecha_hora = {
-                [LogAccionUsuario.sequelize.Op.gte]: filtros.fecha_desde
+                [Op.gte]: filtros.fecha_desde
             };
         }
 

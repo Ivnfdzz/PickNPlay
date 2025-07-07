@@ -409,6 +409,18 @@ document.addEventListener("operacionCrudSeleccionada", (e) => {
     if (entidad === "productos" && operacion === "crear") {
         mostrarFormularioCrearProducto();
     }
+    if (entidad === "subcategorias" && operacion === "listar") {
+        listarSubcategorias();
+    }
+    if (entidad === "subcategorias" && operacion === "crear") {
+        mostrarFormularioCrearSubcategoria();
+    }
+    if (entidad === "usuarios" && operacion === "listar") {
+        listarUsuarios();
+    }
+    if (entidad === "usuarios" && operacion === "crear") {
+    mostrarFormularioCrearUsuario();
+}
 });
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -58,12 +58,12 @@ function renderizarTablaProductos(productos) {
                     <td>${producto.nombre}</td>
                     <td>$${producto.precio.toFixed(2)}</td>
                     <td>${subcats}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary me-2" onclick="mostrarFormularioEditarProducto(${producto.id_producto})">
-                            Modificar
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary me-2" onclick="mostrarFormularioEditarProducto(${producto.id_producto})" title="Modificar">
+                            <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_producto})">
-                            Eliminar
+                        <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_producto})" title="Eliminar">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -323,7 +323,11 @@ async function mostrarFormularioEditarProducto(id) {
 
 async function eliminarProducto(id) {
     try {
+        const confirmado = confirm("¿Desea eliminar este producto?");
+        if (!confirmado) return;
+
         await apiInstance.eliminarProducto(id);
+        
         mostrarToast("Producto eliminado exitosamente.", "success");
         // Actualizar el listado
         listarProductos();

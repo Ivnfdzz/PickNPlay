@@ -1,7 +1,8 @@
 const Usuario = require('../models/usuario.model.js');
 const Rol = require('../models/rol.model.js');
+const { Op } = require('sequelize');
 
-class UsuarioService{
+class UsuarioService {
     static async obtenerTodos() {
         return await Usuario.findAll({
             include: this._getIncludeRol(),
@@ -25,10 +26,10 @@ class UsuarioService{
     static async crear(data) {
         // Validaciones básicas
         this._validarDatosUsuario(data);
-        
+
         // Validar que el rol existe
         await this._validarRolExiste(data.id_rol);
-        
+        // Validar que el usuario no existe
         // Validar duplicados
         await this._validarUsuarioUnico(data.email, data.username);
 
@@ -46,7 +47,7 @@ class UsuarioService{
 
     static async actualizar(id, data) {
         // Validar que el usuario existe
-        await this.obtenerPorId(id); // Lanza error si no existe
+        const usuario = await this.obtenerPorId(id); // Lanza error si no existe
 
         // Si se está actualizando el rol, validarlo
         if (data.id_rol) {
@@ -58,13 +59,12 @@ class UsuarioService{
             await this._validarUsuarioUnicoParaActualizacion(id, data.email, data.username);
         }
 
-        const [filasAfectadas] = await Usuario.update(data, {
-            where: { id_usuario: id }
+        // Actualizar campos manualmente
+        Object.keys(data).forEach(key => {
+            usuario[key] = data[key];
         });
 
-        if (filasAfectadas === 0) {
-            throw new Error('Usuario no encontrado');
-        }
+        await usuario.save();
 
         return 'Usuario actualizado correctamente';
     }
@@ -98,21 +98,21 @@ class UsuarioService{
     }
 
     static async contarUsuarios() {
-    const total = await Usuario.count();
-    
-    const roots = await Usuario.count({ where: { id_rol: 1 } });
-    const analistas = await Usuario.count({ where: { id_rol: 2 } });
-    const repositores = await Usuario.count({ where: { id_rol: 3 } });
-    
-    return {
-        total,
-        por_rol: [
-            { rol: 'root', cantidad: roots },
-            { rol: 'analista', cantidad: analistas },
-            { rol: 'repositor', cantidad: repositores }
-        ]
-    };
-}
+        const total = await Usuario.count();
+
+        const roots = await Usuario.count({ where: { id_rol: 1 } });
+        const analistas = await Usuario.count({ where: { id_rol: 2 } });
+        const repositores = await Usuario.count({ where: { id_rol: 3 } });
+
+        return {
+            total,
+            por_rol: [
+                { rol: 'root', cantidad: roots },
+                { rol: 'analista', cantidad: analistas },
+                { rol: 'repositor', cantidad: repositores }
+            ]
+        };
+    }
 
     static _getIncludeRol() {
         return [
@@ -165,11 +165,11 @@ class UsuarioService{
 
     static async _validarUsuarioUnicoParaActualizacion(userId, email, username) {
         if (email) {
-            const existingEmail = await Usuario.findOne({ 
-                where: { 
+            const existingEmail = await Usuario.findOne({
+                where: {
                     email,
-                    id_usuario: { [Usuario.sequelize.Op.ne]: userId }
-                } 
+                    id_usuario: { [Op.ne]: userId }
+                }
             });
             if (existingEmail) {
                 throw new Error('Email ya registrado');
@@ -177,11 +177,11 @@ class UsuarioService{
         }
 
         if (username) {
-            const existingUsername = await Usuario.findOne({ 
-                where: { 
+            const existingUsername = await Usuario.findOne({
+                where: {
                     username,
-                    id_usuario: { [Usuario.sequelize.Op.ne]: userId }
-                } 
+                    id_usuario: { [Op.ne]: userId }
+                }
             });
             if (existingUsername) {
                 throw new Error('Username ya registrado');
