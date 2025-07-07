@@ -5,9 +5,11 @@ async function listarSubcategorias() {
 
         // 2. Renderizar tabla
         renderizarTablaSubcategorias(subcategorias);
-
     } catch (error) {
-        mostrarToast("Error al cargar subcategorías: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al cargar subcategorías: " + (error.message || error),
+            "error"
+        );
     }
 }
 
@@ -36,17 +38,21 @@ function renderizarTablaSubcategorias(subcategorias) {
             </tr>
         `;
     } else {
-        subcategorias.forEach(subcat => {
+        subcategorias.forEach((subcat) => {
             html += `
                 <tr>
                     <td>${subcat.nombre}</td>
                     <td>${subcat.categoria ? subcat.categoria.nombre : "-"}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary me-2" onclick="mostrarFormularioEditarSubcategoria(${subcat.id_subcategoria})">
-                            Modificar
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary me-2" onclick="mostrarFormularioEditarSubcategoria(${
+                            subcat.id_subcategoria
+                        })">
+                            <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminarSubcategoria(${subcat.id_subcategoria})">
-                            Eliminar
+                        <button class="btn btn-sm btn-danger" onclick="eliminarSubcategoria(${
+                            subcat.id_subcategoria
+                        })">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -92,9 +98,13 @@ async function mostrarFormularioCrearSubcategoria() {
             selectHTML = `
                 <select class="form-select" id="id_categoria" name="id_categoria" required>
                     <option value="">Selecciona una categoría</option>
-                    ${categorias.map(cat => `
+                    ${categorias
+                        .map(
+                            (cat) => `
                         <option value="${cat.id_categoria}">${cat.nombre}</option>
-                    `).join("")}
+                    `
+                        )
+                        .join("")}
                 </select>
             `;
         } else {
@@ -130,7 +140,10 @@ async function mostrarFormularioCrearSubcategoria() {
                 const id_categoria = parseInt(form.id_categoria.value);
 
                 if (!nombre || isNaN(id_categoria)) {
-                    mostrarToast("Por favor, completá todos los campos.", "warning");
+                    mostrarToast(
+                        "Por favor, completá todos los campos.",
+                        "warning"
+                    );
                     return;
                 }
 
@@ -138,17 +151,27 @@ async function mostrarFormularioCrearSubcategoria() {
 
                 try {
                     await apiInstance.crearSubcategoria(subcategoria);
-                    mostrarToast("Subcategoría creada exitosamente.", "success");
+                    mostrarToast(
+                        "Subcategoría creada exitosamente.",
+                        "success"
+                    );
                     setTimeout(() => {
                         listarSubcategorias();
                     }, 1200);
                 } catch (error) {
-                    mostrarToast("Error al crear subcategoría: " + (error.message || error), "error");
+                    mostrarToast(
+                        "Error al crear subcategoría: " +
+                            (error.message || error),
+                        "error"
+                    );
                 }
             });
         }
     } catch (error) {
-        mostrarToast("Error al cargar el formulario: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al cargar el formulario: " + (error.message || error),
+            "error"
+        );
     }
 }
 
@@ -170,11 +193,19 @@ async function mostrarFormularioEditarSubcategoria(id) {
             selectHTML = `
                 <select class="form-select" id="id_categoria" name="id_categoria" required>
                     <option value="">Selecciona una categoría</option>
-                    ${categorias.map(cat => `
-                        <option value="${cat.id_categoria}" ${subcat.id_categoria === cat.id_categoria ? "selected" : ""}>
+                    ${categorias
+                        .map(
+                            (cat) => `
+                        <option value="${cat.id_categoria}" ${
+                                subcat.id_categoria === cat.id_categoria
+                                    ? "selected"
+                                    : ""
+                            }>
                             ${cat.nombre}
                         </option>
-                    `).join("")}
+                    `
+                        )
+                        .join("")}
                 </select>
             `;
         } else {
@@ -187,7 +218,9 @@ async function mostrarFormularioEditarSubcategoria(id) {
             <form id="form-editar-subcategoria" autocomplete="off">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" value="${subcat.nombre || ""}" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="${
+                        subcat.nombre || ""
+                    }" required>
                 </div>
                 <div class="mb-3">
                     <label for="id_categoria" class="form-label">Categoría padre</label>
@@ -211,7 +244,10 @@ async function mostrarFormularioEditarSubcategoria(id) {
                 const id_categoria = parseInt(form.id_categoria.value);
 
                 if (!nombre || isNaN(id_categoria)) {
-                    mostrarToast("Por favor, completá todos los campos.", "warning");
+                    mostrarToast(
+                        "Por favor, completá todos los campos.",
+                        "warning"
+                    );
                     return;
                 }
 
@@ -219,19 +255,30 @@ async function mostrarFormularioEditarSubcategoria(id) {
 
                 try {
                     await apiInstance.actualizarSubcategoria(id, subcatEditada);
-                    mostrarToast("Subcategoría actualizada exitosamente.", "success");
+                    mostrarToast(
+                        "Subcategoría actualizada exitosamente.",
+                        "success"
+                    );
                     setTimeout(() => {
                         listarSubcategorias();
                     }, 1200);
                 } catch (error) {
-                    mostrarToast("Error al actualizar subcategoría: " + (error.message || error), "error");
+                    mostrarToast(
+                        "Error al actualizar subcategoría: " +
+                            (error.message || error),
+                        "error"
+                    );
                 }
             });
         }
     } catch (error) {
-        mostrarToast("Error al cargar el formulario de edición: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al cargar el formulario de edición: " +
+                (error.message || error),
+            "error"
+        );
     }
-};
+}
 
 async function eliminarSubcategoria(id) {
     try {
@@ -242,12 +289,16 @@ async function eliminarSubcategoria(id) {
         mostrarToast("Subcategoría eliminada exitosamente.", "success");
         listarSubcategorias();
     } catch (error) {
-        mostrarToast("Error al eliminar subcategoría: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al eliminar subcategoría: " + (error.message || error),
+            "error"
+        );
     }
-};
+}
 
 // Exportar globalmente para el core
 window.mostrarFormularioCrearSubcategoria = mostrarFormularioCrearSubcategoria;
 window.listarSubcategorias = listarSubcategorias;
-window.mostrarFormularioEditarSubcategoria = mostrarFormularioEditarSubcategoria;
+window.mostrarFormularioEditarSubcategoria =
+    mostrarFormularioEditarSubcategoria;
 window.eliminarSubcategoria = eliminarSubcategoria;

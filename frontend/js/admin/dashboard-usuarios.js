@@ -5,9 +5,11 @@ async function listarUsuarios() {
 
         // 2. Renderizar tabla
         renderizarTablaUsuarios(usuarios);
-
     } catch (error) {
-        mostrarToast("Error al cargar usuarios: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al cargar usuarios: " + (error.message || error),
+            "error"
+        );
     }
 }
 
@@ -37,18 +39,18 @@ function renderizarTablaUsuarios(usuarios) {
             </tr>
         `;
     } else {
-        usuarios.forEach(usuario => {
+        usuarios.forEach((usuario) => {
             html += `
                 <tr>
                     <td>${usuario.username}</td>
                     <td>${usuario.email}</td>
                     <td>${usuario.Rol.nombre}</td>
-                    <td>
+                    <td class="text-center">
                         <button class="btn btn-sm btn-primary me-2" onclick="mostrarFormularioEditarUsuario(${usuario.id_usuario})">
-                            Modificar
+                            <i class="bi bi-pencil"></i>
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${usuario.id_usuario})">
-                            Eliminar
+                            <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -94,9 +96,13 @@ async function mostrarFormularioCrearUsuario() {
             selectHTML = `
                 <select class="form-select" id="id_rol" name="id_rol" required>
                     <option value="">Selecciona un rol</option>
-                    ${roles.map(rol => `
+                    ${roles
+                        .map(
+                            (rol) => `
                         <option value="${rol.id_rol}">${rol.nombre}</option>
-                    `).join("")}
+                    `
+                        )
+                        .join("")}
                 </select>
             `;
         } else {
@@ -142,7 +148,10 @@ async function mostrarFormularioCrearUsuario() {
                 const id_rol = parseInt(form.id_rol.value);
 
                 if (!username || !email || !password || isNaN(id_rol)) {
-                    mostrarToast("Por favor, completá todos los campos.", "warning");
+                    mostrarToast(
+                        "Por favor, completá todos los campos.",
+                        "warning"
+                    );
                     return;
                 }
 
@@ -155,12 +164,18 @@ async function mostrarFormularioCrearUsuario() {
                         listarUsuarios();
                     }, 1200);
                 } catch (error) {
-                    mostrarToast("Error al crear usuario: " + (error.message || error), "error");
+                    mostrarToast(
+                        "Error al crear usuario: " + (error.message || error),
+                        "error"
+                    );
                 }
             });
         }
     } catch (error) {
-        mostrarToast("Error al cargar el formulario: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al cargar el formulario: " + (error.message || error),
+            "error"
+        );
     }
 }
 
@@ -182,11 +197,17 @@ async function mostrarFormularioEditarUsuario(id) {
             selectHTML = `
                 <select class="form-select" id="id_rol" name="id_rol" required>
                     <option value="">Selecciona un rol</option>
-                    ${roles.map(rol => `
-                        <option value="${rol.id_rol}" ${usuario.id_rol === rol.id_rol ? "selected" : ""}>
+                    ${roles
+                        .map(
+                            (rol) => `
+                        <option value="${rol.id_rol}" ${
+                                usuario.id_rol === rol.id_rol ? "selected" : ""
+                            }>
                             ${rol.nombre}
                         </option>
-                    `).join("")}
+                    `
+                        )
+                        .join("")}
                 </select>
             `;
         } else {
@@ -199,11 +220,15 @@ async function mostrarFormularioEditarUsuario(id) {
             <form id="form-editar-usuario" autocomplete="off">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="${usuario.username || ""}" required>
+                    <input type="text" class="form-control" id="username" name="username" value="${
+                        usuario.username || ""
+                    }" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="${usuario.email || ""}" required>
+                    <input type="email" class="form-control" id="email" name="email" value="${
+                        usuario.email || ""
+                    }" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password (dejar vacío para no cambiar)</label>
@@ -233,7 +258,10 @@ async function mostrarFormularioEditarUsuario(id) {
                 const id_rol = parseInt(form.id_rol.value);
 
                 if (!username || !email || isNaN(id_rol)) {
-                    mostrarToast("Por favor, completá todos los campos obligatorios.", "warning");
+                    mostrarToast(
+                        "Por favor, completá todos los campos obligatorios.",
+                        "warning"
+                    );
                     return;
                 }
 
@@ -243,17 +271,28 @@ async function mostrarFormularioEditarUsuario(id) {
 
                 try {
                     await apiInstance.actualizarUsuario(id, usuarioEditado);
-                    mostrarToast("Usuario actualizado exitosamente.", "success");
+                    mostrarToast(
+                        "Usuario actualizado exitosamente.",
+                        "success"
+                    );
                     setTimeout(() => {
                         listarUsuarios();
                     }, 1200);
                 } catch (error) {
-                    mostrarToast("Error al actualizar usuario: " + (error.message || error), "error");
+                    mostrarToast(
+                        "Error al actualizar usuario: " +
+                            (error.message || error),
+                        "error"
+                    );
                 }
             });
         }
     } catch (error) {
-        mostrarToast("Error al cargar el formulario de edición: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al cargar el formulario de edición: " +
+                (error.message || error),
+            "error"
+        );
     }
 }
 
@@ -266,7 +305,10 @@ async function eliminarUsuario(id) {
         mostrarToast("Usuario eliminado exitosamente.", "success");
         listarUsuarios();
     } catch (error) {
-        mostrarToast("Error al eliminar usuario: " + (error.message || error), "error");
+        mostrarToast(
+            "Error al eliminar usuario: " + (error.message || error),
+            "error"
+        );
     }
 }
 

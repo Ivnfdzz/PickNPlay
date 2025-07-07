@@ -66,7 +66,7 @@ function verificarDatosIniciales() {
     // Verificar nombre de cliente
     nombreCliente = localStorage.getItem('nombreCliente');
     if (!nombreCliente) {
-        console.error('❌ No hay nombre de cliente');
+        console.error('No hay nombre de cliente');
         mostrarToast('Debes ingresar tu nombre primero', 'error');
         setTimeout(() => {
             window.location.href = '/frontend/html/index.html';
@@ -307,7 +307,7 @@ window.cambiarCantidadCarrito = function (index, cambio) {
     // Feedback visual
     mostrarToast(`Cantidad actualizada: ${item.nombre} (${item.cantidad})`, 'info');
 
-    console.log(`🔄 Cantidad actualizada: ${item.nombre} = ${item.cantidad}`);
+    console.log(`Cantidad actualizada: ${item.nombre} = ${item.cantidad}`);
 };
 
 window.eliminarProductoCarrito = function (index) {
@@ -491,7 +491,7 @@ function mostrarEstado(estado) {
             break;
     }
 
-    console.log(`🔄 Estado cambiado a: ${estado}`);
+    console.log(`Estado cambiado a: ${estado}`);
 }
 
 function mostrarEstadoError() {
@@ -525,5 +525,3 @@ function getIconoTipo(tipo) {
     };
     return iconos[tipo] || iconos.info;
 }
-
-console.log('carrito.js cargado correctamente');

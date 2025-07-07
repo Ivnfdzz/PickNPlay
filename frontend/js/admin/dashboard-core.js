@@ -26,7 +26,7 @@ const DashboardCore = {
 
     // Inicialización principal
     init() {
-        console.log("🎛️ Inicializando Dashboard Core...");
+        console.log("Inicializando Dashboard Core...");
 
         try {
             if (!Auth.getCurrentUser()) {
@@ -53,9 +53,9 @@ const DashboardCore = {
             // Estado inicial
             this.mostrarBienvenida();
 
-            console.log("✅ Dashboard Core inicializado correctamente");
+            console.log("Dashboard Core inicializado correctamente");
         } catch (error) {
-            console.error("❌ Error inicializando Dashboard Core:", error);
+            console.error("Error inicializando Dashboard Core:", error);
             mostrarToast("Error inicializando el dashboard", "error");
         }
     },
@@ -104,7 +104,7 @@ const DashboardCore = {
             });
         }
 
-        console.log("✅ Eventos configurados");
+        console.log("Eventos configurados");
     },
 
     // MANEJO DE ENTIDADES Y OPERACIONES
@@ -115,7 +115,7 @@ const DashboardCore = {
             return;
         }
 
-        console.log(`📋 Entidad seleccionada: ${entidad}`);
+        console.log(`Entidad seleccionada: ${entidad}`);
         this.currentEntity = entidad;
         this.currentOperation = null;
 
@@ -140,7 +140,7 @@ const DashboardCore = {
             !Permisos.validarAccesoEntidad(this.currentUser, this.currentEntity)
         ) {
             mostrarToast(
-                `❌ Acceso denegado. Permisos insuficientes para gestionar ${this.currentEntity}`,
+                `Acceso denegado. Permisos insuficientes para gestionar ${this.currentEntity}`,
                 "error"
             );
             return;
@@ -153,7 +153,7 @@ const DashboardCore = {
             operacion
         );
         if (!validacionEspecial.permitido) {
-            mostrarToast(`❌ ${validacionEspecial.mensaje}`, "warning");
+            mostrarToast(`${validacionEspecial.mensaje}`, "warning");
             return;
         }
 
@@ -166,14 +166,14 @@ const DashboardCore = {
             )
         ) {
             mostrarToast(
-                `❌ Acceso denegado. Permisos insuficientes para ${operacion} en ${this.currentEntity}`,
+                `Acceso denegado. Permisos insuficientes para ${operacion} en ${this.currentEntity}`,
                 "error"
             );
             return;
         }
 
         console.log(
-            `⚙️ Operación autorizada: ${operacion} para ${this.currentEntity}`
+            `Operación autorizada: ${operacion} para ${this.currentEntity}`
         );
         this.currentOperation = operacion;
 
@@ -192,13 +192,13 @@ const DashboardCore = {
         // Validar permisos para auditoría
         if (!["root", "analista"].includes(this.currentUser.rol)) {
             mostrarToast(
-                "❌ Acceso denegado. Permisos insuficientes para ver la auditoría",
+                "Acceso denegado. Permisos insuficientes para ver la auditoría",
                 "error"
             );
             return;
         }
 
-        console.log("📊 Mostrando auditoría");
+        console.log("Mostrando auditoría");
         this.limpiarSelecciones();
         this.mostrarContenidoDinamico();
 
@@ -206,17 +206,17 @@ const DashboardCore = {
         document.dispatchEvent(new CustomEvent("mostrarAuditoria"));
     },
 
-    // ✅ MODIFICAR mostrarEstadisticas:
+    // MODIFICAR mostrarEstadisticas:
 
     mostrarEstadisticas() {
         if (!["root", "analista"].includes(this.currentUser.rol)) {
             mostrarToast(
-                "❌ Acceso denegado. Permisos insuficientes para ver las estadísticas",
+                "Acceso denegado. Permisos insuficientes para ver las estadísticas",
                 "error"
             );
             return;
         }
-        console.log("📈 Mostrando estadísticas");
+        console.log("Mostrando estadísticas");
         this.limpiarSelecciones();
         this.mostrarContenidoDinamico();
 
@@ -363,7 +363,7 @@ const DashboardCore = {
             localStorage.setItem("tema", "dark");
         }
 
-        console.log(`🌙 Modo ${esModoOscuro ? "claro" : "oscuro"} activado`);
+        console.log(`Modo ${esModoOscuro ? "claro" : "oscuro"} activado`);
     },
 
     cargarTemaGuardado() {
@@ -419,8 +419,17 @@ document.addEventListener("operacionCrudSeleccionada", (e) => {
         listarUsuarios();
     }
     if (entidad === "usuarios" && operacion === "crear") {
-    mostrarFormularioCrearUsuario();
-}
+        mostrarFormularioCrearUsuario();
+    }
+    if (entidad === "metodosPago" && operacion === "listar") {
+        listarMetodosPago();
+    }
+    if (entidad === "metodosPago" && operacion === "crear") {
+        mostrarFormularioCrearMetodoPago();
+    }
+    if (entidad === "pedidos" && operacion === "listar") {
+        listarPedidos();
+    }
 });
 
 document.addEventListener("DOMContentLoaded", () => {

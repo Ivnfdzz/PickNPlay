@@ -128,20 +128,20 @@ class ApiClient {
     async crearSubcategoria(subcategoria) {
         return this._request("/subcategorias", {
             method: "POST",
-            body: JSON.stringify(subcategoria)
+            body: JSON.stringify(subcategoria),
         });
     }
 
     async actualizarSubcategoria(id, subcatData) {
         return this._request(`/subcategorias/${id}`, {
             method: "PUT",
-            body: JSON.stringify(subcatData)
+            body: JSON.stringify(subcatData),
         });
     }
 
     async eliminarSubcategoria(id) {
         return this._request(`/subcategorias/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
         });
     }
 
@@ -190,14 +190,44 @@ class ApiClient {
         return await this._request(`/pedidos/${id}`);
     }
 
+    async eliminarPedido(id) {
+        return await this._request(`/pedidos/${id}`, {
+            method: "DELETE",
+        });
+    }
+
     // MÉTODOS DE PAGOS
 
     async getMetodosPago() {
         return await this._request("/metodosPago");
     }
 
+    async getMetodoPago(id) {
+        return await this._request(`/metodosPago/${id}`);
+    }
+
+    async actualizarMetodoPago(id, metodoData) {
+        return await this._request(`/metodosPago/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(metodoData),
+        });
+    }
+
     async getMetodosPagoActivos() {
         return await this._request("/metodosPago/activos");
+    }
+
+    async crearMetodoPago(metodoPago) {
+        return await this._request("/metodosPago", {
+            method: "POST",
+            body: JSON.stringify(metodoPago),
+        });
+    }
+
+    async eliminarMetodoPago(id) {
+        return await this._request(`/metodosPago/${id}`, {
+            method: "DELETE",
+        });
     }
 
     // MÉTODOS ADMINISTRATIVOS
@@ -244,11 +274,8 @@ class ApiClient {
     }
 }
 
-// EXPORTACIÓN CORREGIDA 
+// EXPORTACIÓN CORREGIDA
 const apiInstance = new ApiClient();
 
 // Hacer disponible globalmente
 window.ApiClient = apiInstance;
-
-// Verificar que se exportó correctamente
-console.log('ApiClient cargado correctamente');

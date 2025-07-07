@@ -11,7 +11,7 @@ const elementos = {
 
 // INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🔐 Login inicializado');
+    console.log('Login inicializado');
     
     // Verificar si ya está autenticado
     verificarSesionExistente();
@@ -28,7 +28,7 @@ function verificarSesionExistente() {
     if (token && userData) {
         try {
             const user = JSON.parse(userData);
-            console.log('✅ Sesión existente encontrada:', user.username);
+            console.log('Sesión existente encontrada:', user.username);
             
             // Redirigir directamente al dashboard
             mostrarToast('Ya tienes una sesión activa. Redirigiendo...', 'info');
@@ -38,7 +38,7 @@ function verificarSesionExistente() {
             }, 1500);
             
         } catch (error) {
-            console.error('❌ Error parseando datos de usuario:', error);
+            console.error('Error parseando datos de usuario:', error);
             limpiarSesion();
         }
     }
@@ -59,7 +59,7 @@ function configurarEventos() {
     elementos.email.addEventListener('input', limpiarError);
     elementos.password.addEventListener('input', limpiarError);
     
-    console.log('✅ Eventos configurados');
+    console.log('Eventos configurados');
 }
 
 // MANEJO DEL LOGIN
@@ -80,12 +80,12 @@ async function manejarLogin(event) {
     limpiarError();
     
     try {
-        console.log('📡 Intentando login para:', email);
+        console.log('Intentando login para:', email);
         
         // Llamar a la API
         const response = await apiInstance.login(email, password);
         
-        console.log('✅ Login exitoso:', response);
+        console.log('Login exitoso:', response);
         
         // Guardar datos en localStorage
         guardarSesion(response.token, response.usuario);
@@ -99,7 +99,7 @@ async function manejarLogin(event) {
         }, 1500);
         
     } catch (error) {
-        console.error('❌ Error en login:', error);
+        console.error('Error en login:', error);
         mostrarError(obtenerMensajeError(error.message));
         
     } finally {
@@ -132,9 +132,9 @@ function guardarSesion(token, usuario) {
     try {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(usuario));
-        console.log('✅ Sesión guardada correctamente');
+        console.log('Sesión guardada correctamente');
     } catch (error) {
-        console.error('❌ Error guardando sesión:', error);
+        console.error('Error guardando sesión:', error);
         mostrarError('Error guardando la sesión');
     }
 }
@@ -142,7 +142,7 @@ function guardarSesion(token, usuario) {
 function limpiarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    console.log('🧹 Sesión limpiada');
+    console.log('Sesión limpiada');
 }
 
 // MANEJO DE UI
@@ -186,5 +186,4 @@ function obtenerMensajeError(errorMessage) {
     
     return mapaErrores[errorMessage] || 'Error al iniciar sesión. Intenta nuevamente.';
 }
-
-console.log('📝 login.js cargado correctamente');   
+ 

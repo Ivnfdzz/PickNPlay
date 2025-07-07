@@ -184,17 +184,7 @@ async function cargarProductos() {
     try {
         const response = await apiInstance.getProductosPorCategoria(categoriaActual.id);
         
-        // ✅ DEPURAR: Ver qué devuelve la API
-        console.log(" Respuesta completa de la API:", response);
-        console.log(" Productos en respuesta:", response.productos);
-        
         productosData = response.productos || [];
-
-        // ✅ DEPURAR: Ver estructura de cada producto
-        if (productosData.length > 0) {
-            console.log(" Primer producto:", productosData[0]);
-            console.log(" Subcategorías del primer producto:", productosData[0].subcategorias);
-        }
 
         console.log(` ${productosData.length} productos cargados`);
     } catch (error) {
@@ -440,7 +430,7 @@ window.cambiarCantidad = function (productoId, cambio) {
 window.agregarAlCarrito = function (productoId) {
     const producto = productosData.find((p) => p.id_producto == productoId);
     if (!producto) {
-        console.error("❌ Producto no encontrado:", productoId);
+        console.error("Producto no encontrado:", productoId);
         mostrarToast('Producto no encontrado', 'error');
         return;
     }
@@ -636,5 +626,3 @@ function limpiarCarrito() {
 
 // Exponer funciones globales necesarias
 window.limpiarCarrito = limpiarCarrito;
-
-console.log("productos.js cargado correctamente");

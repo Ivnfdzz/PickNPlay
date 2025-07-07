@@ -1,4 +1,4 @@
-const MetodoPago = require('../models/metodoPago.model.js');
+const MetodoPago = require("../models/metodoPago.model.js");
 
 const traerMetodosPago = async (req, res) => {
     try {
@@ -14,7 +14,9 @@ const traerMetodoPago = async (req, res) => {
         const metodo = await MetodoPago.findByPk(req.params.id);
 
         if (!metodo) {
-            return res.status(404).json({ message: 'Método de pago no encontrado' });
+            return res
+                .status(404)
+                .json({ message: "Método de pago no encontrado" });
         }
 
         res.json(metodo);
@@ -26,7 +28,7 @@ const traerMetodoPago = async (req, res) => {
 const traerMetodosPagoActivos = async (req, res) => {
     try {
         const metodos = await MetodoPago.findAll({
-            where: { activo: true }
+            where: { activo: true },
         });
         res.json(metodos);
     } catch (error) {
@@ -36,21 +38,22 @@ const traerMetodosPagoActivos = async (req, res) => {
 
 const crearMetodoPago = async (req, res) => {
     try {
-        const { nombre } = req.body;
+        const { nombre, activo } = req.body;
 
         if (!nombre) {
-            return res.status(400).json({ 
-                message: 'El nombre es requerido' 
+            return res.status(400).json({
+                message: "El nombre es requerido",
             });
         }
 
         const nuevoMetodo = await MetodoPago.create({
-            nombre
+            nombre,
+            activo: activo !== undefined ? !!activo : true, // true por defecto si no viene
         });
 
         res.status(201).json({
-            message: 'Método de pago creado correctamente',
-            metodoPago: nuevoMetodo
+            message: "Método de pago creado correctamente",
+            metodoPago: nuevoMetodo,
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -60,14 +63,16 @@ const crearMetodoPago = async (req, res) => {
 const actualizarMetodoPago = async (req, res) => {
     try {
         const [filasAfectadas] = await MetodoPago.update(req.body, {
-            where: { id_metodopago: req.params.id }
+            where: { id_metodopago: req.params.id },
         });
 
         if (filasAfectadas === 0) {
-            return res.status(404).json({ message: 'Método de pago no encontrado' });
+            return res
+                .status(404)
+                .json({ message: "Método de pago no encontrado" });
         }
 
-        res.json('Método de pago actualizado correctamente');
+        res.json("Método de pago actualizado correctamente");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -76,14 +81,16 @@ const actualizarMetodoPago = async (req, res) => {
 const borrarMetodoPago = async (req, res) => {
     try {
         const filasAfectadas = await MetodoPago.destroy({
-            where: { id_metodopago: req.params.id }
+            where: { id_metodopago: req.params.id },
         });
 
         if (filasAfectadas === 0) {
-            return res.status(404).json({ message: 'Método de pago no encontrado' });
+            return res
+                .status(404)
+                .json({ message: "Método de pago no encontrado" });
         }
 
-        res.json('Método de pago eliminado correctamente');
+        res.json("Método de pago eliminado correctamente");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -95,5 +102,5 @@ module.exports = {
     traerMetodosPagoActivos,
     crearMetodoPago,
     actualizarMetodoPago,
-    borrarMetodoPago
+    borrarMetodoPago,
 };
