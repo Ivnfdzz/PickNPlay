@@ -50,3 +50,63 @@ body {
     color: #fff7e6;
     border-color: #2563eb;
 }
+
+/* === MODO OSCURO PROFESIONAL === */
+:root[data-bs-theme="dark"] {
+    --bs-body-bg: #181a1b;
+    --bs-body-color: #f5f5f5;
+    --bs-bg-crema: #232323;
+    --bs-bg-brown: #2d140a;
+    --bs-brown: #a97c50;
+    --bs-card-bg: #232323;
+    --bs-border-color: #333;
+}
+
+[data-bs-theme="dark"] body {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .bg-crema {
+    background-color: var(--bs-bg-crema) !important;
+}
+
+[data-bs-theme="dark"] .bg-brown {
+    background-color: var(--bs-bg-brown) !important;
+}
+
+[data-bs-theme="dark"] .btn-brown {
+    background-color: var(--bs-brown) !important;
+    color: #fff !important;
+}
+[data-bs-theme="dark"] .btn-brown:hover {
+    background-color: #3f1d10 !important;
+    color: #fff7e6 !important;
+}
+
+[data-bs-theme="dark"] .btn-dark-mode {
+    border-color: #fff7e6;
+    color: #fff7e6;
+    background: none;
+}
+[data-bs-theme="dark"] .btn-dark-mode:hover {
+    background-color: #fff7e6;
+    color: #3f1d10 !important;
+}
+
+[data-bs-theme="dark"] .btn-arrow {
+    background-color: var(--bs-brown) !important;
+    color: #fff !important;
+    border-color: var(--bs-brown) !important;
+}
+[data-bs-theme="dark"] .btn-arrow:hover {
+    background-color: #3f1d10 !important;
+    color: #fff7e6 !important;
+    border-color: #3f1d10 !important;
+}
+
+[data-bs-theme="dark"] .form-control {
+    background-color: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}

@@ -89,10 +89,12 @@
     padding: 0.5rem 1rem;
     font-weight: 600;
     transition: background-color 0.2s ease;
+    color: #fff !important; /* Forzar blanco en modo claro */
 }
 
 .btn-agregar-carrito:hover {
     background-color: #733a12;
+    color: #fff !important;
 }
 
 /* Cantidad selector */
@@ -127,6 +129,79 @@
     border: 1px solid #dee2e6;
     border-radius: 4px;
     padding: 0.25rem;
+}
+
+/* === MODO OSCURO PROFESIONAL === */
+:root[data-bs-theme="dark"] {
+    --bs-body-bg: #181a1b;
+    --bs-body-color: #f5f5f5;
+    --bs-bg-crema: #232323;
+    --bs-brown: #a97c50;
+    --bs-card-bg: #232323;
+    --bs-border-color: #333;
+}
+
+[data-bs-theme="dark"] body {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .sidebar-header,
+[data-bs-theme="dark"] .subcategoria-item,
+[data-bs-theme="dark"] .content-header,
+[data-bs-theme="dark"] .content-scroll,
+[data-bs-theme="dark"] .col-md-3.col-lg-2 {
+    background-color: var(--bs-bg-crema) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .producto-card {
+    background: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+[data-bs-theme="dark"] .producto-card .card-img-top {
+    background-color: #232323 !important;
+}
+
+[data-bs-theme="dark"] .producto-precio {
+    color: var(--bs-brown) !important;
+}
+
+[data-bs-theme="dark"] .btn-agregar-carrito {
+    background-color: var(--bs-brown) !important;
+    color: #fff !important;
+}
+[data-bs-theme="dark"] .btn-agregar-carrito:hover {
+    background-color: #3f1d10 !important;
+}
+
+[data-bs-theme="dark"] .cantidad-btn {
+    background-color: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+[data-bs-theme="dark"] .cantidad-btn:hover {
+    background-color: #232323 !important;
+    border-color: var(--bs-brown) !important;
+}
+
+[data-bs-theme="dark"] .cantidad-input {
+    background-color: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .subcategoria-item.active {
+    background-color: var(--bs-brown) !important;
+    color: #fff !important;
+    border-left: 4px solid #a97c50 !important;
+}
+
+[data-bs-theme="dark"] .subcategoria-item:hover {
+    background-color: #232323 !important;
+    border-left: 4px solid var(--bs-brown) !important;
 }
 
 /* Responsive */
