@@ -255,18 +255,15 @@ class ApiClient {
     // MÉTODOS DE AUDITORÍA
 
     async getLogs(filtros = {}) {
+        // Construir query string a partir de filtros
         const params = new URLSearchParams();
+        if (filtros.usuario) params.append("usuario", filtros.usuario);
+        if (filtros.accion) params.append("accion", filtros.accion);
+        if (filtros.producto) params.append("producto", filtros.producto);
+        if (filtros.desde) params.append("desde", filtros.desde);
+        if (filtros.limite) params.append("limite", filtros.limite);
 
-        Object.keys(filtros).forEach((key) => {
-            if (filtros[key]) {
-                params.append(key, filtros[key]);
-            }
-        });
-
-        const queryString = params.toString();
-        const endpoint = queryString ? `/logs?${queryString}` : "/logs";
-
-        return await this._request(endpoint);
+        return await this._request(`/auditoria?${params.toString()}`);
     }
 
     async getEstadisticasAuditoria() {

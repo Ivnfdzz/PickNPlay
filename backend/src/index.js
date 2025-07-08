@@ -31,7 +31,7 @@ app.use("/api/pedidos", pedidoRouter);
 app.use("/api/metodosPago", metodoPagoRouter);
 app.use("/api/acciones", accionRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/logs", logRouter);
+app.use("/api/auditoria", logRouter);
 
 app.listen(PORT, async () => {
     await inicializarDB();

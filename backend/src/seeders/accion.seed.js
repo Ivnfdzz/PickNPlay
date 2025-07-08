@@ -9,11 +9,9 @@ const crearAcciones = async () => {
         }
 
         await Accion.bulkCreate([
-            { nombre: 'crear' },
-            { nombre: 'actualizar' },
-            { nombre: 'eliminar' },
-            { nombre: 'activar' },
-            { nombre: 'desactivar' }
+            { nombre: 'Crear' },
+            { nombre: 'Actualizar' },
+            { nombre: 'Eliminar' }
         ]);
 
         console.log('Acciones creadas');

@@ -33,7 +33,7 @@ const inicializarDB = async () => {
     const establecerRelaciones = require('../models/associations.js');
     establecerRelaciones();
 
-    await DB.sync({alter: true});
+    await DB.sync(); // Cambia a true si quieres reiniciar la base de datos
     console.log('Base de datos sincronizada correctamente.');
 };
 

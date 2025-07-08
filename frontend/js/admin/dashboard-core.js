@@ -432,6 +432,19 @@ document.addEventListener("operacionCrudSeleccionada", (e) => {
     }
 });
 
+if (DashboardCore.elements.btnAuditoria) {
+    DashboardCore.elements.btnAuditoria.addEventListener("click", () => {
+        // Oculta bienvenida y muestra el contenedor dinámico
+        if (DashboardCore.elements.bienvenidaDashboard) {
+            DashboardCore.elements.bienvenidaDashboard.classList.add("d-none");
+        }
+        if (DashboardCore.elements.contenidoDinamico) {
+            DashboardCore.elements.contenidoDinamico.classList.remove("d-none");
+        }
+        listarLogsAuditoria();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     DashboardCore.init();
     DashboardCore.cargarTemaGuardado();

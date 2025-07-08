@@ -7,7 +7,7 @@ const obtenerLogs = async (req, res) => {
             id_accion: req.query.accion,
             id_producto: req.query.producto,
             fecha_desde: req.query.desde,
-            limite: req.query.limite || 50,
+            limite: req.query.limite ? parseInt(req.query.limite, 10) : 50,
         };
 
         const logs = await AuditoriaService.obtenerLogs(filtros);
@@ -50,7 +50,7 @@ const obtenerLogsPorUsuario = async (req, res) => {
     try {
         const filtros = {
             id_usuario: req.params.userId,
-            limite: req.query.limite || 20,
+            limite: req.query.limite ? parseInt(req.query.limite, 10) : 20,
         };
 
         const logs = await AuditoriaService.obtenerLogs(filtros);

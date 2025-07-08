@@ -35,6 +35,7 @@ function renderizarTablaProductos(productos) {
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Subcategorías</th>
+                        <th>Activo</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -58,6 +59,7 @@ function renderizarTablaProductos(productos) {
                     <td>${producto.nombre}</td>
                     <td>$${producto.precio.toFixed(2)}</td>
                     <td>${subcats}</td>
+                    <td>${producto.activo ? "Sí" : "No"}</td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-primary me-2" onclick="mostrarFormularioEditarProducto(${producto.id_producto})" title="Modificar">
                             <i class="bi bi-pencil"></i>
@@ -146,6 +148,10 @@ async function mostrarFormularioCrearProducto() {
                         ${checkboxesHTML}
                     </div>
                 </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="activo" name="activo" checked>
+                    <label class="form-check-label" for="activo">Activo</label>
+                </div>
                 <button type="submit" class="btn btn-primary">Crear producto</button>
             </form>
         `;
@@ -164,6 +170,7 @@ async function mostrarFormularioCrearProducto() {
                 const precio = parseFloat(form.precio.value);
                 const imagen = form.imagen.value.trim();
                 const descripcion = form.descripcion.value.trim();
+                const activo = form.activo.checked;
 
                 // 2. Tomar los IDs de las subcategorías seleccionadas
                 const subcatCheckboxes = form.querySelectorAll('input[name="subcategorias"]:checked');
@@ -181,6 +188,7 @@ async function mostrarFormularioCrearProducto() {
                     precio,
                     imagen,
                     descripcion,
+                    activo,
                     subcategorias
                 };
 
@@ -263,6 +271,10 @@ async function mostrarFormularioEditarProducto(id) {
                         ${checkboxesHTML}
                     </div>
                 </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="activo" name="activo" ${producto.activo ? "checked" : ""}>
+                    <label class="form-check-label" for="activo">Activo</label>
+                </div>
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 <button type="button" class="btn btn-secondary ms-2" onclick="listarProductos()">Cancelar</button>
             </form>
@@ -282,6 +294,7 @@ async function mostrarFormularioEditarProducto(id) {
                 const precio = parseFloat(form.precio.value);
                 const imagen = form.imagen.value.trim();
                 const descripcion = form.descripcion.value.trim();
+                const activo = form.activo.checked;
 
                 // 2. Tomar los IDs de las subcategorías seleccionadas
                 const subcatCheckboxes = form.querySelectorAll('input[name="subcategorias"]:checked');
@@ -299,6 +312,7 @@ async function mostrarFormularioEditarProducto(id) {
                     precio,
                     imagen,
                     descripcion,
+                    activo,
                     subcategorias
                 };
 
