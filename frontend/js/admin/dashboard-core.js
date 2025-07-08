@@ -1,4 +1,3 @@
-// ESTADO GLOBAL DEL DASHBOARD
 const DashboardCore = {
     // Estado actual
     currentEntity: null,
@@ -432,18 +431,27 @@ document.addEventListener("operacionCrudSeleccionada", (e) => {
     }
 });
 
-if (DashboardCore.elements.btnAuditoria) {
-    DashboardCore.elements.btnAuditoria.addEventListener("click", () => {
-        // Oculta bienvenida y muestra el contenedor dinámico
-        if (DashboardCore.elements.bienvenidaDashboard) {
-            DashboardCore.elements.bienvenidaDashboard.classList.add("d-none");
-        }
-        if (DashboardCore.elements.contenidoDinamico) {
-            DashboardCore.elements.contenidoDinamico.classList.remove("d-none");
-        }
-        listarLogsAuditoria();
-    });
-}
+DashboardCore.elements.btnAuditoria.addEventListener("click", () => {
+    // Oculta bienvenida y muestra el contenedor dinámico
+    if (DashboardCore.elements.bienvenidaDashboard) {
+        DashboardCore.elements.bienvenidaDashboard.classList.add("d-none");
+    }
+    if (DashboardCore.elements.contenidoDinamico) {
+        DashboardCore.elements.contenidoDinamico.classList.remove("d-none");
+    }
+    listarLogsAuditoria();
+});
+
+DashboardCore.elements.btnEstadisticas.addEventListener("click", () => {
+    // Oculta bienvenida y muestra el contenedor dinámico
+    if (DashboardCore.elements.bienvenidaDashboard) {
+        DashboardCore.elements.bienvenidaDashboard.classList.add("d-none");
+    }
+    if (DashboardCore.elements.contenidoDinamico) {
+        DashboardCore.elements.contenidoDinamico.classList.remove("d-none");
+    }
+    mostrarEstadisticas();
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     DashboardCore.init();

@@ -87,10 +87,6 @@ class ApiClient {
         });
     }
 
-    async getEstadisticasUsuarios() {
-        return await this._request("/usuarios/estadisticas");
-    }
-
     // MÉTODOS DE ROLES
 
     async getRoles() {
@@ -173,6 +169,26 @@ class ApiClient {
         return await this._request(`/productos/${id}`);
     }
 
+    async crearProducto(productoData) {
+        return await this._request("/productos", {
+            method: "POST",
+            body: JSON.stringify(productoData),
+        });
+    }
+
+    async actualizarProducto(id, productoData) {
+        return await this._request(`/productos/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(productoData),
+        });
+    }
+
+    async eliminarProducto(id) {
+        return await this._request(`/productos/${id}`, {
+            method: "DELETE",
+        });
+    }
+
     // MÉTODOS DE PEDIDOS
 
     async crearPedido(pedidoData) {
@@ -230,28 +246,6 @@ class ApiClient {
         });
     }
 
-    // MÉTODOS ADMINISTRATIVOS
-
-    async crearProducto(productoData) {
-        return await this._request("/productos", {
-            method: "POST",
-            body: JSON.stringify(productoData),
-        });
-    }
-
-    async actualizarProducto(id, productoData) {
-        return await this._request(`/productos/${id}`, {
-            method: "PUT",
-            body: JSON.stringify(productoData),
-        });
-    }
-
-    async eliminarProducto(id) {
-        return await this._request(`/productos/${id}`, {
-            method: "DELETE",
-        });
-    }
-
     // MÉTODOS DE AUDITORÍA
 
     async getLogs(filtros = {}) {
@@ -266,8 +260,22 @@ class ApiClient {
         return await this._request(`/auditoria?${params.toString()}`);
     }
 
+    // MÉTODOS DE ESTADÍSTICAS
+
     async getEstadisticasAuditoria() {
-        return await this._request("/logs/estadisticas");
+        return await this._request("/auditoria/estadisticas");
+    }
+
+    async getEstadisticasUsuarios() {
+        return await this._request("/usuarios/estadisticas");
+    }
+
+    async getProductos() {
+        return await this._request("/productos");
+    }
+
+    async getPedidos() {
+        return await this._request("/pedidos");
     }
 }
 
