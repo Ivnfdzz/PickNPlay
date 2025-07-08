@@ -146,4 +146,4 @@ Usuarios admin iniciales se crean con los seeders.
 ## Notas y troubleshooting
 - Si hay errores de conexión, revisa las variables de entorno y la base de datos.
 - Para restablecer datos, puedes volver a correr los seeders (`npm run seed`).
-- Contacto: [@ivnfdzz05](https://github.com/ivnfdzz05) · [@luchoFatto](https://github.com/luchoFatto)
+- Contacto: [@ivnfdzz05](https://github.com/ivnfdzz) · [@luchoFatto](https://github.com/luchoFatto)
