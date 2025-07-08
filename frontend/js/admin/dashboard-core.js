@@ -347,32 +347,6 @@ const DashboardCore = {
         this.limpiarSelecciones();
     },
 
-    toggleModoOscuro() {
-        const html = document.documentElement;
-        const esModoOscuro = html.getAttribute("data-bs-theme") === "dark";
-
-        if (esModoOscuro) {
-            html.setAttribute("data-bs-theme", "light");
-            this.elements.btnModoOscuro.innerHTML =
-                '<i class="bi bi-moon"></i>';
-            localStorage.setItem("tema", "light");
-        } else {
-            html.setAttribute("data-bs-theme", "dark");
-            this.elements.btnModoOscuro.innerHTML = '<i class="bi bi-sun"></i>';
-            localStorage.setItem("tema", "dark");
-        }
-
-        console.log(`Modo ${esModoOscuro ? "claro" : "oscuro"} activado`);
-    },
-
-    cargarTemaGuardado() {
-        const temaGuardado = localStorage.getItem("tema");
-        if (temaGuardado === "dark") {
-            document.documentElement.setAttribute("data-bs-theme", "dark");
-            this.elements.btnModoOscuro.innerHTML = '<i class="bi bi-sun"></i>';
-        }
-    },
-
     // MÉTODOS PÚBLICOS PARA OTROS MÓDULOS
     getEstadoActual() {
         return {

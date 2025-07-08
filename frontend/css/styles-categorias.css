@@ -37,6 +37,7 @@ body {
     transition: transform 0.2s ease;
     border: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
 }
 
 .categoria-card:hover {
@@ -46,8 +47,70 @@ body {
 
 .card-img-top {
     height: 180px;
-    object-fit: contain; /* Cambiado de 'cover' a 'contain' */
+    object-fit: contain;
+    /* Cambiado de 'cover' a 'contain' */
     object-position: center;
-    background-color: #f8f9fa; /* Fondo gris claro */
-    padding: 10px; /* Añade un poco de espacio alrededor */
+    background-color: #f8f9fa;
+    /* Fondo gris claro */
+    padding: 10px;
+    /* Añade un poco de espacio alrededor */
+}
+
+/* === MODO OSCURO PROFESIONAL === */
+:root[data-bs-theme="dark"] {
+    --bs-body-bg: #181a1b;
+    --bs-body-color: #f5f5f5;
+    --bs-bg-crema: #232323;
+    --bs-bg-brown: #2d140a;
+    --bs-brown: #a97c50;
+    --bs-card-bg: #232323;
+    --bs-border-color: #333;
+}
+
+[data-bs-theme="dark"] body {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .bg-crema {
+    background-color: var(--bs-bg-crema) !important;
+}
+
+[data-bs-theme="dark"] .bg-brown {
+    background-color: var(--bs-bg-brown) !important;
+}
+
+[data-bs-theme="dark"] .btn-brown {
+    background-color: var(--bs-brown) !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .btn-brown:hover {
+    background-color: #3f1d10 !important;
+    color: #fff7e6 !important;
+}
+
+[data-bs-theme="dark"] .btn-dark-mode {
+    border-color: #fff7e6;
+    color: #fff7e6;
+    background: none;
+}
+
+[data-bs-theme="dark"] .btn-dark-mode:hover {
+    background-color: #fff7e6;
+    color: #3f1d10 !important;
+}
+
+[data-bs-theme="dark"] .categoria-card {
+    background: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+[data-bs-theme="dark"] .categoria-card:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+[data-bs-theme="dark"] .card-img-top {
+    background-color: #232323 !important;
 }

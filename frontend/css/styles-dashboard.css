@@ -2,37 +2,32 @@ body {
     font-family: "Segoe UI", sans-serif;
 }
 
-/* Fondo crema PARA TODO */
 .bg-crema {
     background-color: #fff7e6 !important;
 }
 
-/* Navy blue oscuro para admin */
 .bg-dark {
     background-color: #1e2a5a !important;
 }
 
-/* Botón personalizado admin */
 .btn-admin {
-    background-color: #1e2a5a;
+    background: #1e2a5a;
     color: #fff7e6;
     border: none;
 }
 
 .btn-admin:hover {
-    background-color: #2563eb;
+    background: #2563eb;
     color: #fff7e6;
 }
 
-/* Botones outline con tema admin */
 .btn-outline-primary {
     border-color: #1e2a5a;
     color: #1e2a5a;
 }
 
 .btn-outline-primary:hover {
-    background-color: #1e2a5a;
-    border-color: #1e2a5a;
+    background: #1e2a5a;
     color: #fff7e6;
 }
 
@@ -42,62 +37,34 @@ body {
 }
 
 .btn-outline-success:hover {
-    background-color: #198754;
-    border-color: #198754;
-    color: white;
+    background: #198754;
+    color: #fff;
 }
 
-/* === NAVBAR ADMIN === */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
 }
 
 .navbar-brand {
     font-weight: 600;
 }
 
-/* === SIDEBAR === */
 .sidebar {
     border-right: 1px solid #dee2e6;
-    background-color: #fff7e6 !important;
+    background: #fff7e6 !important;
 }
 
 .sidebar-title {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
-.sidebar-section {
-    border-bottom: 1px solid #f1f3f4;
-    padding-bottom: 1rem;
-}
-
-.sidebar-section:last-child {
-    border-bottom: none;
-}
-
-/* Selector de entidad */
-.form-select {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    transition: border-color 0.15s ease-in-out;
-    background-color: white;
-}
-
-.form-select:focus {
-    border-color: #1e2a5a;
-    box-shadow: 0 0 0 0.2rem rgba(30, 42, 90, 0.25);
-}
-
-/* Lista de operaciones CRUD */
 .list-group-item {
     border: none;
     border-radius: 6px !important;
     margin-bottom: 4px;
-    transition: all 0.2s ease;
-    background-color: transparent !important;
+    background: transparent !important;
 }
 
 .list-group-item:hover {
@@ -105,9 +72,8 @@ body {
 }
 
 .list-group-item.active {
-    background-color: #1e2a5a !important;
-    border-color: #1e2a5a;
-    color: white;
+    background: #1e2a5a !important;
+    color: #fff;
 }
 
 .crud-option {
@@ -120,14 +86,8 @@ body {
     text-align: center;
 }
 
-/* === ÁREA CENTRAL === */
 .content-area {
-    background-color: #fff7e6 !important;
-}
-
-/* Bienvenida inicial */
-#bienvenida-dashboard {
-    color: #495057;
+    background: #fff7e6 !important;
 }
 
 #bienvenida-dashboard h2 {
@@ -135,100 +95,43 @@ body {
     font-weight: 600;
 }
 
-/* Cards de acceso rápido */
 .card {
-    border: none;
+    border: 1px solid #e9ecef;
     border-radius: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background-color: white !important;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: #fff !important;
 }
 
 .card-title {
     color: #1e2a5a;
-    font-weight: 600;
 }
 
-/* === CONTENIDO DINÁMICO === */
-#contenido-dinamico {
-    animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* === FORMULARIOS DINÁMICOS === */
-.form-label {
-    font-weight: 500;
-    color: #495057;
-}
-
-.form-control {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    transition: border-color 0.15s ease-in-out;
-    background-color: white !important;
-}
-
-.form-control:focus {
-    border-color: #1e2a5a;
-    box-shadow: 0 0 0 0.2rem rgba(30, 42, 90, 0.25);
-}
-
-/* === TABLAS === */
 .table {
-    background-color: white !important;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    border-radius: 6px;
 }
 
 .table thead th {
-    background-color: #1e2a5a;
-    color: white;
-    border: none;
-    font-weight: 500;
-    text-transform: uppercase;
-    font-size: 0.875rem;
-    letter-spacing: 0.5px;
+    background: #f8f9fa;
+    color: #1e2a5a;
 }
 
 .table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-/* === BADGES === */
-.badge {
-    font-size: 0.75rem;
-    font-weight: 500;
+    background: #f0f0f0;
 }
 
 .badge-activo {
-    background-color: #198754;
+    background: #198754;
+    color: #fff;
 }
 
 .badge-inactivo {
-    background-color: #6c757d;
+    background: #dc3545;
+    color: #fff;
 }
 
-/* === BOTONES DE ACCIÓN === */
 .btn-sm {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
 }
 
 .btn-group .btn {
@@ -239,128 +142,147 @@ body {
     margin-right: 0;
 }
 
-/* Botones de tabla */
 .btn-editar {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    color: white;
+    color: #2563eb;
+    background: none;
+    border: none;
 }
 
 .btn-editar:hover {
-    background-color: #0b5ed7;
-    border-color: #0a58ca;
-    color: white;
+    text-decoration: underline;
 }
 
 .btn-eliminar {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: white;
+    color: #dc3545;
+    background: none;
+    border: none;
 }
 
 .btn-eliminar:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-    color: white;
+    text-decoration: underline;
 }
 
-/* === ALERTAS === */
-.alert {
-    border: none;
-    border-radius: 8px;
-    border-left: 4px solid;
-    background-color: white !important;
-}
-
-.alert-success {
-    border-left-color: #198754;
-    color: #0f5132;
-}
-
-.alert-danger {
-    border-left-color: #dc3545;
-    color: #721c24;
-}
-
-.alert-info {
-    border-left-color: #0dcaf0;
-    color: #055160;
-}
-
-/* === LOADING Y ESTADOS === */
 .spinner-border {
     color: #1e2a5a;
 }
 
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 247, 230, 0.8) !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-}
-
-/* === RESPONSIVE === */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100% !important;
-        min-height: auto !important;
-        border-right: none;
-        border-bottom: 1px solid #dee2e6;
-        background-color: #fff7e6 !important;
-    }
-
-    main {
-        flex-direction: column !important;
-    }
-
-    .content-area {
-        padding: 1rem !important;
-        background-color: #fff7e6 !important;
-    }
-
-    .card-body {
-        padding: 1rem;
-    }
-
-    .table-responsive {
-        border-radius: 8px;
-    }
-}
-
-/* === UTILIDADES === */
-.text-admin {
-    color: #1e2a5a !important;
-}
-
-.border-admin {
-    border-color: #1e2a5a !important;
-}
-
-.shadow-sm {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-}
-
-/* === FOOTER === */
 footer {
-    font-size: 0.875rem;
-    background-color: #1e2a5a !important;
+    background: #1e2a5a;
+    color: #fff7e6;
+    padding: 1rem 0;
+    text-align: center;
 }
 
-body.dashboard-body {
-    background-color: #fff7e6 !important;
+/* === MODO OSCURO PROFESIONAL === */
+:root[data-bs-theme="dark"] {
+    --bs-body-bg: #181a1b;
+    --bs-body-color: #f5f5f5;
+    --bs-bg-crema: #232323;
+    --bs-bg-dark: #10131a;
+    --bs-card-bg: #232323;
+    --bs-border-color: #333;
+    --bs-admin: #2563eb;
+    --bs-sidebar-bg: #181a1b;
+    --bs-sidebar-border: #232323;
 }
 
-.container-fluid {
-    background-color: #fff7e6 !important;
+[data-bs-theme="dark"] body {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
 }
 
-.modal-content,
-.dropdown-menu {
-    background-color: white !important;
+[data-bs-theme="dark"] .bg-crema {
+    background-color: var(--bs-bg-crema) !important;
+}
+
+[data-bs-theme="dark"] .bg-dark {
+    background-color: var(--bs-bg-dark) !important;
+}
+
+[data-bs-theme="dark"] .sidebar {
+    background: var(--bs-sidebar-bg) !important;
+    border-right: 1px solid var(--bs-sidebar-border) !important;
+}
+
+[data-bs-theme="dark"] .content-area {
+    background: var(--bs-bg-crema) !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .table,
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .navbar,
+[data-bs-theme="dark"] footer {
+    background-color: var(--bs-bg-dark) !important;
+    color: #fff7e6 !important;
+}
+
+[data-bs-theme="dark"] .card-title,
+[data-bs-theme="dark"] #bienvenida-dashboard h2 {
+    color: var(--bs-admin) !important;
+}
+
+[data-bs-theme="dark"] .list-group-item {
+    background: none !important;
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .list-group-item.active {
+    background: var(--bs-admin) !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .list-group-item:hover {
+    background: #232323 !important;
+}
+
+[data-bs-theme="dark"] .btn-admin {
+    background: var(--bs-admin) !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .btn-admin:hover {
+    background: #1e2a5a !important;
+    color: #fff7e6 !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary {
+    border-color: var(--bs-admin) !important;
+    color: var(--bs-admin) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover {
+    background: var(--bs-admin) !important;
+    color: #fff7e6 !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-success {
+    border-color: #198754 !important;
+    color: #198754 !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-success:hover {
+    background: #198754 !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .badge-activo {
+    background: #198754 !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .badge-inactivo {
+    background: #dc3545 !important;
+    color: #fff !important;
+}
+
+[data-bs-theme="dark"] .spinner-border {
+    color: var(--bs-admin) !important;
 }
