@@ -1,3 +1,31 @@
+/**
+ * PICK&PLAY - CONTROLADOR DE PÁGINA DE INICIO
+ * 
+ * @description Módulo responsable de la página principal de bienvenida donde
+ *              los clientes ingresan su nombre para iniciar el proceso de compra.
+ *              Incluye funcionalidades especiales de acceso administrativo.
+ * 
+ * @features    - Captura y validación de nombre del cliente
+ *              - Integración con teclado virtual para autoservicio
+ *              - Validaciones avanzadas de entrada de texto
+ *              - Acceso secreto al panel administrativo (5 clicks en logo)
+ *              - Feedback visual y manejo de errores
+ *              - Navegación automática al flujo de compra
+ * 
+ * @business    La página de inicio es el primer punto de contacto con el cliente,
+ *              estableciendo una experiencia personalizada desde el comienzo.
+ *              El registro del nombre permite un trato personalizado durante
+ *              todo el proceso de compra.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Inicializa la página de inicio con todas sus funcionalidades
+ * @description Configura formulario, teclado virtual y easter egg administrativo
+ * @listens DOMContentLoaded
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const inputNombre = document.getElementById('nombreCliente');
@@ -57,6 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/**
+ * Valida que el nombre ingresado cumpla con todos los requisitos
+ * @param {string} nombre - Nombre ingresado por el usuario
+ * @returns {boolean} true si es válido, false si hay errores
+ * @description Aplica validaciones comprehensivas de formato y contenido
+ * @business Asegura que el nombre sea apropiado para personalización
+ */
 function validarNombre(nombre) {
     const inputNombre = document.getElementById('nombreCliente');
 

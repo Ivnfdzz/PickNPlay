@@ -1,57 +1,92 @@
+/**
+ * ESTILOS PARA VISTA DE PRODUCTOS - PICK&PLAY
+ * 
+ * Este archivo contiene todos los estilos específicos para la página de productos
+ * del e-commerce. Incluye el diseño de:
+ * - Sidebar de subcategorías con navegación
+ * - Grid de productos estilo autoservicio
+ * - Selectores de cantidad interactivos
+ * - Sistema responsive completo
+ * - Modo oscuro profesional
+ * 
+ * Estructura visual:
+ * - Sidebar fijo con subcategorías
+ * - Content area con header sticky
+ * - Cards de productos con hover effects
+ * - Controles de cantidad integrados
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ */
+
 /* Importar estilos base de categorías */
 @import url('/frontend/css/base/styles-categorias.css');
 
-/* === ESTILOS ESPECÍFICOS DE PRODUCTOS === */
+/* ================================================
+   SIDEBAR DE SUBCATEGORÍAS
+   ================================================ */
 
-/* Sidebar subcategorías */
+/* Header del sidebar - se mantiene fijo al hacer scroll */
 .sidebar-header {
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: #fff7e6 !important; /* Cambio aquí */
+    background-color: #fff7e6 !important;
 }
 
+/* Items individuales de subcategoría */
 .subcategoria-item {
     border: none !important;
     padding: 1rem 1.5rem;
     transition: all 0.2s ease;
-    background-color: #fff7e6 !important; /* Cambio aquí */
+    background-color: #fff7e6 !important;
 }
 
+/* Efecto hover en subcategorías */
 .subcategoria-item:hover {
     background-color: #f8f9fa !important;
     border-left: 4px solid #3f1d10 !important;
 }
 
+/* Estado activo de subcategoría seleccionada */
 .subcategoria-item.active {
     background-color: #3f1d10 !important;
     color: white !important;
     border-left: 4px solid #733a12 !important;
 }
 
+/* Iconos en estado activo */
 .subcategoria-item.active i {
     color: white !important;
 }
 
-/* Content area */
+/* ================================================
+   ÁREA DE CONTENIDO PRINCIPAL
+   ================================================ */
+
+/* Header del contenido - sticky para mantener filtros visibles */
 .content-header {
     position: sticky;
     top: 0;
     z-index: 9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff7e6 !important; /* Cambio aquí */
+    background-color: #fff7e6 !important;
 }
 
+/* Área scrolleable del contenido */
 .content-scroll {
-    background-color: #fff7e6 !important; /* Ya estaba correcto */
+    background-color: #fff7e6 !important;
 }
 
-/* Sidebar background */
+/* Fondo del sidebar completo */
 .col-md-3.col-lg-2 {
-    background-color: #fff7e6 !important; /* Cambio aquí */
+    background-color: #fff7e6 !important;
 }
 
-/* Cards de productos estilo autoservicio */
+/* ================================================
+   CARDS DE PRODUCTOS ESTILO AUTOSERVICIO
+   ================================================ */
+/* Card principal del producto con efectos de interacción */
 .producto-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: none;
@@ -61,27 +96,32 @@
     background: white;
 }
 
+/* Efecto elevación al hover */
 .producto-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* Imagen del producto - tamaño estandarizado */
 .producto-card .card-img-top {
     height: 200px;
     object-fit: cover;
     object-position: center;
 }
 
+/* Cuerpo de la card con espaciado consistente */
 .producto-card .card-body {
     padding: 1.25rem;
 }
 
+/* Precio destacado del producto */
 .producto-precio {
     font-size: 1.25rem;
     font-weight: bold;
     color: #3f1d10;
 }
 
+/* Botón de agregar al carrito */
 .btn-agregar-carrito {
     background-color: #3f1d10;
     border: none;
@@ -89,7 +129,7 @@
     padding: 0.5rem 1rem;
     font-weight: 600;
     transition: background-color 0.2s ease;
-    color: #fff !important; /* Forzar blanco en modo claro */
+    color: #fff !important; /* Color forzado para modo claro */
 }
 
 .btn-agregar-carrito:hover {
@@ -97,7 +137,11 @@
     color: #fff !important;
 }
 
-/* Cantidad selector */
+/* ================================================
+   SELECTOR DE CANTIDAD INTERACTIVO
+   ================================================ */
+
+/* Contenedor del selector de cantidad */
 .cantidad-selector {
     display: flex;
     align-items: center;
@@ -105,6 +149,7 @@
     margin-bottom: 1rem;
 }
 
+/* Botones de incremento/decremento */
 .cantidad-btn {
     width: 32px;
     height: 32px;
@@ -123,6 +168,7 @@
     border-color: #3f1d10;
 }
 
+/* Input numérico de cantidad */
 .cantidad-input {
     width: 60px;
     text-align: center;
@@ -131,7 +177,9 @@
     padding: 0.25rem;
 }
 
-/* === MODO OSCURO PROFESIONAL === */
+/* ================================================
+   MODO OSCURO
+   ================================================ */
 :root[data-bs-theme="dark"] {
     --bs-body-bg: #181a1b;
     --bs-body-color: #f5f5f5;

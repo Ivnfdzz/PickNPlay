@@ -1,3 +1,28 @@
+/**
+ * PICK&PLAY - CONTROLADOR DE CARRITO DE COMPRAS
+ * 
+ * @description Módulo principal del carrito de compras que gestiona la visualización,
+ *              modificación y procesamiento de productos seleccionados por el cliente.
+ *              Controla todo el flujo desde la revisión hasta la confirmación del pedido.
+ * 
+ * @features    - Gestión completa del carrito de compras
+ *              - Modificación de cantidades y eliminación de productos
+ *              - Cálculo automático de totales y subtotales
+ *              - Validación de formulario de checkout
+ *              - Integración con métodos de pago
+ *              - Procesamiento y envío de pedidos a la API
+ *              - Estados de carga y feedback visual
+ *              - Persistencia en localStorage
+ * 
+ * @business    El carrito es el componente central del proceso de compra,
+ *              donde el cliente revisa y confirma su selección antes del pago.
+ *              Su correcto funcionamiento es crítico para completar transacciones
+ *              y generar ingresos para el negocio.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
 // VARIABLES GLOBALES
 let carritoItems = [];
 let metodoPagoData = [];
@@ -34,6 +59,12 @@ const elementos = {
 };
 
 // INICIALIZACIÓN
+
+/**
+ * Inicializa la página del carrito de compras
+ * @description Configuración principal, verificación de datos y carga inicial
+ * @listens DOMContentLoaded
+ */
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Inicializando página del carrito...');
 
@@ -61,7 +92,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// VERIFICACIÓN INICIAL
+/**
+ * Verifica que existan los datos necesarios para operar el carrito
+ * @returns {boolean} true si los datos son válidos, false si hay error
+ * @description Valida nombre de cliente y redirige si faltan datos críticos
+ */
 function verificarDatosIniciales() {
     // Verificar nombre de cliente
     nombreCliente = localStorage.getItem('nombreCliente');
@@ -78,6 +113,10 @@ function verificarDatosIniciales() {
     return true;
 }
 
+/**
+ * Configura los elementos iniciales de la interfaz de usuario
+ * @description Personaliza la UI con datos del cliente y configuraciones iniciales
+ */
 function configurarUIInicial() {
     // Mostrar saludo personalizado
     if (elementos.saludoCliente) {
@@ -92,7 +131,10 @@ function configurarUIInicial() {
     console.log(' UI inicial configurada');
 }
 
-// CONFIGURACIÓN DE EVENTOS
+/**
+ * Configura todos los event listeners de la interfaz
+ * @description Establece la comunicación entre elementos DOM y funcionalidades
+ */
 function configurarEventos() {
     // Botón agregar más productos
     if (elementos.btnAgregarMas) {
@@ -117,7 +159,11 @@ function configurarEventos() {
     console.log('Eventos configurados');
 }
 
-// CARGA DE DATOS
+/**
+ * Carga todos los datos necesarios para el funcionamiento del carrito
+ * @async
+ * @description Obtiene carrito del localStorage y métodos de pago de la API
+ */
 async function cargarDatosIniciales() {
     mostrarEstado('loading');
 
@@ -143,6 +189,10 @@ async function cargarDatosIniciales() {
     }
 }
 
+/**
+ * Carga los productos del carrito desde el localStorage
+ * @description Recupera y procesa los items previamente guardados
+ */
 function cargarCarritoDesdeLocalStorage() {
     const carritoGuardado = localStorage.getItem('carrito');
 
@@ -161,6 +211,11 @@ function cargarCarritoDesdeLocalStorage() {
     }
 }
 
+/**
+ * Obtiene los métodos de pago disponibles desde la API
+ * @async
+ * @description Carga opciones de pago activas para el formulario de checkout
+ */
 async function cargarMetodosPago() {
     try {
         console.log(' Cargando métodos de pago...');
@@ -187,6 +242,10 @@ async function cargarMetodosPago() {
     }
 }
 
+/**
+ * Renderiza las opciones de métodos de pago en el select
+ * @description Pobla el dropdown con los métodos de pago disponibles
+ */
 function renderizarMetodosPago() {
     if (!elementos.metodoPagoSelect) return;
 
@@ -202,7 +261,11 @@ function renderizarMetodosPago() {
     });
 }
 
-// RENDERIZADO DEL CARRITO
+/**
+ * Renderiza todos los productos del carrito en la interfaz
+ * @description Crea elementos DOM para cada producto con controles de cantidad
+ * @business Visualización clara de la selección para confirmación del cliente
+ */
 function renderizarCarrito() {
     if (!elementos.productosCarrito) return;
 
@@ -216,6 +279,13 @@ function renderizarCarrito() {
     console.log(` ${carritoItems.length} productos renderizados en carrito`);
 }
 
+/**
+ * Crea el elemento DOM para un producto individual del carrito
+ * @param {Object} item - Datos del producto
+ * @param {number} index - Índice del producto en el array
+ * @returns {HTMLElement} Elemento DOM del producto
+ * @description Genera la estructura HTML completa con controles y precios
+ */
 function crearElementoProductoCarrito(item, index) {
     const div = document.createElement('div');
     div.className = 'producto-carrito-item';
@@ -277,7 +347,13 @@ function crearElementoProductoCarrito(item, index) {
     return div;
 }
 
-// FUNCIONES GLOBALES PARA ONCLICK
+/**
+ * Modifica la cantidad de un producto en el carrito
+ * @param {number} index - Índice del producto en el array
+ * @param {number} cambio - Cambio en la cantidad (+1 o -1)
+ * @description Función global para controles de cantidad con validaciones
+ * @global
+ */
 window.cambiarCantidadCarrito = function (index, cambio) {
     if (index < 0 || index >= carritoItems.length) return;
 
@@ -310,6 +386,12 @@ window.cambiarCantidadCarrito = function (index, cambio) {
     console.log(`Cantidad actualizada: ${item.nombre} = ${item.cantidad}`);
 };
 
+/**
+ * Elimina un producto completamente del carrito
+ * @param {number} index - Índice del producto a eliminar
+ * @description Función global para eliminación con actualización de UI
+ * @global
+ */
 window.eliminarProductoCarrito = function (index) {
     if (index < 0 || index >= carritoItems.length) return;
 
@@ -335,7 +417,11 @@ window.eliminarProductoCarrito = function (index) {
     console.log(`Producto eliminado: ${item.nombre}`);
 };
 
-// ACTUALIZACIÓN DE RESUMEN
+/**
+ * Calcula y actualiza el resumen de totales del carrito
+ * @description Recalcula cantidades y precios totales mostrando información actualizada
+ * @business Información crítica para la decisión de compra del cliente
+ */
 function actualizarResumen() {
     const totalItems = carritoItems.reduce((total, item) => total + item.cantidad, 0);
     const totalPrecio = carritoItems.reduce((total, item) => total + (item.precio * item.cantidad), 0);
@@ -358,7 +444,11 @@ function actualizarResumen() {
     console.log(` Resumen actualizado: ${totalItems} items, ${totalPrecio}`);
 }
 
-// NAVEGACIÓN
+/**
+ * Redirige a la página de categorías para agregar más productos
+ * @description Permite al cliente continuar comprando manteniendo el carrito actual
+ * @business Facilita la venta cruzada y aumenta el ticket promedio
+ */
 function irAgregarMasProductos() {
     // Guardar carrito actual
     guardarCarritoEnLocalStorage();
@@ -370,6 +460,10 @@ function irAgregarMasProductos() {
     }, 1000);
 }
 
+/**
+ * Cancela la compra actual y limpia todos los datos
+ * @description Abandona el proceso de compra y vuelve al inicio
+ */
 function cancelarCompra() {
     // Limpiar todo el localStorage relacionado al carrito
     localStorage.removeItem('carrito');
@@ -384,11 +478,21 @@ function cancelarCompra() {
     }, 1000);
 }
 
+/**
+ * Redirige directamente a la página de categorías
+ * @description Navegación simple para selección de categorías
+ */
 function irACategorias() {
     location.assign('/frontend/html/views/categorias.html');
 }
 
-// PROCESAMIENTO DE PEDIDO
+/**
+ * Procesa y envía el pedido final a la API
+ * @async
+ * @param {Event} event - Evento del formulario
+ * @description Valida datos, crea el pedido y redirige al ticket
+ * @business Punto crítico de conversión donde se completa la venta
+ */
 async function procesarPedido(event) {
     event.preventDefault();
 
@@ -436,6 +540,11 @@ async function procesarPedido(event) {
     }
 }
 
+/**
+ * Valida que el formulario de checkout esté completo
+ * @returns {boolean} true si es válido, false si hay errores
+ * @description Verifica método de pago y productos en carrito
+ */
 function validarFormulario() {
     const metodoPago = elementos.metodoPagoSelect.value;
 
@@ -456,6 +565,11 @@ function validarFormulario() {
     return true;
 }
 
+/**
+ * Prepara los datos del pedido para envío a la API
+ * @returns {Object} Objeto con datos estructurados del pedido
+ * @description Formatea los datos según el esquema esperado por el backend
+ */
 function prepararDatosPedido() {
     return {
         nombre_cliente: nombreCliente,
@@ -467,7 +581,11 @@ function prepararDatosPedido() {
     };
 }
 
-// GESTIÓN DE ESTADOS
+/**
+ * Gestiona los diferentes estados visuales de la página
+ * @param {string} estado - Estado a mostrar
+ * @description Controla la visibilidad de elementos según el estado actual
+ */
 function mostrarEstado(estado) {
     // Ocultar todos los estados
     elementos.loadingCarrito?.classList.add('d-none');
@@ -494,6 +612,10 @@ function mostrarEstado(estado) {
     console.log(`Estado cambiado a: ${estado}`);
 }
 
+/**
+ * Muestra un estado de error en la interfaz
+ * @description Configura la UI para mostrar mensajes de error
+ */
 function mostrarEstadoError() {
     if (elementos.carritoContenido) {
         elementos.carritoContenido.innerHTML = `
@@ -511,11 +633,20 @@ function mostrarEstadoError() {
     }
 }
 
-// UTILIDADES
+/**
+ * Guarda el estado actual del carrito en localStorage
+ * @description Persiste los datos para mantener el carrito entre sesiones
+ */
 function guardarCarritoEnLocalStorage() {
     localStorage.setItem('carrito', JSON.stringify(carritoItems));
 }
 
+/**
+ * Obtiene el icono apropiado según el tipo de método de pago
+ * @param {string} tipo - Tipo de método de pago
+ * @returns {string} Clase de icono Bootstrap
+ * @description Proporciona iconos visuales para diferentes métodos de pago
+ */
 function getIconoTipo(tipo) {
     const iconos = {
         success: 'check-circle-fill',

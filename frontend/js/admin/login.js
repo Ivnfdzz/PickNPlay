@@ -1,4 +1,38 @@
-// ELEMENTOS DEL DOM
+/**
+ * PICK&PLAY - SISTEMA DE AUTENTICACIÓN ADMINISTRATIVA
+ * 
+ * @description Módulo responsable del proceso completo de autenticación para el panel
+ *              administrativo. Gestiona validación de credenciales, manejo de sesiones,
+ *              tokens de seguridad y redirección segura al dashboard principal.
+ * 
+ * @features    - Validación completa de formulario de login
+ *              - Autenticación segura con API backend
+ *              - Gestión automática de tokens y sesiones
+ *              - Validación de sesiones existentes al cargar
+ *              - Manejo de estados de carga con feedback visual
+ *              - Login automático para desarrollo y testing
+ *              - Limpieza automática de errores en tiempo real
+ *              - Redirección inteligente post-autenticación
+ * 
+ * @security    - Validación de campos requeridos y formatos
+ *              - Encriptación y manejo seguro de tokens
+ *              - Protección contra sesiones inválidas
+ *              - Limpieza de datos sensibles en memoria
+ * 
+ * @business    El sistema de autenticación protege el acceso al panel administrativo,
+ *              asegurando que solo personal autorizado pueda gestionar el sistema
+ *              y manteniendo un control estricto de sesiones activas.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Referencias centralizadas a elementos del DOM del formulario de login
+ * @constant {Object} elementos - Objeto con referencias a elementos clave del formulario
+ * @description Centraliza todas las referencias DOM para facilitar mantenimiento
+ *              y evitar consultas repetidas al DOM durante la ejecución.
+ */
 const elementos = {
     form: document.getElementById('login-form'),
     email: document.getElementById('email'),
@@ -9,7 +43,13 @@ const elementos = {
     backButton: document.getElementById('backButton')
 };
 
-// INICIALIZACIÓN
+/* ================================================
+   INICIALIZACIÓN Y CONFIGURACIÓN
+   ================================================ */
+/**
+ * Inicialización principal del módulo de login
+ * Se ejecuta cuando el DOM está completamente cargado
+ */
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Login inicializado');
     
@@ -20,7 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarEventos();
 });
 
-// VERIFICACIÓN DE SESIÓN EXISTENTE
+/* ================================================
+   GESTIÓN DE SESIONES
+   ================================================ */
+
+/**
+ * Verifica si existe una sesión válida y redirige automáticamente
+ * Evita que usuarios ya autenticados tengan que volver a hacer login
+ */
 function verificarSesionExistente() {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');

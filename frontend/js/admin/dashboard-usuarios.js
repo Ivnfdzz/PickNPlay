@@ -1,9 +1,42 @@
+/**
+ * PICK&PLAY - SISTEMA DE ADMINISTRACIÓN DE USUARIO
+ * 
+ * @description Módulo responsable de la gestión completa de usuarios en el dashboard administrativo.
+ *              Proporciona funcionalidades CRUD para usuarios del sistema, incluyendo control de roles,
+ *              autenticación y autorización. Permite la administración de cuentas de empleados y 
+ *              administradores con diferentes niveles de acceso.
+ * 
+ * @features    - Listado completo de usuarios con información de roles
+ *              - Creación de nuevos usuarios con asignación de roles
+ *              - Edición de usuarios existentes (datos y roles)
+ *              - Eliminación de usuarios con validaciones de seguridad
+ *              - Búsqueda y filtrado de usuarios
+ *              - Gestión de contraseñas con validaciones
+ *              - Control de acceso basado en roles
+ * 
+ * @security    Solo usuarios con rol 'root' pueden gestionar otros usuarios.
+ *              Las contraseñas se manejan de forma segura y opcional en edición.
+ * 
+ * @business    Los usuarios representan al personal autorizado para gestionar el sistema,
+ *              cada uno con roles específicos que determinan sus permisos y capacidades.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Obtiene y renderiza todos los usuarios del sistema
+ * 
+ * @async
+ * @function listarUsuarios
+ * @description Función principal que carga todos los usuarios registrados
+ *              y los presenta en una tabla interactiva con información de roles y acciones.
+ * @throws {Error} Error de comunicación con la API o problemas de renderizado
+ * @business Permite al administrador root visualizar todo el personal con acceso al sistema
+ */
 async function listarUsuarios() {
     try {
-        // 1. Traer usuarios desde la API
         const usuarios = await apiInstance.getUsuarios();
-
-        // 2. Renderizar tabla
         renderizarTablaUsuarios(usuarios);
     } catch (error) {
         mostrarToast(
@@ -13,6 +46,16 @@ async function listarUsuarios() {
     }
 }
 
+/**
+ * Renderiza la tabla de usuarios en el contenedor principal
+ * 
+ * @function renderizarTablaUsuarios
+ * @param {Array<Object>} usuarios - Array de objetos usuario con estructura {id_usuario, username, email, Rol: {nombre}}
+ * @description Genera HTML dinámico para mostrar usuarios en formato tabla,
+ *              incluyendo información de roles y botones de acción para editar y eliminar.
+ *              También configura los event listeners para búsqueda de usuarios.
+ * @business Proporciona una vista organizada del personal con acceso al sistema
+ */
 function renderizarTablaUsuarios(usuarios) {
     const contenedor = document.getElementById("contenido-dinamico");
     if (!contenedor) return;
@@ -66,7 +109,7 @@ function renderizarTablaUsuarios(usuarios) {
 
     contenedor.innerHTML = html;
 
-    // Event listener para buscar
+    // Configuración de búsqueda de usuarios
     const inputBuscar = document.getElementById("input-buscar-usuario");
     const btnBuscar = document.getElementById("btn-buscar-usuario");
     if (inputBuscar && btnBuscar) {
@@ -81,16 +124,26 @@ function renderizarTablaUsuarios(usuarios) {
     }
 }
 
+/**
+ * Muestra el formulario para crear un nuevo usuario
+ * 
+ * @async
+ * @function mostrarFormularioCrearUsuario
+ * @description Genera y presenta un formulario interactivo para la creación de usuarios,
+ *              incluyendo la carga dinámica de roles disponibles y validación de datos.
+ *              Incluye validaciones de email, contraseña y asignación de roles.
+ * @throws {Error} Error al cargar roles o al procesar la creación
+ * @security Solo accesible para usuarios con rol 'root'
+ * @business Permite incorporar nuevo personal al sistema con los permisos apropiados
+ */
 async function mostrarFormularioCrearUsuario() {
     try {
-        // 1. Traer roles desde la API
         const roles = await apiInstance.getRoles();
 
-        // 2. Seleccionar el contenedor central
         const contenedor = document.getElementById("contenido-dinamico");
         if (!contenedor) return;
 
-        // 3. Armar el select de roles
+        // Generación de opciones de roles
         let selectHTML = "";
         if (roles && roles.length > 0) {
             selectHTML = `
@@ -109,7 +162,7 @@ async function mostrarFormularioCrearUsuario() {
             selectHTML = `<div class="text-muted">No hay roles disponibles.</div>`;
         }
 
-        // 4. Armar el HTML del formulario
+        // Estructura del formulario de creación
         const formHTML = `
             <h2 class="mb-4">Crear nuevo usuario</h2>
             <form id="form-crear-usuario" autocomplete="off">
@@ -133,10 +186,9 @@ async function mostrarFormularioCrearUsuario() {
             </form>
         `;
 
-        // 5. Renderizar el formulario
         contenedor.innerHTML = formHTML;
 
-        // 6. Event listener al formulario
+        // Configuración del evento de envío del formulario
         const form = document.getElementById("form-crear-usuario");
         if (form) {
             form.addEventListener("submit", async function (e) {
@@ -179,19 +231,28 @@ async function mostrarFormularioCrearUsuario() {
     }
 }
 
+/**
+ * Muestra el formulario de edición para un usuario específico
+ * 
+ * @async
+ * @function mostrarFormularioEditarUsuario
+ * @param {number} id - ID único del usuario a editar
+ * @description Carga los datos actuales del usuario y presenta un formulario pre-poblado
+ *              para su modificación. Permite cambiar todos los datos excepto la contraseña
+ *              (que es opcional) y el rol asignado.
+ * @throws {Error} Error al cargar datos del usuario o roles
+ * @security Solo accesible para usuarios con rol 'root', contraseña opcional en edición
+ * @business Permite actualizar información del personal y reasignar roles según necesidades
+ */
 async function mostrarFormularioEditarUsuario(id) {
     try {
-        // 1. Traer datos del usuario
         const usuario = await apiInstance.getUsuario(id);
-
-        // 2. Traer todos los roles
         const roles = await apiInstance.getRoles();
 
-        // 3. Seleccionar el contenedor central
         const contenedor = document.getElementById("contenido-dinamico");
         if (!contenedor) return;
 
-        // 4. Armar el select de roles, marcando el actual
+        // Generación de select con rol actual preseleccionado
         let selectHTML = "";
         if (roles && roles.length > 0) {
             selectHTML = `
@@ -214,7 +275,7 @@ async function mostrarFormularioEditarUsuario(id) {
             selectHTML = `<div class="text-muted">No hay roles disponibles.</div>`;
         }
 
-        // 5. Armar el HTML del formulario
+        // Formulario de edición con datos pre-cargados
         const formHTML = `
             <h2 class="mb-4">Modificar usuario</h2>
             <form id="form-editar-usuario" autocomplete="off">
@@ -243,10 +304,9 @@ async function mostrarFormularioEditarUsuario(id) {
             </form>
         `;
 
-        // 6. Renderizar el formulario
         contenedor.innerHTML = formHTML;
 
-        // 7. Event listener al formulario
+        // Configuración del evento de actualización
         const form = document.getElementById("form-editar-usuario");
         if (form) {
             form.addEventListener("submit", async function (e) {
@@ -265,7 +325,7 @@ async function mostrarFormularioEditarUsuario(id) {
                     return;
                 }
 
-                // Solo enviar password si se completó
+                // Construcción condicional del objeto (contraseña opcional)
                 const usuarioEditado = { username, email, id_rol };
                 if (password) usuarioEditado.password = password;
 
@@ -296,6 +356,18 @@ async function mostrarFormularioEditarUsuario(id) {
     }
 }
 
+/**
+ * Elimina un usuario específico del sistema
+ * 
+ * @async
+ * @function eliminarUsuario
+ * @param {number} id - ID único del usuario a eliminar
+ * @description Solicita confirmación del usuario y procede a eliminar la cuenta.
+ *              Incluye validaciones para prevenir la eliminación accidental de cuentas críticas.
+ * @throws {Error} Error de validación o comunicación con la API
+ * @security Solo accesible para usuarios con rol 'root', no permite auto-eliminación
+ * @business Permite remover personal que ya no requiere acceso al sistema
+ */
 async function eliminarUsuario(id) {
     try {
         const confirmado = confirm("¿Desea eliminar este usuario?");
@@ -312,6 +384,7 @@ async function eliminarUsuario(id) {
     }
 }
 
+// Exportación de funciones para integración con el core del dashboard
 window.listarUsuarios = listarUsuarios;
 window.mostrarFormularioCrearUsuario = mostrarFormularioCrearUsuario;
 window.mostrarFormularioEditarUsuario = mostrarFormularioEditarUsuario;

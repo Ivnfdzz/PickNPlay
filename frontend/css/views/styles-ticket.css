@@ -1,9 +1,32 @@
+/**
+ * ESTILOS PARA VISTA DE TICKET - PICK&PLAY
+ * 
+ * Este archivo contiene todos los estilos específicos para la página de visualización
+ * de tickets/recibos de compra. Incluye estilos para:
+ * - Diseño de ticket imprimible
+ * - Animaciones de confirmación
+ * - Modo oscuro profesional
+ * - Responsive design
+ * - Optimización para PDF/impresión
+ * 
+ * Paleta de colores principal:
+ * - Marrón principal: #3f1d10
+ * - Crema/Fondo: #fff7e6
+ * - Éxito: #198754
+ * - Error: #dc3545
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ */
+
 /* ✅ IMPORTAR ESTILOS BASE */
 @import url('/frontend/css/base/styles-categorias.css');
 
-/* === ESTILOS TICKET - SÚPER SIMPLE === */
+/* ================================================
+   COMPONENTES PRINCIPALES DEL TICKET
+   ================================================ */
 
-/* Agregar clase que falta para botones outline */
+/* Botón outline personalizado para acciones secundarias */
 .btn-outline-brown {
     border: 1px solid #3f1d10;
     color: #3f1d10;
@@ -16,19 +39,19 @@
     color: #fff7e6;
 }
 
-/* Header del ticket con ícono de éxito */
+/* Animación del ícono de éxito en el header */
 .ticket-header .success-icon {
     animation: fadeIn 0.5s ease-in;
 }
 
-/* Card del ticket */
+/* Contenedor principal del ticket - diseño tipo recibo */
 .ticket-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Info sections del ticket */
+/* Secciones informativas del ticket con espaciado optimizado */
 .ticket-info, 
 .cliente-info, 
 .productos-ticket, 
@@ -36,7 +59,11 @@
     line-height: 1.6;
 }
 
-/* Lista de productos */
+/* ================================================
+   LISTA DE PRODUCTOS EN EL TICKET
+   ================================================ */
+
+/* Contenedor de la lista de productos con fondo diferenciado */
 #lista-productos {
     border: 1px solid #e9ecef;
     border-radius: 8px;
@@ -44,6 +71,7 @@
     padding: 1rem;
 }
 
+/* Item individual de producto en el ticket */
 .producto-ticket-item {
     display: flex;
     justify-content: space-between;
@@ -52,66 +80,91 @@
     border-bottom: 1px solid #dee2e6;
 }
 
+/* Último item sin borde inferior */
 .producto-ticket-item:last-child {
     border-bottom: none;
     padding-bottom: 0;
 }
 
+/* Información del producto - nombre destacado */
 .producto-ticket-info h6 {
     margin-bottom: 0.25rem;
     color: #3f1d10;
 }
 
+/* Cantidad del producto - estilo secundario */
 .producto-ticket-cantidad {
     color: #6c757d;
     font-size: 0.875rem;
 }
 
+/* Precio del producto - destacado */
 .producto-ticket-precio {
     color: #3f1d10;
     font-weight: bold;
 }
 
-/* Totales destacados */
+/* ================================================
+   SECCIÓN DE TOTALES
+   ================================================ */
+
+/* Total de productos - peso medio */
 #total-productos {
     color: #3f1d10;
     font-weight: 600;
 }
 
+/* Total final - máximo énfasis visual */
 #total-pagado {
     color: #3f1d10 !important;
     font-size: 1.75rem !important;
     font-weight: bold !important;
 }
 
-/* Botones de acción */
+/* ================================================
+   ELEMENTOS DE INTERACCIÓN
+   ================================================ */
+
+/* Botones de acción del ticket con ancho mínimo */
 .acciones-ticket .btn {
     min-width: 160px;
 }
 
-/* Estados - Loading, Error */
+/* ================================================
+   ESTADOS DE CARGA Y ERROR
+   ================================================ */
+
+/* Spinner de carga con color corporativo */
 #loading-ticket .spinner-border {
     color: #3f1d10;
 }
 
+/* Ícono de error en estado de fallo */
 #error-ticket i {
     color: #dc3545;
 }
 
-/* === RESPONSIVE BÁSICO === */
+/* ================================================
+   DISEÑO RESPONSIVE
+   ================================================ */
+/* Adaptación para dispositivos móviles */
 @media (max-width: 768px) {
+    /* Márgenes reducidos en móvil */
     .ticket-card {
         margin: 0 0.5rem;
     }
     
+    /* Padding interno reducido */
     .ticket-card .card-body {
         padding: 2rem 1.5rem;
     }
     
+    /* Total más pequeño en pantallas reducidas */
     #total-pagado {
         font-size: 1.5rem !important;
     }
     
+    /* Botones a ancho completo en móvil */
     .acciones-ticket .btn {
         min-width: auto;
         width: 100%;
@@ -119,7 +172,10 @@
     }
 }
 
-/* === ANIMACIÓN SIMPLE === */
+/* ================================================
+   ANIMACIONES Y TRANSICIONES
+   ================================================ */
+/* Animación de entrada suave para elementos */
 @keyframes fadeIn {
     from { 
         opacity: 0; 
@@ -131,22 +187,24 @@
     }
 }
 
-/* Aplicar animación al contenido del ticket */
+/* Aplicar animación al contenido principal del ticket */
 #ticket-contenido {
     animation: fadeIn 0.3s ease-in;
 }
 
-/* === PREPARACIÓN PARA PDF === */
-/* === PREPARACIÓN PARA PDF MEJORADA === */
+/* ================================================
+   OPTIMIZACIÓN PARA IMPRESIÓN Y PDF
+   ================================================ */
+/* Estilos específicos para impresión y generación de PDF */
 @media print {
-    /* Ocultar elementos no necesarios */
+    /* Ocultar elementos de navegación e interacción */
     .acciones-ticket,
     nav,
     footer {
         display: none !important;
     }
     
-    /* Optimizar página para PDF */
+    /* Configuración de página optimizada para PDF */
     body {
         background-color: white !important;
         margin: 0 !important;
@@ -155,13 +213,14 @@
         print-color-adjust: exact !important;
     }
     
+    /* Contenedor principal sin restricciones */
     .container {
         max-width: none !important;
         padding: 20px !important;
         margin: 0 !important;
     }
     
-    /* Ticket optimizado para PDF */
+    /* Ticket optimizado para formato impreso */
     .ticket-card {
         box-shadow: none !important;
         border: 2px solid #3f1d10 !important;
@@ -170,11 +229,12 @@
         margin: 0 !important;
     }
     
+    /* Espaciado interno para impresión */
     .ticket-card .card-body {
         padding: 25px !important;
     }
     
-    /* Tipografía optimizada */
+    /* Colores visibles en documento impreso */
     .text-brown {
         color: #3f1d10 !important;
     }
@@ -184,7 +244,7 @@
         font-weight: bold !important;
     }
     
-    /* Bordes y separadores */
+    /* Bordes y separadores bien definidos */
     .border-top, .border-bottom {
         border-color: #3f1d10 !important;
     }
@@ -195,7 +255,7 @@
     }
 }
 
-/* Clase especial cuando está preparando para imprimir */
+/* Estado especial durante preparación de impresión */
 body.imprimiendo-ticket {
     background-color: white !important;
 }
@@ -205,7 +265,10 @@ body.imprimiendo-ticket .ticket-card {
     box-shadow: 0 0 10px rgba(0,0,0,0.1) !important;
 }
 
-/* === MODO OSCURO PROFESIONAL === */
+/* ================================================
+   MODO OSCURO
+   ================================================ */
+/* Variables CSS para el tema oscuro */
 :root[data-bs-theme="dark"] {
     --bs-body-bg: #181a1b;
     --bs-body-color: #f5f5f5;
@@ -215,22 +278,26 @@ body.imprimiendo-ticket .ticket-card {
     --bs-border-color: #333;
 }
 
+/* Configuración base del modo oscuro */
 [data-bs-theme="dark"] body {
     background-color: var(--bs-body-bg) !important;
     color: var(--bs-body-color) !important;
 }
 
+/* Adaptación del ticket principal */
 [data-bs-theme="dark"] .ticket-card {
     background: var(--bs-card-bg) !important;
     color: var(--bs-body-color) !important;
     box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
+/* Lista de productos en modo oscuro */
 [data-bs-theme="dark"] #lista-productos {
     background-color: #232323 !important;
     border-color: var(--bs-border-color) !important;
 }
 
+/* Colores de texto adaptativos para modo oscuro */
 [data-bs-theme="dark"] .producto-ticket-info h6,
 [data-bs-theme="dark"] .producto-ticket-precio,
 [data-bs-theme="dark"] #total-productos,
@@ -238,29 +305,35 @@ body.imprimiendo-ticket .ticket-card {
     color: var(--bs-brown) !important;
 }
 
+/* Botones outline en modo oscuro */
 [data-bs-theme="dark"] .btn-outline-brown {
     border-color: var(--bs-brown) !important;
     color: var(--bs-brown) !important;
     background: none !important;
 }
+
 [data-bs-theme="dark"] .btn-outline-brown:hover {
     background-color: var(--bs-brown) !important;
     color: #fff7e6 !important;
 }
 
+/* Estados de carga adaptados */
 [data-bs-theme="dark"] #loading-ticket .spinner-border {
     color: var(--bs-brown) !important;
 }
 
+/* Botones de acción principales */
 [data-bs-theme="dark"] .acciones-ticket .btn {
     background-color: var(--bs-brown) !important;
     color: #fff !important;
     border: none;
 }
+
 [data-bs-theme="dark"] .acciones-ticket .btn:hover {
     background-color: #3f1d10 !important;
 }
 
+/* Estados de error mantienen su color distintivo */
 [data-bs-theme="dark"] #error-ticket i {
     color: #dc3545 !important;
 }

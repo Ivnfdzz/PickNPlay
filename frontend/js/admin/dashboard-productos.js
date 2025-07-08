@@ -1,9 +1,42 @@
+/**
+ * PICK&PLAY - SISTEMA DE GESTIÓN DE PRODUCTOS
+ * 
+ * @description Módulo responsable de la administración completa del catálogo de productos
+ *              del e-commerce. Proporciona funcionalidades CRUD completas para la gestión
+ *              de productos, incluyendo manejo de imágenes, subcategorías múltiples
+ *              y estados de activación.
+ * 
+ * @features    - Listado completo con búsqueda en tiempo real por nombre
+ *              - Creación de productos con carga de imágenes
+ *              - Edición completa de productos existentes
+ *              - Gestión de relaciones many-to-many con subcategorías
+ *              - Control de estado activo/inactivo por producto
+ *              - Validaciones exhaustivas de formularios
+ *              - Subida y gestión de archivos de imagen
+ *              - Búsqueda instantánea con feedback visual
+ *              - Eliminación segura con confirmaciones
+ * 
+ * @business    Los productos son el núcleo del catálogo e-commerce,
+ *              requiriendo gestión precisa de información, categorización
+ *              adecuada y control de disponibilidad para optimizar ventas.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Obtiene y renderiza la lista completa de productos con funcionalidad de búsqueda
+ * 
+ * @async
+ * @function listarProductos
+ * @description Función principal que carga todos los productos del catálogo
+ *              y los presenta en una tabla interactiva con búsqueda y acciones CRUD.
+ * @throws {Error} Error de comunicación con la API o problemas de renderizado
+ * @business Permite a repositores y administradores gestionar el inventario completo
+ */
 async function listarProductos() {
     try {
-        // 1. Traer productos desde la API
         const productos = await apiInstance.getProductos();
-
-        // 2. Renderizar tabla
         renderizarTablaProductos(productos);
 
     } catch (error) {
@@ -12,6 +45,15 @@ async function listarProductos() {
     }
 }
 
+/**
+ * Renderiza la tabla de productos con funcionalidad de búsqueda y acciones CRUD
+ * 
+ * @function renderizarTablaProductos
+ * @param {Array<Object>} productos - Array de productos con estructura {id_producto, nombre, precio, activo, Subcategorias}
+ * @description Genera HTML dinámico para mostrar productos en tabla interactiva
+ *              con campo de búsqueda y botones de edición/eliminación por producto
+ * @business Facilita la gestión visual del catálogo de productos del sistema
+ */
 function renderizarTablaProductos(productos) {
     // Seleccionamos el contenedor central
     const contenedor = document.getElementById("contenido-dinamico");
@@ -95,6 +137,15 @@ function renderizarTablaProductos(productos) {
     }
 }
 
+/**
+ * Muestra el formulario para crear un nuevo producto
+ * 
+ * @async
+ * @function mostrarFormularioCrearProducto
+ * @description Carga subcategorías disponibles y genera formulario completo
+ *              para crear productos con imagen, precio y asociaciones de subcategorías
+ * @business Permite expandir el catálogo de productos disponibles para los clientes
+ */
 async function mostrarFormularioCrearProducto() {
     try {
         // 1. Traer subcategorías desde la API
@@ -212,6 +263,16 @@ async function mostrarFormularioCrearProducto() {
 
 }
 
+/**
+ * Muestra el formulario para editar un producto existente
+ * 
+ * @async
+ * @function mostrarFormularioEditarProducto
+ * @param {number} id - ID del producto a editar
+ * @description Carga datos del producto y subcategorías, genera formulario pre-poblado
+ *              para edición completa incluyendo imagen y asociaciones de subcategorías
+ * @business Permite mantener actualizado el catálogo de productos con cambios de precio, descripción y categorización
+ */
 async function mostrarFormularioEditarProducto(id) {
     try {
         // 1. Traer los datos del producto por id
@@ -335,6 +396,15 @@ async function mostrarFormularioEditarProducto(id) {
     }
 }
 
+/**
+ * Elimina un producto después de confirmación del usuario
+ * 
+ * @async
+ * @function eliminarProducto
+ * @param {number} id - ID del producto a eliminar
+ * @description Solicita confirmación y elimina el producto especificado del catálogo
+ * @business Permite remover productos descontinuados o erróneos del inventario
+ */
 async function eliminarProducto(id) {
     try {
         const confirmado = confirm("¿Desea eliminar este producto?");
@@ -350,6 +420,15 @@ async function eliminarProducto(id) {
     }
 }
 
+/**
+ * Busca productos por nombre utilizando el campo de búsqueda
+ * 
+ * @async
+ * @function buscarProductosPorNombre
+ * @param {string} nombre - Término de búsqueda para filtrar productos
+ * @description Filtra productos por nombre o muestra todos si el campo está vacío
+ * @business Facilita la localización rápida de productos específicos en el catálogo
+ */
 async function buscarProductosPorNombre(nombre) {
     try {
         if (!nombre) {

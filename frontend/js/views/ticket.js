@@ -1,3 +1,27 @@
+/**
+ * PICK&PLAY - CONTROLADOR DE TICKET DE COMPRA
+ * 
+ * @description Módulo responsable de la visualización y gestión del ticket final
+ *              de compra. Muestra el resumen completo del pedido realizado,
+ *              permite la descarga en PDF y gestiona la navegación post-compra.
+ * 
+ * @features    - Carga y visualización de datos del pedido desde API
+ *              - Renderizado completo del ticket con productos y totales
+ *              - Funcionalidad de descarga/impresión de ticket
+ *              - Gestión de estados de carga y error
+ *              - Limpieza automática de datos de carrito
+ *              - Navegación para nueva compra o volver al inicio
+ *              - Formateo profesional de precios y fechas
+ * 
+ * @business    El ticket representa el comprobante final de la transacción,
+ *              esencial para el control administrativo y la satisfacción del cliente.
+ *              Permite al usuario conservar registro de su compra y facilita
+ *              el seguimiento interno del negocio.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
 // VARIABLES GLOBALES
 let pedidoData = null;
 let pedidoId = null;
@@ -28,6 +52,12 @@ const elementos = {
 };
 
 // INICIALIZACIÓN
+
+/**
+ * Inicializa la página del ticket de compra
+ * @description Configuración principal, carga de datos y renderizado del ticket
+ * @listens DOMContentLoaded
+ */
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Inicializando página del ticket...');
     
@@ -51,7 +81,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// OBTENER ID DEL PEDIDO
+/**
+ * Obtiene el ID del pedido desde los parámetros de la URL
+ * @returns {boolean} true si se encontró el ID, false si hay error
+ * @description Extrae el parámetro 'pedido' de la URL y valida su existencia
+ */
 function obtenerPedidoId() {
     const urlParams = new URLSearchParams(window.location.search);
     pedidoId = urlParams.get('pedido');
@@ -71,7 +105,10 @@ function obtenerPedidoId() {
     return true;
 }
 
-// CONFIGURACIÓN DE EVENTOS
+/**
+ * Configura todos los event listeners de la interfaz
+ * @description Establece la comunicación entre botones y funcionalidades del ticket
+ */
 function configurarEventos() {
     // Solo el botón de abajo (que funciona perfecto)
     if (elementos.btnDescargarPdf2) {
@@ -91,7 +128,12 @@ function configurarEventos() {
     console.log('Eventos configurados');
 }
 
-// CARGA DE DATOS
+/**
+ * Carga los datos completos del pedido desde la API
+ * @async
+ * @description Obtiene todos los detalles del pedido y gestiona estados de UI
+ * @business Punto crítico para mostrar información precisa de la transacción
+ */
 async function cargarDatosTicket() {
     mostrarEstado('loading');
     
@@ -119,7 +161,11 @@ async function cargarDatosTicket() {
     }
 }
 
-// RENDERIZADO DEL TICKET
+/**
+ * Renderiza todos los elementos del ticket en la interfaz
+ * @description Procesa y muestra los datos del pedido de forma organizada
+ * @throws {Error} Error en el procesamiento de datos del pedido
+ */
 function renderizarTicket() {
     try {
         // Datos básicos del pedido
@@ -181,6 +227,10 @@ function renderizarTicket() {
     }
 }
 
+/**
+ * Renderiza la lista de productos del pedido
+ * @description Crea elementos DOM para cada producto con precios formateados
+ */
 function renderizarProductos() {
     if (!elementos.listaProductos || !pedidoData.DetallePedidos) return;
     
@@ -219,6 +269,10 @@ function renderizarProductos() {
     });
 }
 
+/**
+ * Calcula y renderiza los totales del pedido
+ * @description Procesa cantidades y precios para mostrar resumen final
+ */
 function renderizarTotales() {
     if (!pedidoData.DetallePedidos) {
         console.error('No hay DetallePedidos en pedidoData:', pedidoData);
@@ -246,7 +300,11 @@ function renderizarTotales() {
     }
 }
 
-// GESTIÓN DE ESTADOS
+/**
+ * Gestiona los diferentes estados visuales de la página
+ * @param {string} estado - Estado a mostrar ('loading', 'error', 'contenido')
+ * @description Controla la visibilidad de elementos según el estado actual
+ */
 function mostrarEstado(estado) {
     // Ocultar todos
     elementos.loadingTicket?.classList.add('d-none');
@@ -269,12 +327,20 @@ function mostrarEstado(estado) {
     console.log(`Estado del ticket: ${estado}`);
 }
 
+/**
+ * Muestra el estado de error y proporciona feedback al usuario
+ * @description Cambia a vista de error y notifica mediante toast
+ */
 function mostrarError() {
     mostrarEstado('error');
     mostrarToast('Error cargando el ticket', 'error');
 }
 
-// ACCIONES DE NAVEGACIÓN
+/**
+ * Inicia una nueva compra desde cero
+ * @description Limpia todos los datos y redirige al inicio del proceso
+ * @business Facilita al cliente realizar compras adicionales sin complicaciones
+ */
 function nuevaCompra() {
     // Limpiar todo y volver al inicio
     limpiarDatosCarrito();
@@ -286,11 +352,19 @@ function nuevaCompra() {
     }, 1000);
 }
 
+/**
+ * Redirige al usuario al inicio de la aplicación
+ * @description Limpia datos y vuelve a la página principal
+ */
 function volverInicio() {
     limpiarDatosCarrito();
     location.assign('/frontend/html/views/index.html');
 }
 
+/**
+ * Limpia todos los datos relacionados con el carrito y la compra
+ * @description Elimina información almacenada para iniciar proceso limpio
+ */
 function limpiarDatosCarrito() {
     // Limpiar todo el localStorage relacionado
     localStorage.removeItem('carrito');
@@ -301,7 +375,12 @@ function limpiarDatosCarrito() {
     console.log('Datos del carrito limpiados');
 }
 
-// GENERACIÓN DE PDF
+/**
+ * Prepara y ejecuta la descarga del ticket en formato PDF
+ * @async
+ * @description Configura la página para impresión y activa la función de descarga
+ * @business Proporciona comprobante físico/digital de la transacción
+ */
 async function descargarPDF() {
     try {
         mostrarToast('Preparando ticket para descarga...', 'info');

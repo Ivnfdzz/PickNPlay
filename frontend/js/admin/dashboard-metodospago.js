@@ -1,3 +1,40 @@
+/**
+ * PICK&PLAY - SISTEMA DE GESTIÓN DE MÉTODOS DE PAGO
+ * 
+ * @description Módulo responsable de la administración completa de métodos de pago
+ *              disponibles en el sistema e-commerce. Permite a los administradores
+ *              gestionar las opciones de pago que tendrán disponibles los clientes
+ *              durante el proceso de compra.
+ * 
+ * @features    - Listado completo de métodos de pago configurados
+ *              - Creación de nuevos métodos de pago
+ *              - Edición de métodos existentes (nombre y estado)
+ *              - Eliminación de métodos obsoletos
+ *              - Control de activación/desactivación de métodos
+ *              - Validación de campos requeridos
+ *              - Confirmaciones de seguridad antes de eliminaciones
+ * 
+ * @security    Solo usuarios con rol 'root' pueden crear/eliminar métodos.
+ *              Todos los roles pueden ver la lista de métodos disponibles.
+ * 
+ * @business    Los métodos de pago son fundamentales para el proceso de venta,
+ *              permitiendo configurar las opciones disponibles para los clientes
+ *              y adaptarse a diferentes necesidades del mercado.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Obtiene y renderiza la lista completa de métodos de pago
+ * 
+ * @async
+ * @function listarMetodosPago
+ * @description Función principal que carga todos los métodos de pago configurados
+ *              y los presenta en una tabla con opciones de edición y eliminación.
+ * @throws {Error} Error de comunicación con la API o problemas de renderizado
+ * @business Permite a administradores revisar y gestionar las opciones de pago disponibles
+ */
 async function listarMetodosPago() {
     try {
         const metodos = await apiInstance.getMetodosPago();
@@ -10,6 +47,15 @@ async function listarMetodosPago() {
     }
 }
 
+/**
+ * Renderiza la tabla de métodos de pago con opciones de administración
+ * 
+ * @function renderizarTablaMetodosPago
+ * @param {Array<Object>} metodos - Array de métodos de pago con estructura {id_metodopago, nombre, activo}
+ * @description Genera HTML dinámico para mostrar métodos de pago en tabla
+ *              con botones de edición y eliminación para cada registro
+ * @business Facilita la gestión visual de opciones de pago disponibles en el sistema
+ */
 function renderizarTablaMetodosPago(metodos) {
     const contenedor = document.getElementById("contenido-dinamico");
     if (!contenedor) return;
@@ -66,6 +112,15 @@ function renderizarTablaMetodosPago(metodos) {
     contenedor.innerHTML = html;
 }
 
+/**
+ * Muestra el formulario para crear un nuevo método de pago
+ * 
+ * @async
+ * @function mostrarFormularioCrearMetodoPago
+ * @description Genera y configura un formulario para crear métodos de pago
+ *              con validación de campos y manejo de envío asíncrono
+ * @business Permite expandir las opciones de pago disponibles para los clientes
+ */
 async function mostrarFormularioCrearMetodoPago() {
     try {
         const contenedor = document.getElementById("contenido-dinamico");
@@ -129,6 +184,16 @@ async function mostrarFormularioCrearMetodoPago() {
     }
 }
 
+/**
+ * Muestra el formulario para editar un método de pago existente
+ * 
+ * @async
+ * @function mostrarFormularioEditarMetodoPago
+ * @param {number} id - ID del método de pago a editar
+ * @description Carga datos del método de pago y genera formulario pre-poblado
+ *              para edición con validación y manejo de actualización
+ * @business Permite mantener actualizadas las opciones de pago del sistema
+ */
 async function mostrarFormularioEditarMetodoPago(id) {
     try {
         // 1. Traer datos del método de pago
@@ -204,6 +269,15 @@ async function mostrarFormularioEditarMetodoPago(id) {
     }
 }
 
+/**
+ * Elimina un método de pago después de confirmación del usuario
+ * 
+ * @async
+ * @function eliminarMetodoPago
+ * @param {number} id - ID del método de pago a eliminar
+ * @description Solicita confirmación y elimina el método de pago especificado
+ * @business Permite remover opciones de pago obsoletas o no utilizadas
+ */
 async function eliminarMetodoPago(id) {
     try {
         const confirmado = confirm("¿Desea eliminar este método de pago?");

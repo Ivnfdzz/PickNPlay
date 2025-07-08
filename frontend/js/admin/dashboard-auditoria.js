@@ -1,6 +1,39 @@
+/**
+ * PICK&PLAY - SISTEMA DE AUDITORÍA DEL DASHBOARD
+ * 
+ * @description Módulo responsable de la visualización y gestión de logs de auditoría
+ *              del sistema administrativo. Proporciona herramientas para revisar y
+ *              monitorear todas las acciones realizadas por los usuarios en el sistema,
+ *              facilitando el control y seguimiento de actividades críticas.
+ * 
+ * @features    - Listado de logs de auditoría con limitación optimizada
+ *              - Renderizado en formato de cards responsivas
+ *              - Manejo especializado de productos eliminados
+ *              - Formateo automático de fechas y datos de usuario
+ *              - Gestión robusta de errores con feedback visual
+ *              - Filtrado inteligente de errores de autorización
+ * 
+ * @business    Los logs de auditoría son fundamentales para el control administrativo,
+ *              permitiendo rastrear cambios, identificar responsables y mantener
+ *              la integridad del sistema mediante un registro completo de actividades.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Obtiene y renderiza los logs de auditoría del sistema
+ * 
+ * @async
+ * @function listarLogsAuditoria
+ * @description Función principal que carga los logs de auditoría más recientes
+ *              y los presenta en formato de cards organizadas. Optimiza el rendimiento
+ *              limitando a 50 registros por defecto y maneja errores de autorización.
+ * @throws {Error} Error de comunicación con la API o problemas de renderizado
+ * @business Permite a administradores y analistas revisar la actividad del sistema para auditorías
+ */
 async function listarLogsAuditoria() {
     try {
-        // 1. Traer logs desde la API (por defecto, últimos 50)
         const respuesta = await apiInstance.getLogs({ limite: 50 });
         const logs = respuesta.logs || [];
 
@@ -12,6 +45,17 @@ async function listarLogsAuditoria() {
     }
 }
 
+
+/**
+ * Renderiza los logs de auditoría en formato de cards responsivas
+ * 
+ * @function renderizarCardsLogs
+ * @param {Array<Object>} logs - Array de objetos log de auditoría con estructura {id, accion, usuario, producto, fecha_hora}
+ * @description Genera HTML dinámico para mostrar logs en formato de cards organizadas
+ *              en una grilla responsiva. Maneja casos especiales como productos eliminados
+ *              y usuarios sin información completa, proporcionando contexto visual claro.
+ * @business Facilita la revisión rápida de actividades del sistema con formato visual amigable
+ */
 function renderizarCardsLogs(logs) {
     const contenedor = document.getElementById("contenido-dinamico");
     if (!contenedor) return;
@@ -25,6 +69,7 @@ function renderizarCardsLogs(logs) {
         html += `<div class="col-12 text-muted text-center">No hay logs registrados.</div>`;
     } else {
         logs.forEach(log => {
+            // Procesamiento especializado para productos eliminados
             let productoStr = "-";
             if (log.producto) {
                 if (
@@ -37,6 +82,7 @@ function renderizarCardsLogs(logs) {
                     productoStr = log.producto.nombre;
                 }
             }
+            
             html += `
                 <div class="col-md-4">
                     <div class="card shadow-sm h-100">
@@ -44,8 +90,8 @@ function renderizarCardsLogs(logs) {
                             <h6 class="card-title mb-2">
                                 <i class="bi bi-activity me-2 text-primary"></i>
                                 ${log.accion?.nombre || "Acción"}
-                                </h6>
-                                <p class="mb-0"><strong>ID Log:</strong> ${log.id}</p>
+                            </h6>
+                            <p class="mb-0"><strong>ID Log:</strong> ${log.id}</p>
                             <p class="mb-1"><strong>Usuario:</strong> ${log.usuario?.username || "-"} (${log.usuario?.email || "-"})</p>
                             <p class="mb-1"><strong>Producto:</strong> ${productoStr}</p>
                             <p class="mb-1"><strong>Fecha:</strong> ${new Date(log.fecha_hora).toLocaleString()}</p>
@@ -60,5 +106,5 @@ function renderizarCardsLogs(logs) {
     contenedor.innerHTML = html;
 }
 
-// Exportar globalmente
+// Exportación global para integración con el core del dashboard
 window.listarLogsAuditoria = listarLogsAuditoria;

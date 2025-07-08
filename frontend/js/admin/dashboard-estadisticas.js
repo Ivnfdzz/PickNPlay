@@ -1,3 +1,38 @@
+/**
+ * PICK&PLAY - SISTEMA DE ESTADÍSTICAS DEL DASHBOARD
+ * 
+ * @description Módulo responsable de la recopilación, procesamiento y visualización de
+ *              estadísticas del sistema e-commerce. Proporciona métricas clave del negocio
+ *              mediante cards informativas y análisis de rendimiento para la toma de decisiones.
+ * 
+ * @features    - Métricas de auditoría y actividad del sistema
+ *              - Estadísticas de usuarios registrados y activos
+ *              - Análisis del catálogo de productos
+ *              - Métricas de ventas y pedidos realizados
+ *              - Top productos más vendidos con ranking
+ *              - Consultas paralelas para optimización de rendimiento
+ *              - Procesamiento de datos agregados en tiempo real
+ *              - Renderizado responsivo de métricas visuales
+ * 
+ * @business    Las estadísticas proporcionan insights críticos para la gestión del negocio,
+ *              permitiendo identificar tendencias, evaluar rendimiento y tomar decisiones
+ *              informadas sobre inventario, usuarios y estrategias comerciales.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Recopila y renderiza todas las estadísticas principales del sistema
+ * 
+ * @async
+ * @function mostrarEstadisticas
+ * @description Función principal que realiza múltiples consultas paralelas a la API
+ *              para obtener datos de diferentes entidades y los procesa para mostrar
+ *              métricas relevantes del negocio en formato de cards visuales.
+ * @throws {Error} Error en consultas a la API o procesamiento de datos
+ * @business Proporciona vista ejecutiva del rendimiento del sistema para toma de decisiones
+ */
 async function mostrarEstadisticas() {
     try {
         const contenedor = document.getElementById("contenido-dinamico");
@@ -5,7 +40,7 @@ async function mostrarEstadisticas() {
             contenedor.innerHTML = "<div class='text-center my-5'>Cargando estadísticas...</div>";
         }
 
-        // Pedir datos en paralelo
+        // Consultas paralelas para optimización de rendimiento
         const [
             auditoriaStats,
             usuariosStats,

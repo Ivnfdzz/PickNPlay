@@ -1,9 +1,39 @@
+/**
+ * PICK&PLAY - SISTEMA DE ADMINISTRACIÓN DE SUBCATEGORÍAS
+ * 
+ * @description Módulo responsable de la gestión completa de subcategorías en el dashboard administrativo.
+ *              Proporciona funcionalidades CRUD para subcategorías, incluyendo listado, creación,
+ *              edición y eliminación. Las subcategorías están asociadas a categorías padre y permiten
+ *              una organización jerárquica de productos.
+ * 
+ * @features    - Listado completo de subcategorías con paginación
+ *              - Creación de nuevas subcategorías con asignación de categoría padre
+ *              - Edición de subcategorías existentes
+ *              - Eliminación de subcategorías con confirmación
+ *              - Búsqueda y filtrado por nombre
+ *              - Validación de datos en tiempo real
+ *              - Interfaz responsiva con Bootstrap
+ * 
+ * @business    Las subcategorías permiten una clasificación más específica de productos,
+ *              mejorando la experiencia del usuario final y la organización del inventario.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Obtiene y renderiza todas las subcategorías desde la API
+ * 
+ * @async
+ * @function listarSubcategorias
+ * @description Función principal que carga todas las subcategorías disponibles
+ *              y las presenta en una tabla interactiva con opciones de edición y eliminación.
+ * @throws {Error} Error de comunicación con la API o problemas de renderizado
+ * @business Permite al administrador visualizar todas las subcategorías y su relación con categorías padre
+ */
 async function listarSubcategorias() {
     try {
-        // 1. Traer subcategorías desde la API
         const subcategorias = await apiInstance.getSubcategorias();
-
-        // 2. Renderizar tabla
         renderizarTablaSubcategorias(subcategorias);
     } catch (error) {
         mostrarToast(
@@ -13,6 +43,16 @@ async function listarSubcategorias() {
     }
 }
 
+/**
+ * Renderiza la tabla de subcategorías en el contenedor principal
+ * 
+ * @function renderizarTablaSubcategorias
+ * @param {Array<Object>} subcategorias - Array de objetos subcategoría con estructura {id_subcategoria, nombre, categoria: {nombre}}
+ * @description Genera HTML dinámico para mostrar subcategorías en formato tabla,
+ *              incluyendo botones de acción para editar y eliminar cada entrada.
+ *              También configura los event listeners para búsqueda en tiempo real.
+ * @business Proporciona una vista organizada de subcategorías con acciones rápidas para gestión
+ */
 function renderizarTablaSubcategorias(subcategorias) {
     const contenedor = document.getElementById("contenido-dinamico");
     if (!contenedor) return;
@@ -68,7 +108,7 @@ function renderizarTablaSubcategorias(subcategorias) {
 
     contenedor.innerHTML = html;
 
-    // Event listener para buscar
+    // Configuración de búsqueda en tiempo real
     const inputBuscar = document.getElementById("input-buscar-subcat");
     const btnBuscar = document.getElementById("btn-buscar-subcat");
     if (inputBuscar && btnBuscar) {
@@ -83,16 +123,24 @@ function renderizarTablaSubcategorias(subcategorias) {
     }
 }
 
+/**
+ * Muestra el formulario para crear una nueva subcategoría
+ * 
+ * @async
+ * @function mostrarFormularioCrearSubcategoria
+ * @description Genera y presenta un formulario interactivo para la creación de subcategorías,
+ *              incluyendo la carga dinámica de categorías padre disponibles y validación de datos.
+ * @throws {Error} Error al cargar categorías o al procesar la creación
+ * @business Permite expandir la taxonomía de productos creando nuevas subcategorías
+ */
 async function mostrarFormularioCrearSubcategoria() {
     try {
-        // 1. Traer categorías desde la API
         const categorias = await apiInstance.getCategorias();
 
-        // 2. Seleccionar el contenedor central
         const contenedor = document.getElementById("contenido-dinamico");
         if (!contenedor) return;
 
-        // 3. Armar el select de categorías
+        // Generación de opciones de categorías padre
         let selectHTML = "";
         if (categorias && categorias.length > 0) {
             selectHTML = `
@@ -111,7 +159,7 @@ async function mostrarFormularioCrearSubcategoria() {
             selectHTML = `<div class="text-muted">No hay categorías disponibles.</div>`;
         }
 
-        // 4. Armar el HTML del formulario
+        // Estructura del formulario de creación
         const formHTML = `
             <h2 class="mb-4">Crear nueva subcategoría</h2>
             <form id="form-crear-subcategoria" autocomplete="off">
@@ -127,10 +175,9 @@ async function mostrarFormularioCrearSubcategoria() {
             </form>
         `;
 
-        // 5. Renderizar el formulario
         contenedor.innerHTML = formHTML;
 
-        // 6. Event listener al formulario
+        // Configuración del evento de envío del formulario
         const form = document.getElementById("form-crear-subcategoria");
         if (form) {
             form.addEventListener("submit", async function (e) {
@@ -175,19 +222,26 @@ async function mostrarFormularioCrearSubcategoria() {
     }
 }
 
+/**
+ * Muestra el formulario de edición para una subcategoría específica
+ * 
+ * @async
+ * @function mostrarFormularioEditarSubcategoria
+ * @param {number} id - ID único de la subcategoría a editar
+ * @description Carga los datos actuales de la subcategoría y presenta un formulario pre-poblado
+ *              para su modificación, incluyendo la posibilidad de cambiar la categoría padre.
+ * @throws {Error} Error al cargar datos de la subcategoría o categorías
+ * @business Permite actualizar la información de subcategorías para mantener la taxonomía actualizada
+ */
 async function mostrarFormularioEditarSubcategoria(id) {
     try {
-        // 1. Traer datos de la subcategoría
         const subcat = await apiInstance.getSubcategoria(id);
-
-        // 2. Traer todas las categorías
         const categorias = await apiInstance.getCategorias();
 
-        // 3. Seleccionar el contenedor central
         const contenedor = document.getElementById("contenido-dinamico");
         if (!contenedor) return;
 
-        // 4. Armar el select de categorías, marcando la actual
+        // Generación de select con categoría actual preseleccionada
         let selectHTML = "";
         if (categorias && categorias.length > 0) {
             selectHTML = `
@@ -212,7 +266,7 @@ async function mostrarFormularioEditarSubcategoria(id) {
             selectHTML = `<div class="text-muted">No hay categorías disponibles.</div>`;
         }
 
-        // 5. Armar el HTML del formulario
+        // Formulario de edición con datos pre-cargados
         const formHTML = `
             <h2 class="mb-4">Modificar subcategoría</h2>
             <form id="form-editar-subcategoria" autocomplete="off">
@@ -231,10 +285,9 @@ async function mostrarFormularioEditarSubcategoria(id) {
             </form>
         `;
 
-        // 6. Renderizar el formulario
         contenedor.innerHTML = formHTML;
 
-        // 7. Event listener al formulario
+        // Configuración del evento de actualización
         const form = document.getElementById("form-editar-subcategoria");
         if (form) {
             form.addEventListener("submit", async function (e) {
@@ -280,6 +333,17 @@ async function mostrarFormularioEditarSubcategoria(id) {
     }
 }
 
+/**
+ * Elimina una subcategoría específica del sistema
+ * 
+ * @async
+ * @function eliminarSubcategoria
+ * @param {number} id - ID único de la subcategoría a eliminar
+ * @description Solicita confirmación del usuario y procede a eliminar la subcategoría.
+ *              Verifica que no haya productos asociados antes de la eliminación.
+ * @throws {Error} Error de validación o comunicación con la API
+ * @business Permite mantener actualizada la taxonomía removiendo subcategorías obsoletas
+ */
 async function eliminarSubcategoria(id) {
     try {
         const confirmado = confirm("¿Desea eliminar esta subcategoría?");
@@ -296,9 +360,8 @@ async function eliminarSubcategoria(id) {
     }
 }
 
-// Exportar globalmente para el core
+// Exportación de funciones para integración con el core del dashboard
 window.mostrarFormularioCrearSubcategoria = mostrarFormularioCrearSubcategoria;
 window.listarSubcategorias = listarSubcategorias;
-window.mostrarFormularioEditarSubcategoria =
-    mostrarFormularioEditarSubcategoria;
+window.mostrarFormularioEditarSubcategoria = mostrarFormularioEditarSubcategoria;
 window.eliminarSubcategoria = eliminarSubcategoria;

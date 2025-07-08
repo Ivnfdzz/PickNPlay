@@ -1,3 +1,29 @@
+/**
+ * PICK&PLAY - CONTROLADOR DE CATÁLOGO DE PRODUCTOS
+ * 
+ * @description Módulo responsable de la visualización y gestión del catálogo
+ *              de productos. Maneja la navegación por subcategorías, filtrado
+ *              de productos y funcionalidades de agregar al carrito.
+ * 
+ * @features    - Carga dinámica de productos por categoría desde API
+ *              - Sistema de filtrado por subcategorías
+ *              - Gestión completa del carrito de compras
+ *              - Controles de cantidad con validaciones
+ *              - Feedback visual y gestión de estados
+ *              - Persistencia del carrito en localStorage
+ *              - Navegación fluida entre secciones
+ *              - Contador dinámico de productos en carrito
+ * 
+ * @business    El catálogo es el corazón de la experiencia de compra,
+ *              donde los clientes exploran y seleccionan productos.
+ *              Su funcionamiento óptimo es crucial para las ventas
+ *              y la satisfacción del cliente.
+ * 
+ * @version     1.0.0
+ * @since       2024
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
 // VARIABLES GLOBALES
 let categoriaActual = null;
 let subcategoriaActual = null;
@@ -26,6 +52,12 @@ const elementos = {
 };
 
 // INICIALIZACIÓN
+
+/**
+ * Inicializa la página del catálogo de productos
+ * @description Configuración principal, verificación de datos y carga de catálogo
+ * @listens DOMContentLoaded
+ */
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Inicializando página de productos...");
 
@@ -44,7 +76,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarDatosIniciales();
 });
 
-// VERIFICACIÓN Y CONFIGURACIÓN INICIAL
+/**
+ * Verifica que existan todos los datos necesarios para mostrar productos
+ * @returns {boolean} true si los datos son válidos, false si hay error
+ * @description Valida cliente, categoría seleccionada y carga carrito existente
+ */
 function verificarDatosIniciales() {
     const nombreCliente = localStorage.getItem("nombreCliente");
     const categoriaId = localStorage.getItem("categoriaSeleccionada");
@@ -82,6 +118,10 @@ function verificarDatosIniciales() {
     return true;
 }
 
+/**
+ * Recupera los items del carrito desde localStorage
+ * @description Carga el estado del carrito para mantener continuidad de compra
+ */
 function cargarCarritoDesdeLocalStorage() {
     const carritoGuardado = localStorage.getItem('carrito');
     
@@ -105,6 +145,10 @@ function cargarCarritoDesdeLocalStorage() {
     }
 }
 
+/**
+ * Configura los elementos iniciales de la interfaz de usuario
+ * @description Personaliza la UI con información del cliente y categoría
+ */
 function configurarUIInicial() {
     const nombreCliente = localStorage.getItem("nombreCliente");
 
@@ -127,6 +171,10 @@ function configurarUIInicial() {
     actualizarContadorCarrito();
 }
 
+/**
+ * Configura todos los event listeners de la interfaz
+ * @description Establece navegación y funcionalidades interactivas
+ */
 function configurarEventos() {
     // Botón de volver
     if (elementos.backButton) {
@@ -145,7 +193,11 @@ function configurarEventos() {
     }
 }
 
-// CARGA DE DATOS DESDE API
+/**
+ * Carga todos los datos necesarios desde la API
+ * @async
+ * @description Obtiene subcategorías y productos de la categoría seleccionada
+ */
 async function cargarDatosIniciales() {
     try {
         mostrarLoading(true);
@@ -165,6 +217,11 @@ async function cargarDatosIniciales() {
     }
 }
 
+/**
+ * Carga las subcategorías de la categoría actual desde la API
+ * @async
+ * @description Obtiene subcategorías para el filtrado de productos
+ */
 async function cargarSubcategorias() {
     try {
         subcategoriasData = await apiInstance.getSubcategoriasPorCategoria(
@@ -180,6 +237,11 @@ async function cargarSubcategorias() {
     }
 }
 
+/**
+ * Carga todos los productos de la categoría actual desde la API
+ * @async
+ * @description Obtiene el catálogo completo de productos disponibles
+ */
 async function cargarProductos() {
     try {
         const response = await apiInstance.getProductosPorCategoria(categoriaActual.id);
@@ -193,7 +255,10 @@ async function cargarProductos() {
     }
 }
 
-// RENDERIZADO DE SUBCATEGORÍAS
+/**
+ * Renderiza la lista de subcategorías en el sidebar
+ * @description Crea botones de filtrado para navegación por subcategorías
+ */
 function renderizarSubcategorias() {
     if (!elementos.subcategoriasList) return;
 
@@ -218,6 +283,12 @@ function renderizarSubcategorias() {
     configurarEventosSubcategorias();
 }
 
+/**
+ * Crea un botón de subcategoría para el sidebar
+ * @param {Object} subcategoria - Datos de la subcategoría
+ * @returns {HTMLElement} Elemento botón de subcategoría
+ * @description Genera botón con icono y nombre de subcategoría
+ */
 function crearBotonSubcategoria(subcategoria) {
     const button = document.createElement("button");
     button.className =
@@ -234,6 +305,10 @@ function crearBotonSubcategoria(subcategoria) {
     return button;
 }
 
+/**
+ * Configura event listeners para los botones de subcategorías
+ * @description Establece la funcionalidad de filtrado por subcategoría
+ */
 function configurarEventosSubcategorias() {
     const botonesSubcategoria =
         elementos.subcategoriasList.querySelectorAll(".subcategoria-item");
@@ -246,6 +321,12 @@ function configurarEventosSubcategorias() {
     });
 }
 
+/**
+ * Maneja la selección de una subcategoría específica
+ * @param {string} subcategoriaId - ID de la subcategoría seleccionada
+ * @param {HTMLElement} botonClickeado - Botón que fue clickeado
+ * @description Filtra productos y actualiza UI según subcategoría seleccionada
+ */
 function seleccionarSubcategoria(subcategoriaId, botonClickeado) {
     console.log(`Seleccionando subcategoría: ${subcategoriaId}`);
     
@@ -283,6 +364,12 @@ function seleccionarSubcategoria(subcategoriaId, botonClickeado) {
     }
 }
 
+/**
+ * Filtra los productos según la subcategoría seleccionada
+ * @param {string} subcategoriaId - ID de la subcategoría para filtrar
+ * @returns {Array} Array de productos filtrados
+ * @description Aplica filtro de subcategoría al catálogo de productos
+ */
 function filtrarProductosPorSubcategoria(subcategoriaId) {
     console.log(`Filtrando por subcategoría ID: ${subcategoriaId}`);
     console.log(`Total productos disponibles: ${productosData.length}`);
@@ -307,6 +394,12 @@ function filtrarProductosPorSubcategoria(subcategoriaId) {
 }
 
 
+/**
+ * Renderiza la lista de productos en el grid principal
+ * @param {Array} productos - Array de productos a mostrar
+ * @description Crea tarjetas de productos con controles de cantidad y compra
+ * @business Presentación atractiva del catálogo para impulsar ventas
+ */
 function mostrarProductos(productos) {
     if (!elementos.productosContainer) return;
 
@@ -327,6 +420,12 @@ function mostrarProductos(productos) {
     console.log(`${productos.length} productos mostrados`);
 }
 
+/**
+ * Crea la tarjeta individual de un producto
+ * @param {Object} producto - Datos del producto
+ * @returns {HTMLElement} Elemento DOM de la tarjeta del producto
+ * @description Genera tarjeta completa con imagen, info, precio y controles
+ */
 function crearTarjetaProducto(producto) {
     const col = document.createElement("div");
     col.className = "col-md-4 col-lg-3";
@@ -391,7 +490,13 @@ function crearTarjetaProducto(producto) {
     return col;
 }
 
-// FUNCIONES GLOBALES PARA ONCLICK
+/**
+ * Modifica la cantidad seleccionada de un producto
+ * @param {number} productoId - ID del producto
+ * @param {number} cambio - Cambio en cantidad (+1 o -1)
+ * @description Función global para controles de cantidad con límites dinámicos
+ * @global
+ */
 window.cambiarCantidad = function (productoId, cambio) {
     const input = document.getElementById(`cantidad-${productoId}`);
     if (!input) return;
@@ -427,6 +532,13 @@ window.cambiarCantidad = function (productoId, cambio) {
     }
 };
 
+/**
+ * Agrega un producto al carrito con la cantidad seleccionada
+ * @param {number} productoId - ID del producto a agregar
+ * @description Función global para agregar productos con validaciones de límites
+ * @business Función crítica para la conversión de navegación en venta
+ * @global
+ */
 window.agregarAlCarrito = function (productoId) {
     const producto = productosData.find((p) => p.id_producto == productoId);
     if (!producto) {
@@ -492,6 +604,13 @@ window.agregarAlCarrito = function (productoId) {
     console.log(`${producto.nombre} agregado. Total en carrito: ${cantidadFinal}/10`);
 };
 
+/**
+ * Muestra feedback visual al agregar producto al carrito
+ * @param {number} productoId - ID del producto agregado
+ * @param {string} nombre - Nombre del producto
+ * @param {number} cantidadTotal - Cantidad total en carrito
+ * @description Proporciona confirmación visual de la acción realizada
+ */
 function mostrarFeedbackAgregarCarrito(productoId, nombre, cantidadTotal) {
     // Feedback visual en la card
     const card = document.querySelector(`[data-producto-id="${productoId}"]`);
@@ -523,6 +642,10 @@ function mostrarFeedbackAgregarCarrito(productoId, nombre, cantidadTotal) {
     }
 }
 
+/**
+ * Actualiza el contador visual de productos en el carrito
+ * @description Mantiene sincronizado el indicador de carrito en la UI
+ */
 function actualizarContadorCarrito() {
     const totalItems = carritoItems.reduce(
         (total, item) => total + item.cantidad,
@@ -541,7 +664,11 @@ function actualizarContadorCarrito() {
     }
 }
 
-// ESTADOS DE UI
+/**
+ * Controla la visualización del indicador de carga
+ * @param {boolean} mostrar - true para mostrar, false para ocultar
+ * @description Gestiona el estado de loading durante cargas de datos
+ */
 function mostrarLoading(mostrar) {
     if (!elementos.loadingContainer) return;
 
@@ -555,6 +682,10 @@ function mostrarLoading(mostrar) {
     }
 }
 
+/**
+ * Muestra mensaje cuando no hay productos disponibles
+ * @description Informa al usuario sobre ausencia de productos en la categoría
+ */
 function mostrarMensajeSinProductos() {
     if (elementos.noProductos) {
         elementos.noProductos.classList.remove("d-none");
@@ -562,6 +693,10 @@ function mostrarMensajeSinProductos() {
     }
 }
 
+/**
+ * Muestra mensaje de error al cargar datos
+ * @description Informa al usuario sobre problemas de conectividad o carga
+ */
 function mostrarErrorCarga() {
     if (elementos.productosContainer) {
         elementos.productosContainer.innerHTML = `
@@ -580,13 +715,25 @@ function mostrarErrorCarga() {
     }
 }
 
-// FUNCIONES AUXILIARES PARA LÍMITES
+/**
+ * Obtiene la cantidad actual de un producto en el carrito
+ * @param {number} productoId - ID del producto a consultar
+ * @returns {number} Cantidad del producto en el carrito
+ * @description Utilidad para verificar límites y validaciones
+ */
 function obtenerCantidadEnCarrito(productoId) {
     const itemExistente = carritoItems.find(item => item.id_producto == productoId);
     return itemExistente ? itemExistente.cantidad : 0;
 }
 
 
+/**
+ * Verifica si se puede agregar una cantidad específica al carrito
+ * @param {number} productoId - ID del producto
+ * @param {number} cantidadAAgregar - Cantidad que se desea agregar
+ * @returns {boolean} true si se puede agregar, false si excede límites
+ * @description Valida límites máximos por producto en el carrito
+ */
 function verificarLimiteProducto(productoId, cantidadAAgregar) {
     const cantidadActual = obtenerCantidadEnCarrito(productoId);
     const cantidadDisponible = 10 - cantidadActual;
@@ -617,7 +764,11 @@ function verificarLimiteProducto(productoId, cantidadAAgregar) {
     };
 }
 
-// UTILIDADES
+/**
+ * Limpia completamente el carrito de compras
+ * @description Elimina todos los productos del carrito y actualiza localStorage
+ * @global
+ */
 function limpiarCarrito() {
     carritoItems = [];
     actualizarContadorCarrito();

@@ -1,10 +1,36 @@
+/**
+ * ESTILOS PARA VISTA DE CARRITO DE COMPRAS - PICK&PLAY
+ * 
+ * Este archivo contiene todos los estilos específicos para la funcionalidad
+ * del carrito de compras del e-commerce. Incluye:
+ * - Diseño de items del carrito
+ * - Controles de cantidad interactivos
+ * - Sección de resumen y checkout
+ * - Estados de carga y carrito vacío
+ * - Responsive design optimizado
+ * - Modo oscuro profesional
+ * 
+ * Funcionalidades visuales:
+ * - Lista de productos con imágenes
+ * - Controles + y - para cantidad
+ * - Cálculo de totales en tiempo real
+ * - Formulario de checkout integrado
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ */
+
 @import url('/frontend/css/base/styles-categorias.css');
 
 body {
     font-family: "Segoe UI", sans-serif;
 }
 
-/* Header del carrito */
+/* ================================================
+   HEADER Y ESTRUCTURA PRINCIPAL
+   ================================================ */
+
+/* Header informativo del carrito */
 .carrito-header {
     background: #fff;
     border-radius: 10px;
@@ -12,19 +38,21 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Color brown para títulos y elementos importantes */
+/* Color corporativo para elementos importantes */
 .text-brown {
     color: #3f1d10 !important;
 }
 
-/* Cards básicas */
+/* Cards base con bordes redondeados */
 .card {
     border: 1px solid #e9ecef;
     border-radius: 10px;
     background: #fff;
 }
 
-/* Productos carrito */
+/* ================================================
+   ITEMS DEL CARRITO
+   ================================================ */
 
 /* Card de cada producto en el carrito */
 .producto-carrito-item {
@@ -148,7 +176,7 @@ body {
     }
 }
 
-/* MODO OSCURO PROFESIONAL */
+/* MODO OSCURO */
 :root[data-bs-theme="dark"] {
     --bs-body-bg: #181a1b;
     --bs-body-color: #f5f5f5;

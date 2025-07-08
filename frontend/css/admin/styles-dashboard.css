@@ -1,6 +1,33 @@
+/**
+ * ESTILOS PARA DASHBOARD ADMINISTRATIVO - PICK&PLAY
+ * 
+ * Este archivo contiene todos los estilos específicos para el panel de
+ * administración del sistema. Incluye:
+ * - Diseño de sidebar de navegación administrativa
+ * - Estilos para tablas de datos CRUD
+ * - Paleta de colores administrativa (azul navy)
+ * - Estados de elementos activos/inactivos
+ * - Modo oscuro profesional completo
+ * - Componentes específicos del dashboard
+ * 
+ * Paleta de colores administrativa:
+ * - Navy principal: #1e2a5a
+ * - Navy hover: #2563eb
+ * - Crema: #fff7e6
+ * - Verde éxito: #198754
+ * - Rojo error: #dc3545
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ */
+
 body {
     font-family: "Segoe UI", sans-serif;
 }
+
+/* ================================================
+   PALETA DE COLORES ADMINISTRATIVA
+   ================================================ */
 
 .bg-crema {
     background-color: #fff7e6 !important;
@@ -10,6 +37,11 @@ body {
     background-color: #1e2a5a !important;
 }
 
+/* ================================================
+   SISTEMA DE BOTONES ADMINISTRATIVOS
+   ================================================ */
+
+/* Botón principal del admin */
 .btn-admin {
     background: #1e2a5a;
     color: #fff7e6;
@@ -21,6 +53,7 @@ body {
     color: #fff7e6;
 }
 
+/* Botones outline personalizados */
 .btn-outline-primary {
     border-color: #1e2a5a;
     color: #1e2a5a;
@@ -41,6 +74,11 @@ body {
     color: #fff;
 }
 
+/* ================================================
+   NAVEGACIÓN Y SIDEBAR ADMINISTRATIVO
+   ================================================ */
+
+/* Navbar sin sombra para diseño limpio */
 .navbar {
     box-shadow: none;
 }
@@ -49,17 +87,20 @@ body {
     font-weight: 600;
 }
 
+/* Sidebar principal del dashboard */
 .sidebar {
     border-right: 1px solid #dee2e6;
     background: #fff7e6 !important;
 }
 
+/* Títulos de sección en sidebar */
 .sidebar-title {
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
 }
 
+/* Items de navegación del sidebar */
 .list-group-item {
     border: none;
     border-radius: 6px !important;
@@ -76,6 +117,7 @@ body {
     color: #fff;
 }
 
+/* Opciones CRUD en sidebar */
 .crud-option {
     cursor: pointer;
     padding: 0.75rem 1rem;
@@ -86,15 +128,25 @@ body {
     text-align: center;
 }
 
+/* ================================================
+   ÁREA DE CONTENIDO PRINCIPAL
+   ================================================ */
+
 .content-area {
     background: #fff7e6 !important;
 }
 
+/* Título de bienvenida */
 #bienvenida-dashboard h2 {
     color: #1e2a5a;
     font-weight: 600;
 }
 
+/* ================================================
+   COMPONENTES DE DATOS (CARDS Y TABLAS)
+   ================================================ */
+
+/* Cards administrativas */
 .card {
     border: 1px solid #e9ecef;
     border-radius: 8px;
@@ -105,6 +157,7 @@ body {
     color: #1e2a5a;
 }
 
+/* Tablas de datos */
 .table {
     background: #fff;
     border-radius: 6px;
@@ -119,15 +172,25 @@ body {
     background: #f0f0f0;
 }
 
+/* ================================================
+   ESTADOS Y BADGES
+   ================================================ */
+
+/* Badge para estados activos */
 .badge-activo {
     background: #198754;
     color: #fff;
 }
 
+/* Badge para estados inactivos */
 .badge-inactivo {
     background: #dc3545;
     color: #fff;
 }
+
+/* ================================================
+   BOTONES DE ACCIÓN EN TABLAS
+   ================================================ */
 
 .btn-sm {
     font-size: 0.85rem;
@@ -142,6 +205,7 @@ body {
     margin-right: 0;
 }
 
+/* Botón de edición */
 .btn-editar {
     color: #2563eb;
     background: none;
@@ -152,6 +216,7 @@ body {
     text-decoration: underline;
 }
 
+/* Botón de eliminación */
 .btn-eliminar {
     color: #dc3545;
     background: none;
@@ -161,6 +226,10 @@ body {
 .btn-eliminar:hover {
     text-decoration: underline;
 }
+
+/* ================================================
+   ELEMENTOS DE ESTADO
+   ================================================ */
 
 .spinner-border {
     color: #1e2a5a;
@@ -173,7 +242,9 @@ footer {
     text-align: center;
 }
 
-/* === MODO OSCURO PROFESIONAL === */
+/* ================================================
+   MODO OSCURO ADMINISTRATIVO
+   ================================================ */
 :root[data-bs-theme="dark"] {
     --bs-body-bg: #181a1b;
     --bs-body-color: #f5f5f5;

@@ -1,4 +1,29 @@
-// filepath: c:\Users\User\OneDrive\Desktop\PickNPlay.TP\frontend\js\categorias.js
+/**
+ * PICK&PLAY - CONTROLADOR DE SELECCIÓN DE CATEGORÍAS
+ * 
+ * @description Módulo responsable de la navegación y selección de categorías
+ *              de productos. Gestiona la interacción del usuario con las tarjetas
+ *              de categorías y controla la transición hacia el catálogo de productos.
+ * 
+ * @features    - Validación de sesión del cliente
+ *              - Configuración interactiva de tarjetas de categoría
+ *              - Persistencia de selección en localStorage
+ *              - Navegación fluida hacia productos
+ *              - Feedback visual de selección
+ * 
+ * @business    La selección de categorías es el primer paso del proceso de compra,
+ *              dirigiendo al cliente hacia los productos de su interés. Su diseño
+ *              intuitivo facilita la navegación y mejora la experiencia de compra.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Inicializa la página de selección de categorías
+ * @description Verifica la sesión del cliente y configura la interactividad
+ * @listens DOMContentLoaded
+ */
 document.addEventListener("DOMContentLoaded", async () => {
     // Verificar que el usuario tenga nombre
     const nombreCliente = localStorage.getItem("nombreCliente");
@@ -12,6 +37,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     configurarEventosCards();
 });
 
+/**
+ * Configura los event listeners para las tarjetas de categoría
+ * @description Establece la funcionalidad de selección y navegación de categorías
+ * @business Punto de entrada principal para la navegación del catálogo
+ */
 function configurarEventosCards() {
     const cards = document.querySelectorAll(".categoria-card");
 

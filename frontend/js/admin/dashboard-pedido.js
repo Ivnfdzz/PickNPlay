@@ -1,3 +1,41 @@
+/**
+ * PICK&PLAY - SISTEMA DE GESTIÓN DE PEDIDOS
+ * 
+ * @description Módulo responsable de la administración y visualización de pedidos
+ *              realizados en el sistema e-commerce. Proporciona herramientas completas
+ *              para que los administradores puedan revisar, analizar y gestionar
+ *              todas las ventas del sistema.
+ * 
+ * @features    - Listado completo de pedidos con información resumida
+ *              - Vista detallada de pedidos individuales con productos
+ *              - Información completa de clientes y métodos de pago
+ *              - Cálculos automáticos de totales y subtotales
+ *              - Eliminación de pedidos con confirmación de seguridad
+ *              - Navegación fluida entre listado y detalles
+ *              - Formateo de fechas y montos para mejor legibilidad
+ * 
+ * @security    Solo roles 'root' y 'analista' pueden visualizar pedidos.
+ *              Solo 'root' puede eliminar pedidos del sistema.
+ *              Los pedidos se crean únicamente desde el frontend cliente.
+ * 
+ * @business    Los pedidos representan el núcleo del negocio e-commerce,
+ *              permitiendo el seguimiento de ventas, análisis de tendencias
+ *              y gestión de la relación con clientes.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Obtiene y renderiza la lista completa de pedidos del sistema
+ * 
+ * @async
+ * @function listarPedidos
+ * @description Función principal que carga todos los pedidos realizados
+ *              y los presenta en una tabla con información resumida y acciones disponibles.
+ * @throws {Error} Error de comunicación con la API o problemas de renderizado
+ * @business Permite a administradores y analistas revisar el historial completo de ventas
+ */
 async function listarPedidos() {
     try {
         const pedidos = await apiInstance.getPedidos();
@@ -10,6 +48,15 @@ async function listarPedidos() {
     }
 }
 
+/**
+ * Renderiza la tabla de pedidos con información resumida y acciones
+ * 
+ * @function renderizarTablaPedidos
+ * @param {Array<Object>} pedidos - Array de pedidos con estructura {id_pedido, fecha, nombre_cliente, MetodoPago, total, DetallePedidos}
+ * @description Genera HTML dinámico para mostrar pedidos en tabla
+ *              con información de cliente, método de pago, total y acciones de visualización/eliminación
+ * @business Facilita la gestión y revisión del historial de ventas del sistema
+ */
 function renderizarTablaPedidos(pedidos) {
     const contenedor = document.getElementById("contenido-dinamico");
     if (!contenedor) return;
@@ -76,6 +123,16 @@ function renderizarTablaPedidos(pedidos) {
     contenedor.innerHTML = html;
 }
 
+/**
+ * Muestra el detalle completo de un pedido específico
+ * 
+ * @async
+ * @function verDetallePedido
+ * @param {number} id - ID del pedido a visualizar
+ * @description Carga y muestra información detallada del pedido incluyendo
+ *              datos del cliente, método de pago, total y listado de productos
+ * @business Permite revisar en detalle las ventas realizadas para análisis y seguimiento
+ */
 async function verDetallePedido(id) {
     try {
         const pedido = await apiInstance.getPedido(id);
@@ -151,6 +208,15 @@ async function verDetallePedido(id) {
     }
 }
 
+/**
+ * Elimina un pedido después de confirmación del usuario
+ * 
+ * @async
+ * @function eliminarPedido
+ * @param {number} id - ID del pedido a eliminar
+ * @description Solicita confirmación y elimina el pedido especificado del sistema
+ * @business Permite remover pedidos erróneos o cancelados del historial de ventas
+ */
 async function eliminarPedido(id) {
     try {
         const confirmado = confirm("¿Desea eliminar este pedido?");

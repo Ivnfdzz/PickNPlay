@@ -1,3 +1,31 @@
+/**
+ * PICK&PLAY - NÚCLEO DEL DASHBOARD ADMINISTRATIVO
+ * 
+ * @description Módulo central que coordina todas las funcionalidades del dashboard administrativo.
+ *              Actúa como controlador principal que gestiona la navegación, validaciones de permisos,
+ *              y comunicación entre los diferentes módulos especializados del sistema.
+ * 
+ * @features    - Inicialización y configuración completa del dashboard
+ *              - Gestión de eventos de navegación y operaciones CRUD
+ *              - Validación de permisos y control de acceso por roles
+ *              - Coordinación entre módulos especializados
+ *              - Manejo de estados de UI (loading, contenido dinámico)
+ *              - Comunicación inter-módulos mediante eventos personalizados
+ *              - Gestión de sesiones y datos de usuario actual
+ * 
+ * @architecture - Core: Lógica central y navegación principal
+ *               - Especializados: productos, usuarios, pedidos, auditoría, etc.
+ *               - Permisos: Validaciones de acceso y autorización
+ *               - API: Comunicación segura con backend
+ * 
+ * @business    El núcleo centraliza toda la lógica administrativa, asegurando
+ *              un flujo coherente y seguro entre las diferentes funcionalidades
+ *              del sistema de gestión empresarial.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
 const DashboardCore = {
     // Estado actual
     currentEntity: null,
@@ -59,7 +87,11 @@ const DashboardCore = {
         }
     },
 
-    // CONFIGURACIÓN DE EVENTOS
+    /**
+     * Configura todos los event listeners del dashboard
+     * @description Vincula los eventos del navbar, sidebar, selectores y botones
+     * @memberof DashboardCore
+     */
     configurarEventos() {
         // Navbar
         if (this.elements.btnUsuario) {
@@ -100,7 +132,12 @@ const DashboardCore = {
         console.log("Eventos configurados");
     },
 
-    // MANEJO DE ENTIDADES Y OPERACIONES
+    /**
+     * Maneja la selección de una entidad desde el dropdown
+     * @param {string} entidad - Nombre de la entidad seleccionada (productos, usuarios, etc.)
+     * @description Actualiza el estado del dashboard, muestra opciones CRUD y emite eventos
+     * @memberof DashboardCore
+     */
     manejarSeleccionEntidad(entidad) {
         if (!entidad) {
             this.mostrarBienvenida();
@@ -122,6 +159,12 @@ const DashboardCore = {
         this.emitirEventoEntidad(entidad);
     },
 
+    /**
+     * Procesa la selección de una operación CRUD con validación de permisos
+     * @param {string} operacion - Tipo de operación (crear, listar, editar, eliminar)
+     * @description Valida permisos de usuario y entidad antes de permitir la operación
+     * @memberof DashboardCore
+     */
     manejarSeleccionOperacion(operacion) {
         if (!this.currentEntity) {
             mostrarToast("Primero selecciona una entidad", "warning");
@@ -180,7 +223,11 @@ const DashboardCore = {
         this.emitirEventoCrud(this.currentEntity, operacion);
     },
 
-    // MANEJO DE INFORMES
+    /**
+     * Muestra el módulo de auditoría con validación de permisos
+     * @description Solo accesible para usuarios con rol 'root' o 'analista'
+     * @memberof DashboardCore
+     */
     mostrarAuditoria() {
         // Validar permisos para auditoría
         if (!["root", "analista"].includes(this.currentUser.rol)) {
@@ -199,8 +246,11 @@ const DashboardCore = {
         document.dispatchEvent(new CustomEvent("mostrarAuditoria"));
     },
 
-    // MODIFICAR mostrarEstadisticas:
-
+    /**
+     * Muestra el módulo de estadísticas con validación de permisos
+     * @description Solo accesible para usuarios con rol 'root' o 'analista'
+     * @memberof DashboardCore
+     */
     mostrarEstadisticas() {
         if (!["root", "analista"].includes(this.currentUser.rol)) {
             mostrarToast(
@@ -217,30 +267,53 @@ const DashboardCore = {
         document.dispatchEvent(new CustomEvent("mostrarEstadisticas"));
     },
 
-    // GESTIÓN DE UI
+    /**
+     * Muestra la pantalla de bienvenida del dashboard
+     * @description Oculta el contenido dinámico y muestra el mensaje de bienvenida
+     * @memberof DashboardCore
+     */
     mostrarBienvenida() {
         this.elements.bienvenidaDashboard.classList.remove("d-none");
         this.elements.contenidoDinamico.classList.add("d-none");
         this.elements.contenidoDinamico.innerHTML = "";
     },
 
+    /**
+     * Muestra el área de contenido dinámico del dashboard
+     * @description Oculta la bienvenida y muestra el área donde se cargan los módulos
+     * @memberof DashboardCore
+     */
     mostrarContenidoDinamico() {
         this.elements.bienvenidaDashboard.classList.add("d-none");
         this.elements.contenidoDinamico.classList.remove("d-none");
     },
 
+    /**
+     * Hace visibles las opciones de operaciones CRUD en el sidebar
+     * @memberof DashboardCore
+     */
     mostrarOperacionesCrud() {
         if (this.elements.operacionesCrud) {
             this.elements.operacionesCrud.classList.remove("d-none");
         }
     },
 
+    /**
+     * Oculta las opciones de operaciones CRUD en el sidebar
+     * @memberof DashboardCore
+     */
     ocultarOperacionesCrud() {
         if (this.elements.operacionesCrud) {
             this.elements.operacionesCrud.classList.add("d-none");
         }
     },
 
+    /**
+     * Actualiza la selección visual de la operación activa
+     * @param {string} operacion - Operación seleccionada (crear, listar, etc.)
+     * @description Marca visualmente la operación activa en el sidebar
+     * @memberof DashboardCore
+     */
     actualizarSeleccionOperacion(operacion) {
         // Limpiar selecciones anteriores
         this.elements.crudOptions.forEach((option) => {
@@ -256,6 +329,11 @@ const DashboardCore = {
         }
     },
 
+    /**
+     * Limpia todas las selecciones del dashboard y resetea el estado
+     * @description Resetea selector de entidad, oculta CRUD y limpia variables de estado
+     * @memberof DashboardCore
+     */
     limpiarSelecciones() {
         // Limpiar selector de entidad
         if (this.elements.selectorEntidad) {
@@ -273,13 +351,21 @@ const DashboardCore = {
         this.currentOperation = null;
     },
 
+    /**
+     * Remueve la clase 'active' de todas las opciones CRUD
+     * @memberof DashboardCore
+     */
     limpiarSeleccionOperacion() {
         this.elements.crudOptions.forEach((option) => {
             option.classList.remove("active");
         });
     },
 
-    // COMUNICACIÓN ENTRE MÓDULOS
+    /**
+     * Emite evento de selección de entidad para comunicación entre módulos
+     * @param {string} entidad - Entidad seleccionada
+     * @memberof DashboardCore
+     */
     emitirEventoEntidad(entidad) {
         document.dispatchEvent(
             new CustomEvent("entidadSeleccionada", {
@@ -288,6 +374,12 @@ const DashboardCore = {
         );
     },
 
+    /**
+     * Emite evento de operación CRUD para comunicación entre módulos
+     * @param {string} entidad - Entidad sobre la que se realiza la operación
+     * @param {string} operacion - Tipo de operación CRUD
+     * @memberof DashboardCore
+     */
     emitirEventoCrud(entidad, operacion) {
         document.dispatchEvent(
             new CustomEvent("operacionCrudSeleccionada", {
@@ -296,7 +388,11 @@ const DashboardCore = {
         );
     },
 
-    // FUNCIONALIDADES ADICIONALES
+    /**
+     * Muestra información detallada del usuario actual
+     * @description Genera y muestra una tarjeta con datos del usuario y sus permisos
+     * @memberof DashboardCore
+     */
     mostrarInfoUsuario() {
         const infoHtml = `
     <div class="card">
@@ -341,7 +437,12 @@ const DashboardCore = {
         this.limpiarSelecciones();
     },
 
-    // MÉTODOS PÚBLICOS PARA OTROS MÓDULOS
+    /**
+     * Obtiene el estado actual del dashboard
+     * @returns {Object} Objeto con entidad, operación y usuario actual
+     * @description Método público para que otros módulos accedan al estado
+     * @memberof DashboardCore
+     */
     getEstadoActual() {
         return {
             entidad: this.currentEntity,
@@ -350,11 +451,23 @@ const DashboardCore = {
         };
     },
 
+    /**
+     * Actualiza el contenido del área dinámica del dashboard
+     * @param {string} html - Contenido HTML a mostrar
+     * @description Método público para que otros módulos actualicen la vista
+     * @memberof DashboardCore
+     */
     actualizarContenido(html) {
         this.mostrarContenidoDinamico();
         this.elements.contenidoDinamico.innerHTML = html;
     },
 
+    /**
+     * Muestra un indicador de carga en el área de contenido dinámico
+     * @param {string} [mensaje="Cargando..."] - Mensaje personalizado para mostrar
+     * @description Útil durante operaciones asíncronas para mejorar UX
+     * @memberof DashboardCore
+     */
     mostrarLoading(mensaje = "Cargando...") {
         const loadingHtml = `
             <div class="text-center py-5">

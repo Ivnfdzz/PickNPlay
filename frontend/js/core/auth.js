@@ -1,4 +1,43 @@
+/**
+ * PICK&PLAY - SISTEMA DE CONTROL DE AUTENTICACIÓN
+ * 
+ * @description Módulo responsable del control completo de autenticación y autorización
+ *              en toda la aplicación. Gestiona sesiones, tokens, permisos por rol
+ *              y proporciona una interfaz unificada para el manejo de usuarios
+ *              tanto en el frontend cliente como en el panel administrativo.
+ * 
+ * @features    - Autenticación completa con API backend
+ *              - Gestión automática de tokens y sesiones
+ *              - Control de permisos basado en roles (root, analista, repositor)
+ *              - Validación de sesiones existentes al cargar páginas
+ *              - UI adaptativa según estado de autenticación
+ *              - Redirección inteligente según permisos de usuario
+ *              - Manejo de estados de carga y errores
+ *              - Limpieza automática de sesiones inválidas
+ * 
+ * @security    - Validación de tokens en cada operación crítica
+ *              - Protección de rutas administrativas
+ *              - Limpieza segura de datos de sesión
+ *              - Control de acceso granular por funcionalidad
+ * 
+ * @business    El control de autenticación es fundamental para proteger el sistema,
+ *              asegurar que solo personal autorizado acceda a funciones administrativas
+ *              y mantener la seguridad de datos sensibles del negocio.
+ * 
+ * @version     1.0.0
+ * @authors     Iván Fernández y Luciano Fattoni
+ */
+
+/**
+ * Controlador principal de autenticación y autorización
+ * @class AuthController
+ */
 class AuthController {
+    /**
+     * Constructor del controlador de autenticación
+     * @description Inicializa el controlador, configura referencias DOM y estado inicial
+     * @business Centraliza la gestión de autenticación para toda la aplicación
+     */
     constructor() {
         this.elements = {
             // Elementos de login
@@ -22,11 +61,19 @@ class AuthController {
 
     // INICIALIZACIÓN
 
+    /**
+     * Inicializa el controlador de autenticación
+     * @description Configura event listeners y verifica el estado de autenticación actual
+     */
     init() {
         this.setupEventListeners();
         this.checkAuthStatus();
     }
 
+    /**
+     * Configura todos los event listeners de la interfaz
+     * @description Establece la comunicación entre elementos DOM y funcionalidades de auth
+     */
     setupEventListeners() {
         // Formulario de login
         if (this.elements.loginForm) {
@@ -66,6 +113,13 @@ class AuthController {
 
     // AUTENTICACIÓN PRINCIPAL
 
+    /**
+     * Maneja el proceso completo de login de usuario
+     * @async
+     * @description Valida credenciales, autentica con API, guarda sesión y redirige según permisos
+     * @throws {Error} Error de validación o comunicación con API
+     * @business Punto de entrada principal para acceso al sistema
+     */
     async handleLogin() {
         try {
             const email = this.elements.loginEmail.value.trim();
@@ -104,6 +158,11 @@ class AuthController {
         }
     }
 
+    /**
+     * Maneja el proceso de logout del usuario
+     * @description Limpia la sesión y redirige al login
+     * @business Asegura la terminación segura de sesiones
+     */
     handleLogout() {
         this.clearSession();
         mostrarToast("Sesión cerrada correctamente", "info");
@@ -112,6 +171,12 @@ class AuthController {
         }, 1500);
     }
 
+    /**
+     * Verifica el estado actual de autenticación del usuario
+     * @async
+     * @description Valida tokens existentes y actualiza UI según estado de autenticación
+     * @business Mantiene la consistencia de sesiones entre recargas de página
+     */
     async checkAuthStatus() {
         const token = localStorage.getItem("token");
         const userData = localStorage.getItem("user");
@@ -150,11 +215,22 @@ class AuthController {
 
     // GESTIÓN DE SESIÓN
 
+    /**
+     * Guarda los datos de sesión en localStorage
+     * @param {string} token - Token de autenticación JWT
+     * @param {Object} user - Datos del usuario autenticado
+     * @description Almacena de forma segura las credenciales de sesión
+     */
     saveSession(token, user) {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
     }
 
+    /**
+     * Limpia completamente los datos de sesión
+     * @description Elimina token, datos de usuario y resetea estado interno
+     * @security Asegura limpieza completa de datos sensibles
+     */
     clearSession() {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -163,6 +239,12 @@ class AuthController {
 
     // VERIFICACIONES DE PERMISOS
 
+    /**
+     * Verifica si el usuario tiene acceso al panel administrativo
+     * @returns {boolean} true si tiene acceso, false si no
+     * @description Valida roles administrativos y redirige si es necesario
+     * @security Control de acceso crítico para funciones administrativas
+     */
     verifyAdminAccess() {
         const userRole = this.currentUser?.rol;
 
@@ -175,6 +257,12 @@ class AuthController {
         return true;
     }
 
+    /**
+     * Redirige al usuario al dashboard apropiado según su rol
+     * @param {string} userRole - Rol del usuario (root, analista, repositor)
+     * @description Dirige al usuario a la interfaz correcta según permisos
+     * @business Asegura que cada usuario acceda solo a su área autorizada
+     */
     redirectToDashboard(userRole) {
         if (["root", "analista", "repositor"].includes(userRole)) {
             location.assign("/frontend/html/admin/dashboard.html");
@@ -188,6 +276,13 @@ class AuthController {
 
     // VALIDACIONES
 
+    /**
+     * Valida los datos de entrada del formulario de login
+     * @param {string} email - Email del usuario
+     * @param {string} password - Contraseña del usuario
+     * @returns {boolean} true si las validaciones pasan, false si hay errores
+     * @description Verifica formato de email y requisitos de contraseña
+     */
     validateLoginInputs(email, password) {
         if (!email || !password) {
             this.showError("Por favor, completa todos los campos");
@@ -209,6 +304,12 @@ class AuthController {
 
     // MANEJO DE UI BÁSICO
 
+    /**
+     * Actualiza la interfaz para un usuario autenticado
+     * @param {Object} user - Datos del usuario autenticado
+     * @description Muestra elementos de usuario y configura UI según rol
+     * @business Personaliza la experiencia según el perfil del usuario
+     */
     updateUIForAuthenticatedUser(user) {
         // Mostrar info del usuario (si los elementos existen)
         if (this.elements.userNameDisplay) {
@@ -230,6 +331,11 @@ class AuthController {
         console.log(`Usuario autenticado: ${user.username} (${user.rol})`);
     }
 
+    /**
+     * Actualiza la interfaz para un usuario no autenticado
+     * @description Oculta elementos de usuario y funcionalidades administrativas
+     * @security Asegura que elementos sensibles no sean visibles sin autenticación
+     */
     updateUIForUnauthenticatedUser() {
         // Ocultar info del usuario
         if (this.elements.userInfo) {
@@ -247,6 +353,12 @@ class AuthController {
         console.log("Usuario no autenticado");
     }
 
+    /**
+     * Muestra elementos administrativos según el rol del usuario
+     * @param {string} userRole - Rol del usuario actual
+     * @description Controla la visibilidad de funciones según permisos de rol
+     * @business Implementa el control granular de acceso a funcionalidades
+     */
     showAdminElements(userRole) {
         this.elements.adminItems.forEach((element) => {
             const requiredRoles = element.dataset.requiredRoles?.split(",") || [
@@ -264,12 +376,21 @@ class AuthController {
         });
     }
 
+    /**
+     * Oculta todos los elementos administrativos
+     * @description Asegura que funciones administrativas no sean visibles sin permisos
+     */
     hideAdminElements() {
         this.elements.adminItems.forEach((element) => {
             element.classList.add("d-none");
         });
     }
 
+    /**
+     * Controla el estado de carga del botón de login
+     * @param {boolean} isLoading - true para mostrar loading, false para estado normal
+     * @description Proporciona feedback visual durante el proceso de autenticación
+     */
     setLoginLoading(isLoading) {
         if (this.elements.loginButton) {
             if (isLoading) {
@@ -287,6 +408,11 @@ class AuthController {
 
     // MANEJO DE MENSAJES
 
+    /**
+     * Muestra un mensaje de error al usuario
+     * @param {string} message - Mensaje de error a mostrar
+     * @description Presenta errores tanto en UI local como en toast global
+     */
     showError(message) {
         // Feedback visual en el login (opcional)
         if (this.elements.loginError) {
@@ -297,16 +423,31 @@ class AuthController {
         mostrarToast(message, "error");
     }
 
+    /**
+     * Muestra un mensaje de éxito al usuario
+     * @param {string} message - Mensaje de éxito a mostrar
+     * @description Proporciona feedback positivo mediante toast
+     */
     showSuccess(message) {
         mostrarToast(message, "success");
     }
 
+    /**
+     * Limpia los mensajes de error de la interfaz
+     * @description Oculta elementos de error en el formulario de login
+     */
     clearError() {
         if (this.elements.loginError) {
             this.elements.loginError.classList.add("d-none");
         }
     }
 
+    /**
+     * Convierte mensajes de error técnicos en mensajes amigables
+     * @param {string} errorMessage - Mensaje de error original de la API
+     * @returns {string} Mensaje de error amigable para el usuario
+     * @description Mejora la experiencia de usuario con mensajes comprensibles
+     */
     getErrorMessage(errorMessage) {
         const errorMap = {
             "Email y password son requeridos":
@@ -325,10 +466,21 @@ class AuthController {
     }
 
     // MÉTODOS DE UTILIDAD PÚBLICOS
+
+    /**
+     * Verifica si hay un usuario autenticado actualmente
+     * @returns {boolean} true si está autenticado, false si no
+     * @description Método público para verificar estado de autenticación
+     */
     isAuthenticated() {
         return !!this.currentUser && !!localStorage.getItem("token");
     }
 
+    /**
+     * Obtiene los datos del usuario actual
+     * @returns {Object|null} Datos del usuario o null si no está autenticado
+     * @description Proporciona acceso a los datos del usuario autenticado
+     */
     getCurrentUser() {
         if (!this.currentUser) {
             const userData = localStorage.getItem("user");
@@ -339,10 +491,22 @@ class AuthController {
         return this.currentUser;
     }
 
+    /**
+     * Verifica si el usuario tiene un rol específico
+     * @param {string} role - Rol a verificar (root, analista, repositor)
+     * @returns {boolean} true si tiene el rol, false si no
+     * @description Utilidad para verificación granular de permisos
+     */
     hasRole(role) {
         return this.currentUser?.rol === role;
     }
 
+    /**
+     * Requiere que el usuario esté autenticado para continuar
+     * @returns {boolean} true si está autenticado, false y redirige si no
+     * @description Guard function para proteger rutas que requieren autenticación
+     * @security Punto de control crítico para acceso a funcionalidades protegidas
+     */
     requireAuth() {
         if (!this.isAuthenticated()) {
             location.assign("/frontend/html/admin/login.html");
@@ -351,6 +515,13 @@ class AuthController {
         return true;
     }
 
+    /**
+     * Requiere que el usuario tenga un rol específico para continuar
+     * @param {string} requiredRole - Rol requerido para el acceso
+     * @returns {boolean} true si tiene el rol, false y bloquea si no
+     * @description Guard function para proteger funcionalidades específicas por rol
+     * @security Control de acceso granular por funcionalidad
+     */
     requireRole(requiredRole) {
         if (!this.requireAuth()) return false;
 
@@ -363,6 +534,11 @@ class AuthController {
     }
 }
 
+/**
+ * Inicialización global del controlador de autenticación
+ * @description Crea la instancia principal del controlador cuando el DOM está listo
+ *              y la expone globalmente como window.Auth para uso en toda la aplicación
+ */
 document.addEventListener("DOMContentLoaded", () => {
     window.Auth = new AuthController();
 });

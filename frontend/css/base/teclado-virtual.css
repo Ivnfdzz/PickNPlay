@@ -1,4 +1,28 @@
-/* Estilos básicos para el teclado virtual */
+/**
+ * TECLADO VIRTUAL PARA DISPOSITIVOS TÁCTILES - PICK&PLAY
+ * 
+ * Este archivo implementa un teclado virtual personalizado para mejorar
+ * la experiencia de usuario en dispositivos táctiles como tablets.
+ * Especialmente útil para:
+ * - Kioscos de autoservicio
+ * - Tablets en puntos de venta
+ * - Dispositivos sin teclado físico
+ * 
+ * Características:
+ * - Diseño responsive adaptativo
+ * - Colores corporativos integrados
+ * - Teclas de acción diferenciadas
+ * - Feedback visual en interacciones
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ */
+
+/* ================================================
+   ESTRUCTURA PRINCIPAL DEL TECLADO
+   ================================================ */
+
+/* Contenedor principal del teclado virtual */
 .teclado-virtual {
     display: flex;
     flex-direction: column;
@@ -6,10 +30,18 @@
     gap: 0.5rem;
     margin-top: 1rem;
 }
+
+/* Filas individuales de teclas */
 .teclado-virtual-fila {
     display: flex;
     gap: 0.3rem;
 }
+
+/* ================================================
+   DISEÑO DE TECLAS INDIVIDUALES
+   ================================================ */
+
+/* Botón base para todas las teclas */
 .teclado-virtual-boton {
     min-width: 2.5rem;
     min-height: 2.5rem;
@@ -21,13 +53,23 @@
     cursor: pointer;
     transition: background 0.2s;
 }
+
+/* Feedback visual al presionar teclas */
 .teclado-virtual-boton:active {
     background: #ffe0a3;
 }
+
+/* Teclas especiales (Enter, Delete, etc.) */
 .teclado-virtual-boton.tecla-accion {
     background: #bfa16a;
     color: #fff;
 }
+
+/* ================================================
+   DISEÑO RESPONSIVE
+   ================================================ */
+
+/* Adaptación para pantallas pequeñas */
 @media (max-width: 600px) {
     .teclado-virtual-boton {
         min-width: 2rem;
