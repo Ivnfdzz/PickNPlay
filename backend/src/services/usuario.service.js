@@ -1,8 +1,38 @@
+/**
+ * @fileoverview Servicio de Usuarios para el sistema Pick&Play
+ * 
+ * Gestiona la lógica de negocio relacionada con usuarios del sistema,
+ * incluyendo operaciones CRUD, validaciones de unicidad, gestión de roles
+ * y estadísticas de usuarios. Coordina las operaciones entre el modelo
+ * Usuario y Rol manteniendo la integridad de los datos.
+ * 
+ * Implementa validaciones exhaustivas para email y username únicos,
+ * así como validaciones de roles para garantizar la consistencia
+ * del sistema de autorización.
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const Usuario = require('../models/usuario.model.js');
 const Rol = require('../models/rol.model.js');
 const { Op } = require('sequelize');
 
+/**
+ * Servicio para la gestión de usuarios del sistema
+ * 
+ * @class UsuarioService
+ * @description Proporciona métodos para crear, consultar, actualizar y eliminar
+ *              usuarios, incluyendo validaciones de negocio y estadísticas.
+ */
 class UsuarioService {
+    /**
+     * Obtiene todos los usuarios con información de rol
+     * 
+     * @async
+     * @returns {Promise<Array>} Array de usuarios con roles (sin contraseñas)
+     */
     static async obtenerTodos() {
         return await Usuario.findAll({
             include: this._getIncludeRol(),
@@ -10,6 +40,14 @@ class UsuarioService {
         });
     }
 
+    /**
+     * Obtiene un usuario específico por ID
+     * 
+     * @async
+     * @param {number} id - ID del usuario
+     * @returns {Promise<Object>} Usuario con información de rol
+     * @throws {Error} Si el usuario no existe
+     */
     static async obtenerPorId(id) {
         const usuario = await Usuario.findByPk(id, {
             include: this._getIncludeRol(),
@@ -23,13 +61,25 @@ class UsuarioService {
         return usuario;
     }
 
+    /**
+     * Crea un nuevo usuario con validaciones completas
+     * 
+     * @async
+     * @param {Object} data - Datos del usuario a crear
+     * @param {string} data.username - Nombre de usuario único
+     * @param {string} data.email - Email único del usuario
+     * @param {string} data.password - Contraseña (será encriptada automáticamente)
+     * @param {number} data.id_rol - ID del rol a asignar
+     * @returns {Promise<Object>} Usuario creado (sin contraseña)
+     * @throws {Error} Si faltan datos, el rol no existe o hay duplicados
+     */
     static async crear(data) {
         // Validaciones básicas
         this._validarDatosUsuario(data);
 
         // Validar que el rol existe
         await this._validarRolExiste(data.id_rol);
-        // Validar que el usuario no existe
+        
         // Validar duplicados
         await this._validarUsuarioUnico(data.email, data.username);
 
@@ -45,9 +95,18 @@ class UsuarioService {
         };
     }
 
+    /**
+     * Actualiza un usuario existente
+     * 
+     * @async
+     * @param {number} id - ID del usuario a actualizar
+     * @param {Object} data - Datos a actualizar
+     * @returns {Promise<string>} Mensaje de confirmación
+     * @throws {Error} Si el usuario no existe, rol inválido o datos duplicados
+     */
     static async actualizar(id, data) {
         // Validar que el usuario existe
-        const usuario = await this.obtenerPorId(id); // Lanza error si no existe
+        const usuario = await this.obtenerPorId(id);
 
         // Si se está actualizando el rol, validarlo
         if (data.id_rol) {
@@ -69,9 +128,17 @@ class UsuarioService {
         return 'Usuario actualizado correctamente';
     }
 
+    /**
+     * Elimina un usuario por ID
+     * 
+     * @async
+     * @param {number} id - ID del usuario a eliminar
+     * @returns {Promise<string>} Mensaje de confirmación
+     * @throws {Error} Si el usuario no existe
+     */
     static async eliminar(id) {
         // Validar que el usuario existe
-        await this.obtenerPorId(id); // Lanza error si no existe
+        await this.obtenerPorId(id);
 
         const filasAfectadas = await Usuario.destroy({
             where: { id_usuario: id }
@@ -84,6 +151,14 @@ class UsuarioService {
         return 'Usuario eliminado correctamente';
     }
 
+    /**
+     * Obtiene usuarios filtrados por rol
+     * 
+     * @async
+     * @param {string} rolNombre - Nombre del rol a filtrar
+     * @returns {Promise<Array>} Array de usuarios con el rol especificado
+     * @throws {Error} Si el rol no existe
+     */
     static async obtenerPorRol(rolNombre) {
         const rol = await Rol.findOne({ where: { nombre: rolNombre } });
         if (!rol) {
@@ -97,6 +172,14 @@ class UsuarioService {
         });
     }
 
+    /**
+     * Genera estadísticas de usuarios del sistema
+     * 
+     * @async
+     * @returns {Promise<Object>} Estadísticas de usuarios por rol
+     * @property {number} total - Total de usuarios
+     * @property {Array} por_rol - Distribución por roles
+     */
     static async contarUsuarios() {
         const total = await Usuario.count();
 
@@ -114,6 +197,12 @@ class UsuarioService {
         };
     }
 
+    /**
+     * Configuración de include para consultas con rol
+     * 
+     * @private
+     * @returns {Array} Array de configuración de includes para Sequelize
+     */
     static _getIncludeRol() {
         return [
             {
@@ -123,6 +212,13 @@ class UsuarioService {
         ];
     }
 
+    /**
+     * Valida la estructura básica de los datos del usuario
+     * 
+     * @private
+     * @param {Object} data - Datos del usuario a validar
+     * @throws {Error} Si faltan campos requeridos o formato inválido
+     */
     static _validarDatosUsuario(data) {
         const { username, email, password, id_rol } = data;
 
@@ -143,6 +239,15 @@ class UsuarioService {
         }
     }
 
+    /**
+     * Valida que el rol especificado existe en el sistema
+     * 
+     * @async
+     * @private
+     * @param {number} id_rol - ID del rol a validar
+     * @returns {Promise<Object>} Rol encontrado
+     * @throws {Error} Si el rol no existe
+     */
     static async _validarRolExiste(id_rol) {
         const rol = await Rol.findByPk(id_rol);
         if (!rol) {
@@ -151,6 +256,15 @@ class UsuarioService {
         return rol;
     }
 
+    /**
+     * Valida que email y username sean únicos en el sistema
+     * 
+     * @async
+     * @private
+     * @param {string} email - Email a validar
+     * @param {string} username - Username a validar
+     * @throws {Error} Si alguno ya está registrado
+     */
     static async _validarUsuarioUnico(email, username) {
         const existingEmail = await Usuario.findOne({ where: { email } });
         if (existingEmail) {
@@ -163,6 +277,16 @@ class UsuarioService {
         }
     }
 
+    /**
+     * Valida unicidad para actualizaciones excluyendo el usuario actual
+     * 
+     * @async
+     * @private
+     * @param {number} userId - ID del usuario que se está actualizando
+     * @param {string} email - Email a validar (opcional)
+     * @param {string} username - Username a validar (opcional)
+     * @throws {Error} Si alguno ya está registrado por otro usuario
+     */
     static async _validarUsuarioUnicoParaActualizacion(userId, email, username) {
         if (email) {
             const existingEmail = await Usuario.findOne({
@@ -190,4 +314,11 @@ class UsuarioService {
     }
 }
 
+/**
+ * Exporta el servicio de usuarios para su uso en controladores.
+ * 
+ * @module UsuarioService
+ * @description Servicio central para la gestión de usuarios del sistema.
+ *              Utilizado por el controlador de usuarios y funciones administrativas.
+ */
 module.exports = UsuarioService;

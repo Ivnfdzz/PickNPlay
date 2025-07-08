@@ -1,5 +1,42 @@
+/**
+ * @fileoverview Seeder de Usuarios para el sistema Pick&Play
+ * 
+ * Inicializa la tabla de usuarios con cuentas administrativas predefinidas
+ * para cada nivel de acceso del sistema. Proporciona usuarios de prueba
+ * y administración inicial para el funcionamiento del sistema.
+ * 
+ * Crea usuarios con contraseñas seguras para cada rol: root (superadmin),
+ * analista (admin) y repositor (básico), facilitando el acceso inicial
+ * al dashboard administrativo.
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const Usuario = require('../models/usuario.model.js');
 
+/**
+ * Crea los usuarios administrativos del sistema si no existen
+ * 
+ * @async
+ * @function crearUsuarios
+ * @description Inicializa la tabla usuarios con cuentas administrativas:
+ *              
+ *              Usuarios root (id_rol: 1):
+ *              - root1@pickandplay.com / root2@pickandplay.com
+ *              
+ *              Usuario analista (id_rol: 2):
+ *              - analista1@pickandplay.com
+ *              
+ *              Usuario repositor (id_rol: 3):
+ *              - repositor1@pickandplay.com
+ *              
+ *              Las contraseñas se encriptan automáticamente mediante
+ *              el hook beforeCreate del modelo Usuario.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error durante la creación
+ */
 const crearUsuarios = async () => {
     try {
         const usuariosExistentes = await Usuario.count();
@@ -42,4 +79,11 @@ const crearUsuarios = async () => {
     }
 };
 
+/**
+ * Exporta la función de seeding para su uso en el script principal.
+ * 
+ * @module crearUsuarios
+ * @description Función de inicialización de datos para usuarios administrativos.
+ *              Utilizada por el script principal de seeders para poblar la base de datos.
+ */
 module.exports = crearUsuarios;

@@ -1,5 +1,45 @@
+/**
+ * @fileoverview Seeder de Productos para el sistema Pick&Play
+ * 
+ * Inicializa la tabla de productos con un catálogo completo de juegos
+ * de mesa y cartas disponibles para alquiler. Incluye información
+ * detallada de precios, descripciones y asociaciones con subcategorías.
+ * 
+ * Utiliza el ProductoService para crear productos con sus relaciones
+ * many-to-many con subcategorías, asegurando la integridad referencial
+ * y la correcta clasificación del catálogo.
+ * 
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const ProductoService = require("../services/producto.service.js");
 
+/**
+ * Crea el catálogo inicial de productos si no existen
+ * 
+ * @async
+ * @function crearProductos
+ * @description Inicializa la tabla producto con un catálogo diverso:
+ *              
+ *              Juegos de Mesa:
+ *              - Clásicos: Monopoly, Scrabble, Risk, Ajedrez
+ *              - Familiares: Jenga, Parchís, Generala
+ *              - Estrategia: Cluedo, Batalla Naval
+ *              - Tradicionles: Dominó
+ *              
+ *              Juegos de Cartas:
+ *              - Baraja Española: Truco, Chin Chon, Mus
+ *              - Baraja Francesa: Poker, Blackjack  
+ *              - Party Games: UNO, HDP, Cards Against Humanity
+ *              - Rápidos: DOS
+ *              
+ *              Cada producto incluye precio, imagen, descripción y
+ *              asociaciones con múltiples subcategorías apropiadas.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error durante la creación
+ */
 const crearProductos = async () => {
     try {
         const productosExistentes =
@@ -10,6 +50,7 @@ const crearProductos = async () => {
         }
 
         const productos = [
+            // Juegos de Mesa
             {
                 nombre: "Monopoly Clásico",
                 precio: 4000.0,
@@ -85,7 +126,8 @@ const crearProductos = async () => {
                     "Coloca tus fichas y sé el primero en quedarte sin piezas.",
                 subcategorias: [3, 8], // Fichas, Uno contra uno
             },
-            //CARTAS
+            
+            // Juegos de Cartas
             {
                 nombre: "Truco",
                 precio: 1200.0,
@@ -163,4 +205,11 @@ const crearProductos = async () => {
     }
 };
 
+/**
+ * Exporta la función de seeding para su uso en el script principal.
+ * 
+ * @module crearProductos
+ * @description Función de inicialización de datos para el catálogo de productos.
+ *              Utilizada por el script principal de seeders para poblar la base de datos.
+ */
 module.exports = crearProductos;
