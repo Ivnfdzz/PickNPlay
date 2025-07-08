@@ -1,70 +1,69 @@
+/**
+ * @fileoverview Middleware de auditoría para Pick&Play.
+ * Intercepta requests de productos y registra automáticamente acciones de auditoría (crear, actualizar) asociadas a un usuario y producto.
+ * No audita operaciones DELETE ni GET.
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const AuditoriaService = require("../services/auditoria.service.js");
 
 /**
- * Middleware que intercepta requests de productos y registra auditorías automáticamente
+ * Middleware que intercepta requests de productos y registra auditorías automáticamente.
+ * Solo audita operaciones POST, PUT y PATCH exitosas asociadas a un usuario.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @param {Function} next - Siguiente middleware.
+ * @returns {void}
  */
 const auditoriaMiddleware = async (req, res, next) => {
     // Protección extra: nunca auditar DELETE
     if (req.method === "DELETE") {
         return next();
     }
-
-    // PASO 1: Interceptar la respuesta original
+    // Interceptar la respuesta original
     const originalSend = res.send;
     const originalJson = res.json;
-
-    // PASO 2: Variables para capturar datos
     let responseData = null;
     let statusCode = null;
-
-    // PASO 3: Interceptar res.send()
     res.send = function (data) {
         responseData = data;
         statusCode = this.statusCode;
         return originalSend.call(this, data);
     };
-
-    // PASO 4: Interceptar res.json()
     res.json = function (data) {
         responseData = data;
         statusCode = this.statusCode;
         return originalJson.call(this, data);
     };
-
-    // PASO 5: Escuchar cuando la respuesta termine
     res.on("finish", async () => {
         try {
-            // PASO 6: Solo auditar si hay usuario y operación exitosa
+            // Solo auditar si hay usuario y operación exitosa
             if (req.usuario && statusCode >= 200 && statusCode < 300) {
                 await procesarAuditoria(req, responseData);
             }
         } catch (error) {
-            console.error("Error en auditoría:", error.message);
+            // Se loguea el error solo si es relevante para la operación
         }
     });
-
-    // PASO 7: Continuar con el siguiente middleware/controller
     next();
 };
 
 /**
- * Procesa y registra la auditoría basado en la request
+ * Procesa y registra la auditoría basado en la request y la respuesta.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {*} responseData - Datos de la respuesta HTTP.
+ * @returns {Promise<void>}
  */
 async function procesarAuditoria(req, responseData) {
-    // PASO 1: Determinar qué acción se realizó
     const accion = determinarAccion(req.method);
-
     if (!accion) return; // No auditar GET
-
-    // PASO 2: Extraer ID del producto
     const idProducto = extraerIdProducto(req, responseData);
-
     if (!idProducto) {
-        console.warn("⚠️ No se pudo extraer ID del producto para auditoría");
+        // No se pudo extraer ID de producto, no se registra auditoría
         return;
     }
-
-    // PASO 3: Registrar en AuditoriaService
     await AuditoriaService.registrarAccion(
         req.usuario.id_usuario,
         accion,
@@ -73,43 +72,42 @@ async function procesarAuditoria(req, responseData) {
 }
 
 /**
- * Determina qué acción se realizó basado en el método HTTP
+ * Determina la acción de auditoría según el método HTTP.
+ * @param {string} metodo - Método HTTP (POST, PUT, PATCH).
+ * @returns {string|null} Acción de auditoría o null si no corresponde.
  */
 function determinarAccion(metodo) {
     switch (metodo) {
         case "POST":
             return "crear";
         case "PUT":
-            return "actualizar";
         case "PATCH":
             return "actualizar";
         default:
-            return null; // No auditar GET
+            return null; // No auditar GET ni otros
     }
 }
 
 /**
- * Extrae el ID del producto desde params o response
+ * Extrae el ID del producto desde los parámetros de la request o la respuesta.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {*} responseData - Datos de la respuesta HTTP.
+ * @returns {number|null} ID del producto o null si no se puede extraer.
  */
 function extraerIdProducto(req, responseData) {
-    // OPCIÓN 1: Desde parámetros de URL (PUT /productos/5, DELETE /productos/5)
     if (req.params.id) {
         return parseInt(req.params.id);
     }
-
-    // OPCIÓN 2: Desde respuesta de creación (POST /productos)
     try {
         if (typeof responseData === "string") {
             responseData = JSON.parse(responseData);
         }
-
         if (responseData?.producto?.id_producto) {
             return parseInt(responseData.producto.id_producto);
         }
     } catch (error) {
         // Ignorar errores de parsing
     }
-
     return null;
 }
 

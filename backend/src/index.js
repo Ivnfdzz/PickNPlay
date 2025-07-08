@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Punto de entrada principal de la API de Pick&Play.
+ * Configura y levanta el servidor Express, rutas, middlewares y conexión a la base de datos.
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -19,10 +27,16 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+/**
+ * Ruta raíz de la API para verificación de estado.
+ * @route GET /
+ * @returns {string} Mensaje de bienvenida.
+ */
 app.get("/", (req, res) => {
     res.send("¡Esta es la API de Pick&Play!");
 });
 
+// Rutas principales de la API
 app.use("/api/roles", rolRouter);
 app.use("/api/categorias", categoriaRouter);
 app.use("/api/subcategorias", subcategoriaRouter);
@@ -35,6 +49,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/auditoria", logRouter);
 app.use('/img/productos', express.static(path.join(__dirname, 'img/productos')));
 
+// Inicialización del servidor y la base de datos
 app.listen(PORT, async () => {
     await inicializarDB();
     console.log(`Servidor escuchando en el puerto ${PORT}`);

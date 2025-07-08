@@ -1,6 +1,21 @@
+/**
+ * @fileoverview Controlador para la gestión de subcategorías en el sistema Pick&Play.
+ * Permite crear, actualizar, eliminar y consultar subcategorías, así como filtrarlas por categoría.
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const Subcategoria = require('../models/subcategoria.model.js');
 const Categoria = require('../models/categoria.model.js');
 
+/**
+ * Obtiene todas las subcategorías, incluyendo el nombre de la categoría asociada.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve un array de subcategorías en formato JSON.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const traerSubcategorias = async (req, res) => {
     try {
         const subcategorias = await Subcategoria.findAll({
@@ -18,6 +33,13 @@ const traerSubcategorias = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene una subcategoría específica por su ID, incluyendo el nombre de la categoría asociada.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID de la subcategoría en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve la subcategoría encontrada o error si no existe.
+ * @throws {Error} Si la subcategoría no existe o hay un error en la consulta.
+ */
 const traerSubcategoria = async (req, res) => {
     try {
         const subcategoria = await Subcategoria.findByPk(req.params.id, {
@@ -40,6 +62,13 @@ const traerSubcategoria = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene todas las subcategorías asociadas a una categoría específica.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID de la categoría en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve un array de subcategorías.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const traerSubcategoriasPorCategoria = async (req, res) => {
     try {
         const subcategorias = await Subcategoria.findAll({
@@ -59,6 +88,13 @@ const traerSubcategoriasPorCategoria = async (req, res) => {
     }
 };
 
+/**
+ * Crea una nueva subcategoría, validando que la categoría asociada exista.
+ * @param {import('express').Request} req - Solicitud HTTP con los datos de la subcategoría en el body.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve la subcategoría creada o error de validación.
+ * @throws {Error} Si faltan datos requeridos o la categoría no existe.
+ */
 const crearSubcategoria = async (req, res) => {
     try {
         const { nombre, id_categoria } = req.body;
@@ -92,6 +128,13 @@ const crearSubcategoria = async (req, res) => {
     }
 };
 
+/**
+ * Actualiza una subcategoría existente por su ID, validando la existencia de la categoría si se modifica.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID y los datos a actualizar.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve mensaje de éxito o error.
+ * @throws {Error} Si la subcategoría o la categoría no existen, o hay un error en la actualización.
+ */
 const actualizarSubcategoria = async (req, res) => {
     try {
         const { id } = req.params;
@@ -121,6 +164,13 @@ const actualizarSubcategoria = async (req, res) => {
     }
 };
 
+/**
+ * Elimina una subcategoría por su ID.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve mensaje de éxito o error.
+ * @throws {Error} Si la subcategoría no existe o hay un error en la eliminación.
+ */
 const borrarSubcategoria = async (req, res) => {
     try {
         const filasAfectadas = await Subcategoria.destroy({

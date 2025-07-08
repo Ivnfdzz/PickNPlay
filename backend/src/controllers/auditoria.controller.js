@@ -1,5 +1,20 @@
+/**
+ * @fileoverview Controlador de auditoría para el sistema Pick&Play.
+ * Permite consultar logs, estadísticas y resúmenes de acciones de usuarios y productos.
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const AuditoriaService = require("../services/auditoria.service.js");
 
+/**
+ * Obtiene logs de auditoría filtrados por usuario, acción, producto o fecha.
+ * @param {import('express').Request} req - Solicitud HTTP con filtros opcionales en query.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve un objeto con el total y los logs encontrados.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const obtenerLogs = async (req, res) => {
     try {
         const filtros = {
@@ -48,6 +63,13 @@ const obtenerLogs = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene estadísticas generales de auditoría.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve estadísticas generales.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const obtenerEstadisticas = async (req, res) => {
     try {
         const estadisticas = await AuditoriaService.obtenerEstadisticas();
@@ -57,6 +79,13 @@ const obtenerEstadisticas = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene logs de auditoría para un usuario específico.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID de usuario en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve logs del usuario o error si no hay registros.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const obtenerLogsPorUsuario = async (req, res) => {
     try {
         const filtros = {
@@ -87,6 +116,13 @@ const obtenerLogsPorUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene logs de auditoría para un producto específico.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID de producto en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve logs del producto o error si no hay registros.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const obtenerLogsPorProducto = async (req, res) => {
     try {
         const filtros = {
@@ -118,6 +154,13 @@ const obtenerLogsPorProducto = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene un resumen semanal de actividad y estadísticas generales de auditoría.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve resumen semanal, estadísticas y actividad reciente.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const obtenerResumen = async (req, res) => {
     try {
         // Obtener logs recientes (últimos 7 días)

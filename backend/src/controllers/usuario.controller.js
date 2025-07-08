@@ -1,5 +1,20 @@
+/**
+ * @fileoverview Controlador para la gestión de usuarios en el sistema Pick&Play.
+ * Permite crear, actualizar, eliminar y consultar usuarios, así como obtener estadísticas.
+ * @author Iván Fernández y Luciano Fattoni
+ * @version 1.0.0
+ * @since 2025-01-07
+ */
+
 const UsuarioService = require('../services/usuario.service.js');
 
+/**
+ * Obtiene todos los usuarios registrados.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve un array de usuarios en formato JSON.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const traerUsuarios = async (req, res) => {
     try {
         const usuarios = await UsuarioService.obtenerTodos();
@@ -9,6 +24,13 @@ const traerUsuarios = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene un usuario específico por su ID.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID del usuario en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve el usuario encontrado o error si no existe.
+ * @throws {Error} Si el usuario no existe o hay un error en la consulta.
+ */
 const traerUsuario = async (req, res) => {
     try {
         const usuario = await UsuarioService.obtenerPorId(req.params.id);
@@ -21,6 +43,13 @@ const traerUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Crea un nuevo usuario.
+ * @param {import('express').Request} req - Solicitud HTTP con los datos del usuario en el body.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve el usuario creado o error de validación.
+ * @throws {Error} Si ocurre un error en la creación o validación.
+ */
 const crearUsuario = async (req, res) => {
     try {
         const nuevoUsuario = await UsuarioService.crear(req.body);
@@ -41,6 +70,13 @@ const crearUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Actualiza un usuario existente por su ID.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID y los datos a actualizar.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve mensaje de éxito o error.
+ * @throws {Error} Si el usuario no existe o hay un error en la actualización.
+ */
 const actualizarUsuario = async (req, res) => {
     try {
         const mensaje = await UsuarioService.actualizar(req.params.id, req.body);
@@ -57,6 +93,13 @@ const actualizarUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Elimina un usuario por su ID.
+ * @param {import('express').Request} req - Solicitud HTTP con el ID en los parámetros.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve mensaje de éxito o error.
+ * @throws {Error} Si el usuario no existe o hay un error en la eliminación.
+ */
 const borrarUsuario = async (req, res) => {
     try {
         const mensaje = await UsuarioService.eliminar(req.params.id);
@@ -69,6 +112,13 @@ const borrarUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Obtiene estadísticas generales de usuarios.
+ * @param {import('express').Request} req - Solicitud HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {void} Devuelve estadísticas de usuarios.
+ * @throws {Error} Si ocurre un error en la consulta.
+ */
 const obtenerEstadisticas = async (req, res) => {
     try {
         const estadisticas = await UsuarioService.contarUsuarios();
