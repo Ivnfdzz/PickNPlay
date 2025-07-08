@@ -57,5 +57,3 @@ module.exports = {
     actualizarRol,
     borrarRol
 };
-
-//Estandarizacion de nombre de import

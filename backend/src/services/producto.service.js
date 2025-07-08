@@ -69,7 +69,7 @@ class ProductoService {
                     const productoId = producto.id_producto;
 
                     if (!productosMap.has(productoId)) {
-                        // ✅ CREAR producto con array vacío de subcategorías
+                        // CREAR producto con array vacío de subcategorías
                         productosMap.set(productoId, {
                             id_producto: producto.id_producto,
                             nombre: producto.nombre,
@@ -81,7 +81,7 @@ class ProductoService {
                         });
                     }
 
-                    // ✅ AGREGAR subcategoría al producto
+                    // AGREGAR subcategoría al producto
                     productosMap.get(productoId).subcategorias.push({
                         id_subcategoria: subcategoria.id_subcategoria,
                         nombre: subcategoria.nombre,
@@ -101,7 +101,7 @@ class ProductoService {
                 subcategorias[0].categoria :
                 await Categoria.findByPk(categoriaId);
 
-            console.log(`✅ ProductoService.obtenerPorCategoria: ${productosUnicos.length} productos únicos encontrados`);
+            console.log(`ProductoService.obtenerPorCategoria: ${productosUnicos.length} productos únicos encontrados`);
 
             return {
                 productos: productosUnicos,
@@ -109,7 +109,7 @@ class ProductoService {
             };
 
         } catch (error) {
-            console.error('❌ Error en ProductoService.obtenerPorCategoria:', error);
+            console.error('Error en ProductoService.obtenerPorCategoria:', error);
             throw error;
         }
     }
