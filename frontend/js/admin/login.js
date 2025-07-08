@@ -34,7 +34,7 @@ function verificarSesionExistente() {
             mostrarToast('Ya tienes una sesión activa. Redirigiendo...', 'info');
             
             setTimeout(() => {
-                window.location.href = '/frontend/html/dashboard.html';
+                location.assign('/frontend/html/admin/dashboard.html');
             }, 1500);
             
         } catch (error) {
@@ -52,12 +52,35 @@ function configurarEventos() {
     // Botón volver
     elementos.backButton.addEventListener('click', (e) => {
         e.preventDefault();
-        window.location.href = '/frontend/html/index.html';
+        location.assign('/frontend/html/views/index.html');
     });
     
     // Limpiar errores al escribir
     elementos.email.addEventListener('input', limpiarError);
     elementos.password.addEventListener('input', limpiarError);
+
+    // Login automático para el profesor
+    const btnLoginProfesor = document.getElementById('btn-login-profesor');
+    if (btnLoginProfesor) {
+        btnLoginProfesor.addEventListener('click', async () => {
+            elementos.email.value = 'profesor1@pickandplay.com';
+            elementos.password.value = 'profesorAdmin123';
+            limpiarError();
+            mostrarCargando(true);
+            try {
+                const response = await apiInstance.login('profesor1@pickandplay.com', 'profesorAdmin123');
+                guardarSesion(response.token, response.usuario);
+                mostrarToast(`¡Bienvenido ${response.usuario.username}!`, 'success');
+                setTimeout(() => {
+                    location.assign('/frontend/html/admin/dashboard.html');
+                }, 1500);
+            } catch (error) {
+                mostrarError(obtenerMensajeError(error.message));
+            } finally {
+                mostrarCargando(false);
+            }
+        });
+    }
     
     console.log('Eventos configurados');
 }
@@ -95,7 +118,7 @@ async function manejarLogin(event) {
         
         // Redirigir al dashboard
         setTimeout(() => {
-            window.location.href = '/frontend/html/dashboard.html';
+            location.assign('/frontend/html/admin/dashboard.html');
         }, 1500);
         
     } catch (error) {
@@ -186,4 +209,3 @@ function obtenerMensajeError(errorMessage) {
     
     return mapaErrores[errorMessage] || 'Error al iniciar sesión. Intenta nuevamente.';
 }
- 

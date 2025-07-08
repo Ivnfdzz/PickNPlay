@@ -54,7 +54,7 @@ function verificarDatosIniciales() {
         console.error("No hay nombre de cliente");
         mostrarToast("Debes ingresar tu nombre primero", "error");
         setTimeout(() => {
-            window.location.href = "/backend/src/html/index.html";
+            location.assign("/backend/src/html/views/index.html");
         }, 2000);
         return false;
     }
@@ -63,7 +63,7 @@ function verificarDatosIniciales() {
         console.error("No hay categoría seleccionada");
         mostrarToast("Debes seleccionar una categoría primero", "error");
         setTimeout(() => {
-            window.location.href = "/backend/src/html/categorias.html";
+            location.assign("/backend/src/html/views/categorias.html");
         }, 2000);
         return false;
     }
@@ -140,7 +140,7 @@ function configurarEventos() {
         elementos.btnCarrito.addEventListener("click", () => {
             // Guardar carrito en localStorage antes de redirigir
             localStorage.setItem("carrito", JSON.stringify(carritoItems));
-            window.location.href = "/frontend/html/carrito.html";
+            location.assign("/frontend/html/views/carrito.html");
         });
     }
 }

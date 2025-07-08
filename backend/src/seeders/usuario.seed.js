@@ -73,6 +73,13 @@ const crearUsuarios = async () => {
             id_rol: 3
         });
 
+        await Usuario.create({
+            username: 'Profesor1',
+            email: 'profesor1@pickandplay.com',
+            password: 'profesorAdmin123',
+            id_rol: 1
+        });
+
         console.log('Usuarios creados');
     } catch (error) {
         console.error('Error creando usuarios:', error);

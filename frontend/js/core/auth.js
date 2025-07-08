@@ -108,7 +108,7 @@ class AuthController {
         this.clearSession();
         mostrarToast("Sesión cerrada correctamente", "info");
         setTimeout(() => {
-            location.assign("/frontend/html/login.html");
+            location.assign("/frontend/html/admin/login.html");
         }, 1500);
     }
 
@@ -135,7 +135,7 @@ class AuthController {
 
                 // Si está en página admin, redirigir a login
                 if (window.location.pathname.includes("/admin/")) {
-                    location.assign("/frontend/html/login.html");
+                    location.assign("/frontend/html/admin/login.html");
                 }
             }
         } else {
@@ -143,7 +143,7 @@ class AuthController {
 
             // Si está en página admin sin auth, redirigir
             if (window.location.pathname.includes("/admin/")) {
-                location.assign("/frontend/html/login.html");
+                location.assign("/frontend/html/admin/login.html");
             }
         }
     }
@@ -168,7 +168,7 @@ class AuthController {
 
         if (!["root", "analista", "repositor"].includes(userRole)) {
             alert("No tienes permisos para acceder al panel administrativo");
-            location.assign("/frontend/html/index.html");
+            location.assign("/frontend/html/views/index.html");
             return false;
         }
 
@@ -345,7 +345,7 @@ class AuthController {
 
     requireAuth() {
         if (!this.isAuthenticated()) {
-            location.assign("/frontend/html/login.html");
+            location.assign("/frontend/html/admin/login.html");
             return false;
         }
         return true;

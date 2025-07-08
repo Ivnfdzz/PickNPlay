@@ -69,7 +69,7 @@ function verificarDatosIniciales() {
         console.error('No hay nombre de cliente');
         mostrarToast('Debes ingresar tu nombre primero', 'error');
         setTimeout(() => {
-            window.location.href = '/frontend/html/index.html';
+            location.assign('/frontend/html/views/index.html');
         }, 2000);
         return false;
     }
@@ -366,7 +366,7 @@ function irAgregarMasProductos() {
     mostrarToast('Redirigiendo a categorías...', 'info');
 
     setTimeout(() => {
-        window.location.href = '/frontend/html/categorias.html';
+        location.assign('/frontend/html/views/categorias.html');
     }, 1000);
 }
 
@@ -380,12 +380,12 @@ function cancelarCompra() {
     mostrarToast('Compra cancelada', 'info');
 
     setTimeout(() => {
-        window.location.href = '/frontend/html/index.html';
+        location.assign('/frontend/html/views/index.html');
     }, 1000);
 }
 
 function irACategorias() {
-    window.location.href = '/frontend/html/categorias.html';
+    location.assign('/frontend/html/views/categorias.html');
 }
 
 // PROCESAMIENTO DE PEDIDO
@@ -426,7 +426,7 @@ async function procesarPedido(event) {
 
         // Redirigir al ticket con el ID del pedido
         setTimeout(() => {
-            window.location.href = `/frontend/html/ticket.html?pedido=${pedidoId}`;
+            location.assign(`/frontend/html/views/ticket.html?pedido=${pedidoId}`);
         }, 2000);
 
     } catch (error) {

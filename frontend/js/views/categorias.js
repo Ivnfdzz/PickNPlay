@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nombreCliente = localStorage.getItem("nombreCliente");
     if (!nombreCliente) {
         alert("Debes ingresar tu nombre primero");
-        location.assign("/frontend/html/index.html");
+        location.assign("/frontend/html/views/index.html");
         return;
     }
 
@@ -25,7 +25,7 @@ function configurarEventosCards() {
             localStorage.setItem("nombreCategoria", categoriaNombre);
 
             // Navegar después del feedback
-            location.assign("/frontend/html/productos.html");
+            location.assign("/frontend/html/views/productos.html");
         });
     });
 }

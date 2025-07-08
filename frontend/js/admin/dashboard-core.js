@@ -68,12 +68,6 @@ const DashboardCore = {
             });
         }
 
-        if (this.elements.btnModoOscuro) {
-            this.elements.btnModoOscuro.addEventListener("click", () => {
-                this.toggleModoOscuro();
-            });
-        }
-
         // Sidebar - Selector de entidad
         if (this.elements.selectorEntidad) {
             this.elements.selectorEntidad.addEventListener("change", (e) => {
@@ -429,7 +423,6 @@ DashboardCore.elements.btnEstadisticas.addEventListener("click", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     DashboardCore.init();
-    DashboardCore.cargarTemaGuardado();
 });
 
 // Hacer disponible globalmente para otros módulos

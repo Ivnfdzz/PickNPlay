@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputNombre = document.getElementById('nombreCliente');
     const logo = document.querySelector('.navbar-brand');
     
+    // Inicializar teclado virtual
+    if (inputNombre) {
+        TecladoVirtual.init(inputNombre);
+    }
+    
     let clickCount = 0;
     let clickTimer = null;
 
@@ -16,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem("nombreCliente", nombre);
 
-        location.assign("/frontend/html/categorias.html");
+        location.assign("/frontend/html/views/categorias.html");
     });
 
     // Funcionalidad secreta para acceso admin
@@ -47,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(clickTimer);
             clickCount = 0;
 
-            location.assign("/frontend/html/login.html");            
+            location.assign("/frontend/html/admin/login.html");            
         }
     });
 });

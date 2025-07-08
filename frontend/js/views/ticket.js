@@ -61,7 +61,7 @@ function obtenerPedidoId() {
         mostrarToast('No se encontró el pedido solicitado', 'error');
         
         setTimeout(() => {
-            window.location.href = '/frontend/html/index.html';
+            location.assign('/frontend/html/views/index.html');
         }, 3000);
         
         return false;
@@ -282,13 +282,13 @@ function nuevaCompra() {
     mostrarToast('Iniciando nueva compra...', 'info');
     
     setTimeout(() => {
-        window.location.href = '/frontend/html/index.html';
+        location.assign('/frontend/html/views/index.html');
     }, 1000);
 }
 
 function volverInicio() {
     limpiarDatosCarrito();
-    window.location.href = '/frontend/html/index.html';
+    location.assign('/frontend/html/views/index.html');
 }
 
 function limpiarDatosCarrito() {
