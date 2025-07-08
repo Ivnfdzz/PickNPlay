@@ -77,13 +77,13 @@ Visualización y descarga del ticket generado tras confirmar el pedido.
 3. **Configura las variables de entorno:**
    - Crea un archivo `.env` en `backend/` con los siguientes datos:
      ```env
+     PORT=3306
      DB_HOST=localhost
-     DB_PORT=3306
-     DB_NAME=picknplay
      DB_USER=tu_usuario
      DB_PASSWORD=tu_password
-     PORT=3000
+     DB_NAME=picknplay
      JWT_SECRET=un_secreto_seguro
+     JWT_EXPIRES_IN=1D
      ```
 
 ---
