@@ -4,6 +4,11 @@ const AuditoriaService = require("../services/auditoria.service.js");
  * Middleware que intercepta requests de productos y registra auditorías automáticamente
  */
 const auditoriaMiddleware = async (req, res, next) => {
+    // Protección extra: nunca auditar DELETE
+    if (req.method === "DELETE") {
+        return next();
+    }
+
     // PASO 1: Interceptar la respuesta original
     const originalSend = res.send;
     const originalJson = res.json;

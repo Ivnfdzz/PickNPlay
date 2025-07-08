@@ -16,19 +16,30 @@ const obtenerLogs = async (req, res) => {
             total: logs.length,
             logs: logs.map((log) => ({
                 id: log.id_log,
-                usuario: {
-                    id: log.Usuario.id_usuario,
-                    username: log.Usuario.username,
-                    email: log.Usuario.email,
-                },
-                accion: {
-                    id: log.Accion.id_accion,
-                    nombre: log.Accion.nombre,
-                },
-                producto: {
-                    id: log.Producto.id_producto,
-                    nombre: log.Producto.nombre,
-                },
+                usuario: log.Usuario
+                    ? {
+                        id: log.Usuario.id_usuario,
+                        username: log.Usuario.username,
+                        email: log.Usuario.email,
+                    }
+                    : null,
+                accion: log.Accion
+                    ? {
+                        id: log.Accion.id_accion,
+                        nombre: log.Accion.nombre,
+                    }
+                    : null,
+                producto: log.Producto
+                    ? {
+                        id: log.Producto.id_producto,
+                        nombre: log.Producto.nombre,
+                    }
+                    : log.id_producto
+                        ? {
+                            id: log.id_producto,
+                            nombre: "Producto eliminado "
+                        }
+                        : null,
                 fecha_hora: log.fecha_hora,
             })),
         });

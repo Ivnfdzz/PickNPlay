@@ -237,9 +237,9 @@ function crearElementoProductoCarrito(item, index) {
         <div class="row align-items-center">
             <!-- Imagen del producto -->
             <div class="col-auto">
-                <img src="/frontend/img/productos/${item.imagen}" 
+                <img src="/backend/src/img/productos/${item.imagen}" 
                 class="producto-carrito-img" alt="${item.nombre}"
-                onerror="this.src='/frontend/img/productos/default.jpg'">
+                onerror="this.src='/backend/src/img/productos/default.jpg'">
             </div>
             
             <!-- Info del producto -->

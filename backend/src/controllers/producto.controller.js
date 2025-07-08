@@ -74,6 +74,10 @@ const buscarProductos = async (req, res) => {
 
 const crearProducto = async (req, res) => {
     try {
+        if (req.file) {
+            req.body.imagen = req.file.filename;
+        }
+        
         const nuevoProducto = await ProductoService.crear(req.body);
         res.status(201).json({
             message: "Producto creado correctamente",
@@ -95,6 +99,10 @@ const crearProducto = async (req, res) => {
 
 const actualizarProducto = async (req, res) => {
     try {
+        if (req.file) {
+            req.body.imagen = req.file.filename;
+        }
+        
         const mensaje = await ProductoService.actualizar(
             req.params.id,
             req.body

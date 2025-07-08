@@ -54,7 +54,7 @@ function verificarDatosIniciales() {
         console.error("No hay nombre de cliente");
         mostrarToast("Debes ingresar tu nombre primero", "error");
         setTimeout(() => {
-            window.location.href = "/frontend/html/index.html";
+            window.location.href = "/backend/src/html/index.html";
         }, 2000);
         return false;
     }
@@ -63,7 +63,7 @@ function verificarDatosIniciales() {
         console.error("No hay categoría seleccionada");
         mostrarToast("Debes seleccionar una categoría primero", "error");
         setTimeout(() => {
-            window.location.href = "/frontend/html/categorias.html";
+            window.location.href = "/backend/src/html/categorias.html";
         }, 2000);
         return false;
     }
@@ -342,10 +342,10 @@ function crearTarjetaProducto(producto) {
         <div class="card producto-card h-100" data-producto-id="${
             producto.id_producto
         }">
-            <img src="/frontend/img/productos/${producto.imagen}" 
+            <img src="/backend/src/img/productos/${producto.imagen}" 
                     class="card-img-top" 
                     alt="${producto.nombre}"
-                    onerror="this.src='/frontend/img/productos/default.jpg'">
+                    onerror="this.src='/backend/src/img/productos/default.jpg'">
             <div class="card-body d-flex flex-column">
                 <h6 class="card-title">${producto.nombre}</h6>
                 <p class="card-text text-muted small flex-grow-1">${

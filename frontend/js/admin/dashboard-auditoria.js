@@ -25,6 +25,18 @@ function renderizarCardsLogs(logs) {
         html += `<div class="col-12 text-muted text-center">No hay logs registrados.</div>`;
     } else {
         logs.forEach(log => {
+            let productoStr = "-";
+            if (log.producto) {
+                if (
+                    log.producto.nombre &&
+                    log.producto.nombre.toLowerCase().includes("eliminado") &&
+                    log.producto.id
+                ) {
+                    productoStr = `Producto eliminado (ID: ${log.producto.id})`;
+                } else if (log.producto.nombre) {
+                    productoStr = log.producto.nombre;
+                }
+            }
             html += `
                 <div class="col-md-4">
                     <div class="card shadow-sm h-100">
@@ -35,7 +47,7 @@ function renderizarCardsLogs(logs) {
                                 </h6>
                                 <p class="mb-0"><strong>ID Log:</strong> ${log.id}</p>
                             <p class="mb-1"><strong>Usuario:</strong> ${log.usuario?.username || "-"} (${log.usuario?.email || "-"})</p>
-                            <p class="mb-1"><strong>Producto:</strong> ${log.producto?.nombre || "-"}</p>
+                            <p class="mb-1"><strong>Producto:</strong> ${productoStr}</p>
                             <p class="mb-1"><strong>Fecha:</strong> ${new Date(log.fecha_hora).toLocaleString()}</p>
                         </div>
                     </div>

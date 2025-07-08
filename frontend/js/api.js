@@ -10,16 +10,21 @@ class ApiClient {
     }
 
     // Método base para hacer peticiones HTTP
-    async _request(endpoint, options = {}) {
+    async _request(endpoint, options = {}, isFormData = false) {
         const url = `${this.baseURL}${endpoint}`;
 
         // Configurar headers
-        const headers = { ...this.defaultHeaders };
+        let headers = { ...this.defaultHeaders };
 
         // Agregar token si existe (para rutas protegidas)
         const token = localStorage.getItem("token");
         if (token) {
             headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        // Si es FormData, eliminar Content-Type para que el navegador lo setee automáticamente
+        if (isFormData) {
+            delete headers["Content-Type"];
         }
 
         // Configuración final de la petición
@@ -30,18 +35,14 @@ class ApiClient {
 
         try {
             const response = await fetch(url, config);
-
-            // Verificar si la respuesta es exitosa
-            const data = await response.json();
             if (!response.ok) {
-                throw new Error(
-                    data.message || `HTTP Error: ${response.status}`
-                );
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || response.statusText);
             }
-
-            return data;
+            // Si la respuesta es vacía (204), no intentar parsear JSON
+            if (response.status === 204) return null;
+            return await response.json();
         } catch (error) {
-            console.error(`API Error en ${endpoint}:`, error.message);
             throw error;
         }
     }
@@ -169,18 +170,36 @@ class ApiClient {
         return await this._request(`/productos/${id}`);
     }
 
-    async crearProducto(productoData) {
-        return await this._request("/productos", {
-            method: "POST",
-            body: JSON.stringify(productoData),
-        });
+    async crearProducto(productoData, isFormData = false) {
+        let options;
+        if (isFormData) {
+            options = {
+                method: "POST",
+                body: productoData,
+            };
+        } else {
+            options = {
+                method: "POST",
+                body: JSON.stringify(productoData),
+            };
+        }
+        return await this._request("/productos", options, isFormData);
     }
 
-    async actualizarProducto(id, productoData) {
-        return await this._request(`/productos/${id}`, {
-            method: "PUT",
-            body: JSON.stringify(productoData),
-        });
+    async actualizarProducto(id, productoData, isFormData = false) {
+        let options;
+        if (isFormData) {
+            options = {
+                method: "PUT",
+                body: productoData,
+            };
+        } else {
+            options = {
+                method: "PUT",
+                body: JSON.stringify(productoData),
+            };
+        }
+        return await this._request(`/productos/${id}`, options, isFormData);
     }
 
     async eliminarProducto(id) {

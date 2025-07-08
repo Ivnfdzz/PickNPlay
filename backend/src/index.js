@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const path = require('path');
 const { inicializarDB } = require("./config/db.config.js");
 const rolRouter = require("./routes/rol.route.js");
 const categoriaRouter = require("./routes/categoria.route.js");
@@ -32,6 +33,7 @@ app.use("/api/metodosPago", metodoPagoRouter);
 app.use("/api/acciones", accionRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/auditoria", logRouter);
+app.use('/img/productos', express.static(path.join(__dirname, 'img/productos')));
 
 app.listen(PORT, async () => {
     await inicializarDB();

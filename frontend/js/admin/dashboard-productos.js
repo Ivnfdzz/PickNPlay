@@ -135,8 +135,8 @@ async function mostrarFormularioCrearProducto() {
                     <input type="number" class="form-control" id="precio" name="precio" min="0" step="0.01" required>
                 </div>
                 <div class="mb-3">
-                    <label for="imagen" class="form-label">Imagen (URL o nombre de archivo)</label>
-                    <input type="text" class="form-control" id="imagen" name="imagen" required>
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
                 </div>
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripción</label>
@@ -168,7 +168,6 @@ async function mostrarFormularioCrearProducto() {
                 // 1. Tomar los valores de los campos
                 const nombre = form.nombre.value.trim();
                 const precio = parseFloat(form.precio.value);
-                const imagen = form.imagen.value.trim();
                 const descripcion = form.descripcion.value.trim();
                 const activo = form.activo.checked;
 
@@ -177,24 +176,24 @@ async function mostrarFormularioCrearProducto() {
                 const subcategorias = Array.from(subcatCheckboxes).map(cb => parseInt(cb.value));
 
                 // 3. Validar campos requeridos
-                if (!nombre || isNaN(precio) || !imagen || subcategorias.length === 0) {
+                const imagenInput = form.imagen;
+                if (!nombre || isNaN(precio) || !imagenInput.files[0] || subcategorias.length === 0) {
                     mostrarToast("Por favor, completá todos los campos obligatorios y seleccioná al menos una subcategoría.", "warning");
                     return;
                 }
 
-                // 4. Armar el objeto producto
-                const producto = {
-                    nombre,
-                    precio,
-                    imagen,
-                    descripcion,
-                    activo,
-                    subcategorias
-                };
+                // 4. Armar FormData para enviar archivo y datos
+                const formData = new FormData();
+                formData.append("nombre", nombre);
+                formData.append("precio", precio);
+                formData.append("imagen", imagenInput.files[0]);
+                formData.append("descripcion", descripcion);
+                formData.append("activo", activo);
+                subcategorias.forEach(id => formData.append("subcategorias[]", id));
 
                 // 5. Llamar a la API para crear el producto
                 try {
-                    await apiInstance.crearProducto(producto);
+                    await apiInstance.crearProducto(formData, true); // true indica que es FormData
                     mostrarToast("Producto creado exitosamente.", "success");
                     // Volver al listado después de un breve delay
                     setTimeout(() => {
@@ -258,8 +257,9 @@ async function mostrarFormularioEditarProducto(id) {
                     <input type="number" class="form-control" id="precio" name="precio" min="0" step="0.01" value="${producto.precio || ""}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="imagen" class="form-label">Imagen (URL o nombre de archivo)</label>
-                    <input type="text" class="form-control" id="imagen" name="imagen" value="${producto.imagen || ""}" required>
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                    <div class="form-text">Dejar vacío para mantener la imagen actual.</div>
                 </div>
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripción</label>
@@ -292,7 +292,6 @@ async function mostrarFormularioEditarProducto(id) {
                 // 1. Tomar los valores de los campos
                 const nombre = form.nombre.value.trim();
                 const precio = parseFloat(form.precio.value);
-                const imagen = form.imagen.value.trim();
                 const descripcion = form.descripcion.value.trim();
                 const activo = form.activo.checked;
 
@@ -301,25 +300,26 @@ async function mostrarFormularioEditarProducto(id) {
                 const subcategorias = Array.from(subcatCheckboxes).map(cb => parseInt(cb.value));
 
                 // 3. Validar campos requeridos
-                if (!nombre || isNaN(precio) || !imagen || subcategorias.length === 0) {
+                if (!nombre || isNaN(precio) || subcategorias.length === 0) {
                     mostrarToast("Por favor, completá todos los campos obligatorios y seleccioná al menos una subcategoría.", "warning");
                     return;
                 }
 
-                // 4. Armar el objeto producto
-                const productoEditado = {
-                    nombre,
-                    precio,
-                    imagen,
-                    descripcion,
-                    activo,
-                    subcategorias
-                };
+                // 4. Armar FormData para enviar archivo y datos
+                const formData = new FormData();
+                formData.append("nombre", nombre);
+                formData.append("precio", precio);
+                formData.append("descripcion", descripcion);
+                formData.append("activo", activo);
+                subcategorias.forEach(id => formData.append("subcategorias[]", id));
+                const imagenInput = form.imagen;
+                if (imagenInput.files[0]) {
+                    formData.append("imagen", imagenInput.files[0]);
+                }
 
                 // 5. Llamar a la API para actualizar el producto
                 try {
-                    console.log("Editando producto id:", id, "con data:", productoEditado);
-                    await apiInstance.actualizarProducto(id, productoEditado);
+                    await apiInstance.actualizarProducto(id, formData, true); // true indica que es FormData
                     mostrarToast("Producto actualizado exitosamente.", "success");
                     setTimeout(() => {
                         listarProductos();
