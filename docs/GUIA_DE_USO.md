@@ -9,6 +9,7 @@ Pick&Play es un sistema de autoservicio para alquiler de juegos de mesa y cartas
 - Node.js (v18+ recomendado)
 - MySQL (v8+ recomendado)
 - Git
+* Docker (Opcional, pero muy recomendado)
 
 ---
 
