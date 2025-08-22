@@ -1,0 +1,35 @@
+# Archivos y carpetas que Docker debe ignorar
+
+# Dependencias de Node.js
+node_modules/
+npm-debug.log*
+
+# Variables de entorno locales
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+
+# Archivos temporales
+.tmp/
+temp/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# IDE
+.vscode/
+.idea/

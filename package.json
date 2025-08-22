@@ -1,0 +1,14 @@
+ {
+  "name": "picknplay-v2",
+  "version": "1.0.0",
+  "description": "Sistema de autoservicio para alquiler de juegos de mesa",
+  "scripts": {
+    "start": "cd backend && npm run seed && npm start",
+    "install-backend": "cd backend && npm install",
+    "postinstall": "npm run install-backend",
+    "seed": "cd backend && npm run seed"
+  },
+  "keywords": ["node", "express", "mysql", "board-games"],
+  "author": "Iván Fernández, Luciano Fattoni",
+  "license": "ISC"
+}

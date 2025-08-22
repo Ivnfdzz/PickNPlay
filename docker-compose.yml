@@ -1,0 +1,69 @@
+# Docker Compose para PickNPlay
+# Este archivo define todos los servicios que necesita tu aplicación
+
+services:
+  # Servicio del backend
+  backend:
+    build: ./backend # Construye desde el Dockerfile del backend
+    container_name: picknplay_backend
+    restart: always
+    environment:
+      # Variables para conectar con MySQL
+      DB_HOST: mysql
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: production
+    ports:
+      - "3000:3000" # localhost:3000
+    depends_on:
+      - mysql # El backend necesita que MySQL esté listo
+    networks:
+      - picknplay_network
+    # Espera a que MySQL esté completamente listo
+    command: sh -c "sleep 10 && npm start"
+
+  # Servicio de base de datos MySQL
+  mysql:
+    image: mysql:8.0 # Imagen oficial de MySQL 8.0
+    container_name: picknplay_mysql # Nombre del contenedor
+    restart: always # Se reinicia automáticamente si falla
+    environment:
+      # Variables de entorno para configurar MySQL (leídas desde .env)
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306" # Puerto 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - picknplay_network
+
+  # phpMyAdmin para gestionar la base de datos visualmente
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin  # Imagen oficial de phpMyAdmin
+    container_name: picknplay_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: ${PMA_HOST}       
+      PMA_PORT: ${PMA_PORT}
+      PMA_USER: ${PMA_USER}  
+      PMA_PASSWORD: ${PMA_PASSWORD} 
+    ports:
+      - "8080:80" # localhost:8080
+    depends_on:
+      - mysql # phpMyAdmin necesita que MySQL esté corriendo
+    networks:
+      - picknplay_network
+
+# Volúmenes para persistir datos
+volumes:
+  mysql_data: 
+
+# Red para que los contenedores se comuniquen
+networks:
+  picknplay_network:
+    driver: bridge

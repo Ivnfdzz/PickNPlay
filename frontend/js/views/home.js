@@ -22,6 +22,33 @@
  */
 
 /**
+ * Determina si debe usarse el teclado virtual según LocalStorage
+ */
+function shouldUseVirtualKeyboard() {
+    const mode = localStorage.getItem('vkMode');
+    if (mode === 'off') return false;
+    // Por defecto, o si es 'on', se usa el teclado virtual
+    return true;
+};
+
+/**
+ * Aplica la preferencia: crea o destruye el teclado virtual
+ */
+function applyVirtualKeyboard(inputEl) {
+    if (!inputEl) return;
+    if (shouldUseVirtualKeyboard()) {
+        if (!TecladoVirtual.active) {
+            TecladoVirtual.init(inputEl);
+        }
+    } else {
+        if (TecladoVirtual.active) {
+            TecladoVirtual.destroy();
+        }
+        inputEl.removeAttribute('readonly');
+    }
+};
+
+/**
  * Inicializa la página de inicio con todas sus funcionalidades
  * @description Configura formulario, teclado virtual y easter egg administrativo
  * @listens DOMContentLoaded
@@ -30,12 +57,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const inputNombre = document.getElementById('nombreCliente');
     const logo = document.querySelector('.navbar-brand');
-    
-    // Inicializar teclado virtual
+
+    /**
+ * Aplica la preferencia: crea o destruye el teclado virtual
+ */
+    // Inicializar teclado virtual según preferencia
     if (inputNombre) {
-        TecladoVirtual.init(inputNombre);
+        applyVirtualKeyboard(inputNombre);
     }
-    
+
+    // Atajo dev: Ctrl+Alt+K para alternar modo teclado virtual
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.altKey && (e.key === 'k' || e.key === 'K')) {
+            const current = localStorage.getItem('vkMode');
+            const next = current === 'off' ? null : 'off';
+            if (next === null) {
+                localStorage.removeItem('vkMode');
+            } else {
+                localStorage.setItem('vkMode', next);
+            }
+            applyVirtualKeyboard(inputNombre);
+            if (typeof mostrarToast === 'function') {
+                mostrarToast(next === 'off' ? 'Teclado virtual: OFF' : 'Teclado virtual: ON', 'info');
+            } else {
+                console.info('[VK]', next === 'off' ? 'OFF' : 'ON');
+            }
+        }
+    });
+
     let clickCount = 0;
     let clickTimer = null;
 

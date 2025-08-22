@@ -6,6 +6,8 @@
     "start": "node src/index.js",
     "dev": "node ./node_modules/nodemon/bin/nodemon.js src/index.js",
     "seed": "node src/seeders/index.js",
+    "setup": "npm install && npm run seed",
+    "db:reset": "npm run seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

@@ -106,29 +106,6 @@ function configurarEventos() {
     elementos.email.addEventListener('input', limpiarError);
     elementos.password.addEventListener('input', limpiarError);
 
-    // Login automático para el profesor
-    const btnLoginProfesor = document.getElementById('btn-login-profesor');
-    if (btnLoginProfesor) {
-        btnLoginProfesor.addEventListener('click', async () => {
-            elementos.email.value = 'profesor1@pickandplay.com';
-            elementos.password.value = 'profesorAdmin123';
-            limpiarError();
-            mostrarCargando(true);
-            try {
-                const response = await apiInstance.login('profesor1@pickandplay.com', 'profesorAdmin123');
-                guardarSesion(response.token, response.usuario);
-                mostrarToast(`¡Bienvenido ${response.usuario.username}!`, 'success');
-                setTimeout(() => {
-                    location.assign('/frontend/html/admin/dashboard.html');
-                }, 1500);
-            } catch (error) {
-                mostrarError(obtenerMensajeError(error.message));
-            } finally {
-                mostrarCargando(false);
-            }
-        });
-    }
-    
     console.log('Eventos configurados');
 }
 

@@ -34,10 +34,10 @@ const TecladoVirtual = {
      *              con teclas especiales para funcionalidad completa.
      */
     layout: [
-        ['Q','W','E','R','T','Y','U','I','O','P'],
-        ['A','S','D','F','G','H','J','K','L','Ñ'],
-        ['Z','X','C','V','B','N','M','←'],
-        ['MAY','space']
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '←'],
+        ['MAY', 'space']
     ],
 
     /**
@@ -59,6 +59,12 @@ const TecladoVirtual = {
     container: null,
 
     /**
+     * Indica si el teclado está activo para un input
+     * @property {boolean} active
+     */
+    active: false,
+
+    /**
      * Inicializa el teclado virtual para un input específico
      * @method init
      * @param {HTMLElement} inputElement - Elemento input al que asociar el teclado
@@ -70,6 +76,19 @@ const TecladoVirtual = {
         this.input = inputElement;
         this.crearTeclado();
         this.input.setAttribute('readonly', 'readonly');
+        this.active = true;
+    },
+
+    destroy() {
+        const existente = document.getElementById('teclado-virtual');
+        if (existente) existente.remove();
+        if (this.input) {
+            this.input.removeAttribute('readonly');
+        }
+        this.input = null;
+        this.container = null;
+        this.mayusculas = false;
+        this.active = false;
     },
 
     /**
@@ -91,31 +110,31 @@ const TecladoVirtual = {
         this.layout.forEach((fila, idx) => {
             const filaDiv = document.createElement('div');
             filaDiv.className = 'teclado-virtual-fila';
-            
+
             fila.forEach(tecla => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'teclado-virtual-boton';
-                
+
                 // Configuración específica por tipo de tecla
-                if(tecla === 'space') {
+                if (tecla === 'space') {
                     btn.textContent = 'ESPACIO';
                     btn.style.minWidth = '7rem';
-                } else if(tecla === 'MAY') {
+                } else if (tecla === 'MAY') {
                     btn.textContent = 'MAY';
                 } else {
                     btn.textContent = this.mayusculas && /^[a-zA-Z]$/.test(tecla) ? tecla.toUpperCase() : tecla;
                 }
-                
+
                 // Estilo especial para teclas de acción
-                if(['←','MAY','space'].includes(tecla)) btn.classList.add('tecla-accion');
-                
+                if (['←', 'MAY', 'space'].includes(tecla)) btn.classList.add('tecla-accion');
+
                 btn.addEventListener('click', () => this.manejarTecla(tecla));
                 filaDiv.appendChild(btn);
             });
             this.container.appendChild(filaDiv);
         });
-        
+
         this.input.parentNode.appendChild(this.container);
     },
 
@@ -142,10 +161,11 @@ const TecladoVirtual = {
             // Insertar carácter normal con caso apropiado
             this.input.value += this.mayusculas ? tecla.toUpperCase() : tecla.toLowerCase();
         }
-        
+
         // Disparar evento input para compatibilidad con validaciones
         this.input.dispatchEvent(new Event('input'));
-    }
+    },
+
 };
 
 // Exportación global para uso en toda la aplicación
