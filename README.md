@@ -25,6 +25,7 @@ Sistema de autoservicio para alquiler de juegos de mesa y cartas en bares y cafe
 - Auditoría de acciones y estadísticas de uso.
 - Interfaz moderna y responsiva (Bootstrap 5).
 - Seguridad con JWT y roles.
+- **Teclado virtual opcional:** El campo de nombre en la pantalla de inicio utiliza un teclado virtual por defecto (ideal para pantallas táctiles). Los desarrolladores pueden alternar entre teclado virtual y físico usando el atajo `Ctrl+Alt+K` (la preferencia se guarda en LocalStorage).
 
 ## Tecnologías utilizadas
 - Node.js, Express, Sequelize
@@ -229,9 +230,25 @@ erDiagram
 ---
 
 ## Instalación y despliegue
-Ver [`GUÍA_DE_USO.md`](/docs/GUIA_DE_USO.md) para pasos detallados de instalación, configuración y despliegue.
+
+### Opción 1: Docker (recomendado)
+1. Asegúrate de tener Docker y Docker Compose instalados.
+2. Copia el archivo `.env.example` a `.env` en la carpeta `backend/` y completa tus variables.
+3. Ejecuta:
+  ```bash
+  docker-compose up --build
+  ```
+  Esto levantará tanto el backend como la base de datos MySQL. El frontend puede abrirse desde `frontend/html/views/` o servirlo con un servidor estático.
+
+### Opción 2: Manual (Node.js y MySQL)
+Sigue los pasos tradicionales en [`GUÍA_DE_USO.md`](/docs/GUIA_DE_USO.md) para instalación manual.
 
 ---
+
+## Notas y troubleshooting
+- Si hay errores de conexión, revisa las variables de entorno y la base de datos.
+- Para restablecer datos, puedes volver a correr los seeders (`npm run seed`).
+- Si necesitas desactivar el teclado virtual para testear en PC, usa el atajo `Ctrl+Alt+K` en la pantalla de inicio.
 
 ## Autores
 - Iván Fernández

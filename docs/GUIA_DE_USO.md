@@ -50,6 +50,8 @@ Pantalla de bienvenida y selección de categorías para el cliente.
 ![Inicio cliente](./screenshots/index.png)
 ![Categorías](./screenshots/categorias.png)
 
+- El campo de nombre utiliza un teclado virtual por defecto para pantallas táctiles. Si usas PC o quieres desactivar el teclado virtual, presiona `Ctrl+Alt+K` (la preferencia se guarda y puedes volver a activarlo con el mismo atajo).
+
 ### Vista cliente: productos y carrito
 Selección de productos y gestión del carrito de pedidos.
 
@@ -64,6 +66,17 @@ Visualización y descarga del ticket generado tras confirmar el pedido.
 ---
 
 ## Instalación y configuración
+
+### Opción rápida: Docker
+1. Instala Docker y Docker Compose.
+2. Copia `.env.example` a `.env` en `backend/` y completa tus datos.
+3. Ejecuta:
+   ```bash
+   docker-compose up --build
+   ```
+4. El backend y la base de datos estarán listos automáticamente.
+
+### Opción manual
 1. **Clona el repositorio:**
    ```bash
    git clone <url-del-repo>
