@@ -27,7 +27,7 @@ Sistema de autoservicio para alquiler de juegos de mesa y cartas en bares y cafe
 - Seguridad con JWT y roles.
 
 ## Tecnologías utilizadas
-- Node.js, Express, Sequelize
+- Node.js, Express, Sequelize, Docker
 - MySQL
 - Bootstrap 5, HTML5, CSS3, JavaScript
 
@@ -242,4 +242,5 @@ Sigue los pasos en [`GUÍA_DE_USO.md`](/docs/GUIA_DE_USO.md) para la instalació
 ## Autores
 - Iván Fernández
 - Luciano Fattoni
+
 
